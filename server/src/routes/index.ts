@@ -1,3 +1,3 @@
-import test from './test'
-
-export default { test }
+import testRoute from './test'
+import usersRoute from './users'
+export default { testRoute, usersRoute }

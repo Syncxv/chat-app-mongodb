@@ -5,7 +5,7 @@ const PORT = 8000
 const main = async () => {
     const app = express()
     app.use(express.json())
-    mongoose.connect('mongodb://localhost/chat')
+    mongoose.connect('mongodb://localhost/chatapp')
     const db = mongoose.connection
     db.on('error', err => console.error(err))
     db.on('open', () => console.log('WOAH'))
