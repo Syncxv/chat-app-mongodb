@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
+import argon2 from 'argon2'
+import { createAcessToken } from '../../utils/auth'
 const users = {
     index: async (_: Request, res: Response) => {
         const data = await User.find()
@@ -22,11 +24,44 @@ const users = {
     register: async (req: Request<any, any, UserType>, res: Response) => {
         try {
             const { username, password, email } = req.body
-            const user = await User.create({ username, password, email })
+            const hash = await argon2.hash(password)
+            const user = new User({ username, password: hash, email })
+            console.log(user)
+            const token = createAcessToken(user, user.id)
+            console.log(token)
             user.save()
-            res.status(201).send(user)
+            res.status(201).send({ user, acessToken: token })
         } catch (err) {
+            console.error(err)
             res.send({ error: err.message })
+        }
+    },
+    login: async (req: Request<any, any, UserType>, res: Response) => {
+        try {
+            const user = (
+                await User.find({ username: req.body.username }).select(
+                    '+password'
+                )
+            )[0]
+            if (!user)
+                return res.send({
+                    error: { feild: 'username', message: 'unkown username' }
+                })
+            const valid = await argon2.verify(user.password, req.body.password)
+            if (!valid)
+                return res.send({
+                    error: {
+                        feild: 'password',
+                        message: 'password is incorrect nobba'
+                    }
+                })
+            return res.send({
+                user,
+                acessToken: createAcessToken(user, user.id)
+            })
+        } catch (err) {
+            console.error(err)
+            return res.send({ error: err.message })
         }
     },
     me: {

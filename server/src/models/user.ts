@@ -14,7 +14,7 @@ const User = new Schema<UserType>(
         username: { type: String, required: true },
         email: { type: String, required: true },
         discriminator: { type: Number },
-        password: { required: true, type: String },
+        password: { required: true, type: String, select: false },
         avatar: String
     },
     { timestamps: true }

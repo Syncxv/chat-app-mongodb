@@ -1,6 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import routes from './routes'
+import dotenv from 'dotenv'
+dotenv.config()
 const PORT = 8000
 const main = async () => {
     const app = express()
