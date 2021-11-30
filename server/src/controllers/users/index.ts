@@ -3,12 +3,16 @@ import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
 import argon2 from 'argon2'
 import { createAcessToken } from '../../utils/auth'
+import { queryAuthType } from '../../types'
 const users = {
     index: async (_: Request, res: Response) => {
         const data = await User.find()
         res.send({ data })
     },
-    getUser: async (req: Request<{ id: string }>, res: Response) => {
+    getUser: async (
+        req: Request<any, any, any, { id: string }>,
+        res: Response
+    ) => {
         try {
             const { id } = req.query
             const user = await User.find({ id })
@@ -55,6 +59,8 @@ const users = {
                         message: 'password is incorrect nobba'
                     }
                 })
+            // delete user.password
+            // delete THE FUCKING PASSOWRD from the response pls idk man VSCODE IS SO SLOW FOR SOME REASON
             return res.send({
                 user,
                 acessToken: createAcessToken(user, user.id)
@@ -66,11 +72,9 @@ const users = {
     },
     me: {
         index: async (
-            req: Request<any, any, { jwt: { user: UserType } }>,
+            req: Request<any, any, any, { jwt: { user: UserType } }>,
             res: Response
         ) => {
-            //@ts-ignore
-            //ill fix this later SO BASICALLY the type sand SHOWING UP HERE N(GGA ) WHAT HTE FUCK
             const { user: jwt_user } = req.query.jwt
             if (!jwt_user)
                 return res
@@ -80,26 +84,33 @@ const users = {
             return res.send({ user })
         },
         createChannel: async (
-            req: Request<any, any, { members: string[] }>,
+            req: Request<any, any, { members: string[] }, queryAuthType>,
             res: Response
         ) => {
             try {
                 const { members } = req.body
+                const { user: jwt_user } = req.query.jwt
                 if (members.length > 2)
                     throw new Error(
                         'can only create channel with 2 people okay'
                     )
-                const channel = await DmChannels.create({ members })
+                const channel = await DmChannels.create({
+                    members: [jwt_user.id, ...members]
+                })
                 await channel.save()
                 res.send({ data: channel })
             } catch (err) {
                 res.send({ error: { message: err.message } })
             }
         },
-        getChannels: async (req: Request, res: Response) => {
+        getChannels: async (
+            req: Request<any, any, any, queryAuthType>,
+            res: Response
+        ) => {
+            const { user: jwt_user } = req.query.jwt
             try {
                 const channels = await DmChannels.find({
-                    members: { $in: [req.params.id] }
+                    members: { $in: [jwt_user.id] }
                 })
                 res.status(200).send(channels)
             } catch (err) {
