@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
+import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
 const users = {
-    index: async (req: Request, res: Response) => {
+    index: async (_: Request, res: Response) => {
         const data = await User.find()
         res.send({ data })
     },
@@ -13,7 +14,7 @@ const users = {
                 return res.status(404).send({ error: 'cant find him :|' })
             }
             console.log(user)
-            return res.send({ data: user } || { data: null })
+            return res.send(user || { data: null })
         } catch (err) {
             return res.send({ error: err.message })
         }
@@ -26,6 +27,39 @@ const users = {
             res.status(201).send(user)
         } catch (err) {
             res.send({ error: err.message })
+        }
+    },
+    me: {
+        index: async (req: Request, res: Response) => {
+            const user = await User.findById(req.query.id)
+            res.send({ user })
+        },
+        createChannel: async (
+            req: Request<any, any, { members: string[] }>,
+            res: Response
+        ) => {
+            try {
+                const { members } = req.body
+                if (members.length > 2)
+                    throw new Error(
+                        'can only create channel with 2 people okay'
+                    )
+                const channel = await DmChannels.create({ members })
+                await channel.save()
+                res.send({ data: channel })
+            } catch (err) {
+                res.send({ error: { message: err.message } })
+            }
+        },
+        getChannels: async (req: Request, res: Response) => {
+            try {
+                const channels = await DmChannels.find({
+                    members: { $in: [req.params.id] }
+                })
+                res.status(200).send(channels)
+            } catch (err) {
+                res.send({ error: { message: err.message } })
+            }
         }
     }
 }
