@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import routes from './routes'
 import dotenv from 'dotenv'
+import isAuth from './utils/isAuth'
 dotenv.config()
 const PORT = 8000
 const main = async () => {
@@ -11,7 +12,7 @@ const main = async () => {
     const db = mongoose.connection
     db.on('error', err => console.error(err))
     db.on('open', () => console.log('WOAH'))
-    app.get('/', (_, res) => res.send('hehe'))
+    app.use('/', isAuth)
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
     app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)

@@ -65,9 +65,19 @@ const users = {
         }
     },
     me: {
-        index: async (req: Request, res: Response) => {
-            const user = await User.findById(req.query.id)
-            res.send({ user })
+        index: async (
+            req: Request<any, any, { jwt: { user: UserType } }>,
+            res: Response
+        ) => {
+            //@ts-ignore
+            //ill fix this later SO BASICALLY the type sand SHOWING UP HERE N(GGA ) WHAT HTE FUCK
+            const { user: jwt_user } = req.query.jwt
+            if (!jwt_user)
+                return res
+                    .status(500)
+                    .send({ error: 'idk mawn jwt user isnt there' })
+            const user = await User.findById(jwt_user.id)
+            return res.send({ user })
         },
         createChannel: async (
             req: Request<any, any, { members: string[] }>,
