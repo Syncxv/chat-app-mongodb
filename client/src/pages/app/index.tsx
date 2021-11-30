@@ -1,14 +1,13 @@
-import PrivateDmList from "../../components/sidebar/PrivateDmList"
+import Sidebar from "../../components/sidebar"
 
-export const App = () => {
+const App = () => {
     return (
         <>
-            <div className="sidebar-outer">
-                <div className="sidbar-head">
-                    
-                </div>
-                <PrivateDmList channels={[]} />
+            <div className="app-wrapper">
+                <Sidebar />
             </div>
         </>
     )
 }
+
+export default App

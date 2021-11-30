@@ -6,7 +6,8 @@ interface PrivateDmListsInterface {
     channels: Channel[]
 }
 
-const PrivateDmList : NextPage<PrivateDmListsInterface> = ({}) => {
+const PrivateDmList : NextPage<PrivateDmListsInterface> = ({channels}) => {
+    // const newChannels = channels.map(chan => chan.members.map(id => ))
     return (
         <>
             

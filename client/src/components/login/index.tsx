@@ -1,16 +1,29 @@
 import { NextPage } from 'next'
 import React from 'react'
+import Button from '../Button'
 import Input from '../Input'
 
-interface LoginProps {
+interface LoginProps {}
 
-}
-
-const Login : NextPage<LoginProps> = () => {
+const Login: NextPage<LoginProps> = () => {
     return (
         <>
-            <form>
-                <Input placeholder="hehe" onChange={() => console.log("hey")} />
+            <form className="login-form">
+                <Input
+                    label="Username"
+                    onChange={() => console.log('hey')}
+                    type="text"
+                />
+                <Input
+                    label="Password"
+                    onChange={() => console.log('hey')}
+                    type="password"
+                />
+                <Button
+                    text="hehe"
+                    size={Button.Size.sizeLarge}
+                    onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                ></Button>
             </form>
         </>
     )
