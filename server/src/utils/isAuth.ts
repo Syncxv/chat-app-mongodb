@@ -13,7 +13,7 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
         req.query.jwt = payload
     } catch (err) {
         console.log(err)
-        throw new Error('didnt work :|')
+        return res.status(401).send({ error: 'bruh wrong token' })
     }
     return next()
 }

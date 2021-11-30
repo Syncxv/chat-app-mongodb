@@ -1,3 +1,5 @@
+@use "./colors.scss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
 /* Box sizing rules */
 *,
 *::before,
@@ -35,6 +37,9 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  font-family: 'Poppins', sans-serif;
+  background-color: colors.$background;
+  color: hsl(0, 0%, 87%);
 }
 
 /* A elements that don't have a class get default styles */
