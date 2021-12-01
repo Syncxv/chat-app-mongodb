@@ -21,7 +21,7 @@ const Login: NextPage<LoginProps> = () => {
                 />
                 <Button
                     text="hehe"
-                    size={Button.Size.sizeLarge}
+                    size={Button.Size.Large}
                     onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 ></Button>
             </form>

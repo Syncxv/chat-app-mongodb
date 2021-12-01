@@ -1,5 +1,5 @@
 export interface Channel {
-    id: string,
+    id: string
     members: string[]
 }
 export interface UserType {
@@ -9,3 +9,23 @@ export interface UserType {
     email: string
     avatar?: string
 }
+export interface _Sizes {
+    Icon: 'sizeIcon'
+    Large: 'sizeLarge'
+    Max: 'sizeMax'
+    Medium: 'sizeMedium'
+    Min: 'sizeMin'
+    Small: 'sizeSmall'
+    Tiny: 'sizeTiny'
+    Xlarge: 'sizeXlarge'
+}
+
+export type _sizes =
+    | 'sizeIcon'
+    | 'sizeLarge'
+    | 'sizeMax'
+    | 'sizeMedium'
+    | 'sizeMin'
+    | 'sizeSmall'
+    | 'sizeTiny_'
+    | 'sizeXlarge'

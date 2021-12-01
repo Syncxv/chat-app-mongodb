@@ -1,33 +1,16 @@
 import { motion } from 'framer-motion'
 import { NextPage } from 'next'
 import sizes from '../styles/base/_sizes.module.scss'
-interface shit {
-    sizeIcon: 'sizeIcon'
-    sizeLarge: 'sizeLarge'
-    sizeMax: 'sizeMax'
-    sizeMedium: 'sizeMedium'
-    sizeMin: 'sizeMin'
-    sizeSmall: 'sizeSmall'
-    sizeTiny: 'sizeTiny'
-    sizeXlarge: 'sizeXlarge'
-}
-export type _sizes =
-    | 'sizeIcon'
-    | 'sizeLarge'
-    | 'sizeMax'
-    | 'sizeMedium'
-    | 'sizeMin'
-    | 'sizeSmall'
-    | 'sizeTiny_'
-    | 'sizeXlarge'
+import { _Sizes, _sizes } from '../types'
+
 interface ButtonProps {
     onClick?: Function
     text: string
     size: _sizes
 }
 
-type NextPageWrapper = {
-    Size: typeof sizes
+export type NextPageWrapper = {
+    Size: _Sizes
 } & NextPage<ButtonProps>
 
 const Button: NextPageWrapper = ({
@@ -42,7 +25,7 @@ const Button: NextPageWrapper = ({
             className={`btn ${sizes[size]}`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={onClick}
+            onClick={e => onClick(e)}
         >
             {text}
         </motion.button>
@@ -50,14 +33,14 @@ const Button: NextPageWrapper = ({
 }
 
 Button.Size = {
-    sizeIcon: 'sizeIcon',
-    sizeLarge: 'sizeLarge',
-    sizeMax: 'sizeMax',
-    sizeMedium: 'sizeMedium',
-    sizeMin: 'sizeMin',
-    sizeSmall: 'sizeSmall',
-    sizeTiny: 'sizeTiny',
-    sizeXlarge: 'sizeXlarge'
+    Icon: 'sizeIcon',
+    Large: 'sizeLarge',
+    Max: 'sizeMax',
+    Medium: 'sizeMedium',
+    Min: 'sizeMin',
+    Small: 'sizeSmall',
+    Tiny: 'sizeTiny',
+    Xlarge: 'sizeXlarge'
 }
 
 export default Button
