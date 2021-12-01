@@ -1,11 +1,10 @@
 import type { NextPage } from 'next'
-import Login from '../components/login'
 const Home: NextPage = () => {
-  return (
-    <>
-      <Login />
-    </>
-  )
+    return (
+        <>
+            <div>jeje</div>
+        </>
+    )
 }
 
 export default Home

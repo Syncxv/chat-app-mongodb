@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
-import { useQuery } from 'react-query'
 import { apiUrl } from '../../constants'
 import { UserType } from '../../types'
 import { requestWrapper } from '../../util/reqeust'
+import router from 'next/router'
 interface response {
     user: UserType
     acessToken: string
@@ -22,6 +22,7 @@ const loginSubmit = async (
         if (res.data.acessToken) {
             window.localStorage.setItem('token', res.data.acessToken)
             requestWrapper.updateToken(res.data.acessToken)
+            router.push('/app')
         }
     }
 }

@@ -1,28 +1,16 @@
-import axios, { AxiosResponse } from 'axios'
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import { apiUrl } from '../../constants'
-import { UserType } from '../../types'
-import Button from '../Button'
-import Input from '../Input'
-import Link, { LinkP } from '../Link'
-import loginSubmit from './loginSubmit'
-
-interface LoginProps {}
-type ErrorResponse = {
-    error: boolean
-    feild?: string
-    message: string
-}
-const Login: NextPage<LoginProps> = () => {
+import Button from '../components/Button'
+import Input from '../components/Input'
+import { LinkP } from '../components/Link'
+import loginSubmit from '../components/login/loginSubmit'
+const LoginHehe: NextPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     // const [invalid, setError] = useState<ErrorResponse>()
     const [signUp, setSignUp] = useState(false)
     let disabled = false
-
     return (
         <>
             <div className="form-wrapper" style={{ width: '18rem', margin: '0 auto' }}>
@@ -60,4 +48,4 @@ const Login: NextPage<LoginProps> = () => {
     )
 }
 
-export default Login
+export default LoginHehe

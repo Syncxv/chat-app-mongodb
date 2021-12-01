@@ -112,7 +112,12 @@ const users = {
                 const channels = await DmChannels.find({
                     members: { $in: [jwt_user.id] }
                 })
-                res.status(200).send(channels)
+                console.log(channels)
+                const realchannel = channels.map(chan => {
+                    chan.members = chan.members.filter(id => id !== jwt_user.id)
+                    return chan
+                })
+                res.status(200).send(realchannel)
             } catch (err) {
                 res.send({ error: { message: err.message } })
             }
