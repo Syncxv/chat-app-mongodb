@@ -9,6 +9,10 @@ export interface UserType {
     email: string
     avatar?: string
 }
+export interface RawChannel {
+    id: string
+    members: UserType[]
+}
 export interface _Sizes {
     Icon: 'sizeIcon'
     Large: 'sizeLarge'

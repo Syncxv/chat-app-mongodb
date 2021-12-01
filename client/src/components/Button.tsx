@@ -25,7 +25,6 @@ const Button: NextPageWrapper = ({
     onClick = () => {},
     type = 'button'
 }) => {
-    console.log(sizes)
     return (
         <motion.button
             className={`btn ${sizes[size]} ${className}`}

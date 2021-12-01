@@ -1,21 +1,34 @@
-import { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
+import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
-import { Channel } from '../../types'
+import { Channel, RawChannel } from '../../types'
 import PrivateDmList from './PrivateDmList'
 
-interface Props {}
-
+interface Props {
+    channels?: Channel[]
+}
+const getRawChannels = async () => {
+    const channels = await getChannels()
+    console.log(channels)
+    return Promise.all(
+        channels.map(async (chann: Channel) => {
+            const members = await Promise.all(chann.members.map(async id => await getUser(id)))
+            chann.members = members
+            return chann
+        })
+    )
+}
 const Sidebar: NextPage<Props> = ({}) => {
-    const { isError, isLoading, data } = useQuery<Channel[]>(['getChannels'], getChannels)
+    const { isLoading, data } = useQuery('heh', getRawChannels)
+    console.log(data)
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
                 <h3>Friends</h3>
             </div>
-            {isLoading ? <h3> LOADING </h3> : <PrivateDmList channels={data!} />}
+            <PrivateDmList isLoading={isLoading} channels={data as RawChannel[]} />
         </div>
     )
 }

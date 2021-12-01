@@ -1,22 +1,24 @@
 import { NextPage } from 'next'
 import React from 'react'
-import { Channel } from '../../types'
+import { Channel, RawChannel } from '../../types'
 import { requestWrapper } from '../../util/reqeust'
+import DirectMessage from './DirectMessage'
 
 interface PrivateDmListsInterface {
-    channels: Channel[]
+    channels: RawChannel[]
+    isLoading: boolean
 }
 
-const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels }) => {
+const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
     console.log(channels)
-    window.channels = channels
-    window.requestWrapper = requestWrapper
     return (
         <>
-            <div className="">
-                {/* {channels.map(chan => {
-                    chan.members.map(id => getUser(id))
-                })} */}
+            <div className="channel-users">
+                {!isLoading ? (
+                    channels.map(chan => <DirectMessage key={chan.members[0].id} user={chan.members[0]} />)
+                ) : (
+                    <div> LOADING </div>
+                )}
             </div>
         </>
     )

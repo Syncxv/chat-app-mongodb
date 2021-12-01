@@ -1,9 +1,17 @@
+import { Channel } from '../../types'
 import Button from '../../components/Button'
 import Sidebar from '../../components/sidebar'
 import { apiUrl } from '../../constants'
+import { getUser } from '../../hooks/getUser'
+import getChannels from '../../hooks/useGetChannels'
 import { requestWrapper } from '../../util/reqeust'
+import { NextPage } from 'next'
 
-const App = () => {
+interface AppProps {
+    // channels: Channel[]
+}
+
+const App: NextPage<AppProps> = ({}) => {
     return (
         <>
             <div className="app-wrapper">

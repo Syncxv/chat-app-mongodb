@@ -5,9 +5,11 @@ import argon2 from 'argon2'
 import { createAcessToken } from '../../utils/auth'
 import { queryAuthType } from '../../types'
 const users = {
-    index: async (_: Request, res: Response) => {
-        const data = await User.find()
-        res.send({ data })
+    index: async (req: Request, res: Response) => {
+        const { id } = req.params
+        const data = await User.findOne({ id })
+        if (!data) return res.send({ error: 'no user eh' })
+        return res.send({ data })
     },
     getUser: async (
         req: Request<any, any, any, { id: string }>,

@@ -3,7 +3,7 @@ import users from '../controllers/users'
 import isAuth from '../utils/isAuth'
 
 const router = Router()
-router.route('/').get(users.index)
+router.route('/:id').get(users.index)
 router.route('/register').post(users.register)
 router.route('/login').post(users.login)
 router.route('/getuser/:id').get(users.getUser)

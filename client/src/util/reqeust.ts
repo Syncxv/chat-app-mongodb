@@ -19,7 +19,7 @@ class RequestThingy {
     }
     getHeaders() {}
     async get(url: string, opt?: options) {
-        return axios.get(opt?.apiurl ? `${apiUrl}${url}` : url, {
+        return axios.get(opt?.apiurl ? `${apiUrl}/${url}` : url, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: this.token as string
