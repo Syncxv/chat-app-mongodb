@@ -2,10 +2,12 @@ import express from 'express'
 import mongoose from 'mongoose'
 import routes from './routes'
 import dotenv from 'dotenv'
+import cors from 'cors'
 dotenv.config()
 const PORT = 8000
 const main = async () => {
     const app = express()
+    app.use(cors())
     app.use(express.json())
     mongoose.connect('mongodb://localhost/chatapp')
     const db = mongoose.connection

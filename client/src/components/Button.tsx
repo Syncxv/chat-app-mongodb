@@ -7,6 +7,9 @@ interface ButtonProps {
     onClick?: Function
     text: string
     size: _sizes
+    disabled?: boolean
+    type?: 'button' | 'submit' | 'reset' | undefined
+    className?: string
 }
 
 export type NextPageWrapper = {
@@ -17,15 +20,20 @@ const Button: NextPageWrapper = ({
     children,
     text,
     size,
-    onClick = () => {}
+    disabled,
+    className = '',
+    onClick = () => {},
+    type = 'button'
 }) => {
     console.log(sizes)
     return (
         <motion.button
-            className={`btn ${sizes[size]}`}
+            className={`btn ${sizes[size]} ${className}`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={e => onClick(e)}
+            disabled={disabled || false}
+            type={type}
         >
             {text}
         </motion.button>

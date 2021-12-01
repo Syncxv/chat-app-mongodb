@@ -5,7 +5,8 @@ const options = {
     endOfLine: 'lf',
     semi: false,
     tabWidth: 4,
-    trailingComma: 'none'
-  }
-  
-  module.exports = options
+    trailingComma: 'none',
+    printWidth: 120
+}
+
+module.exports = options
