@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose'
 export interface MessageType {
     channel_id: string
     content: string
-    author: Object
+    author: any
 }
 const Message = new Schema<MessageType>(
     {
@@ -17,7 +17,7 @@ const Message = new Schema<MessageType>(
         },
         author: {
             required: true,
-            type: Object
+            type: Schema.Types.ObjectId
         }
     },
     { timestamps: true }
