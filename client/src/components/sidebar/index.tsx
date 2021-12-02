@@ -14,6 +14,7 @@ const getRawChannels = async () => {
     console.log(channels)
     return Promise.all(
         channels.map(async (chann: Channel) => {
+            console.log(chann.members[0])
             const members = await Promise.all(chann.members.map(async id => await getUser(id)))
             chann.members = members
             return chann

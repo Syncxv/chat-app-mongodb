@@ -7,7 +7,7 @@ import register from './register'
 const users = {
     index: async (req: Request, res: Response) => {
         const { id } = req.params
-        const data = await User.findOne({ id })
+        const data = await User.findById(id)
         if (!data) return res.send({ error: 'no user eh' })
         return res.send({ data })
     },
