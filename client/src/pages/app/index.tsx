@@ -6,6 +6,7 @@ import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
 import { requestWrapper } from '../../util/reqeust'
 import { NextPage } from 'next'
+import { getAcessToken } from '../../hooks/getAcessToken'
 
 interface AppProps {
     // channels: Channel[]

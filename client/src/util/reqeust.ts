@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { apiUrl } from '../constants'
+import { getAcessToken } from '../hooks/getAcessToken'
 
 export const hehe = ''
 interface options {
@@ -9,7 +10,7 @@ class RequestThingy {
     public token: string | boolean
     constructor() {
         try {
-            this.token = window.localStorage.getItem('token') || false
+            this.token = getAcessToken() || false
         } catch {
             this.token = false
         }
@@ -19,10 +20,11 @@ class RequestThingy {
     }
     getHeaders() {}
     async get(url: string, opt?: options) {
+        console.log(this.token, url)
         return axios.get(opt?.apiurl ? `${apiUrl}/${url}` : url, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: this.token as string
+                Authorization: getAcessToken() as string
             }
         })
     }
