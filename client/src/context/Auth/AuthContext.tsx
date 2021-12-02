@@ -2,7 +2,8 @@ import { NextPage } from 'next'
 import { Dispatch, useEffect, useReducer } from 'react'
 import { createContext } from 'react'
 import AuthReducer, { Actions } from './AuthReducer'
-interface initStateType {
+import { ACTIONS_TYPES } from '../../constants'
+export interface initStateType {
     accessToken: string | null
     isFetching: boolean
     error: boolean
@@ -14,12 +15,10 @@ export const initState: initStateType = {
     error: false
 }
 export const AuthContext = createContext(initState)
+let init = true
 
 export const AuthContextProvider: NextPage = ({ children }) => {
     const [state, dispatch] = useReducer(AuthReducer, initState)
-    useEffect(() => {
-        state.accessToken = localStorage.getItem('token')
-    }, [])
     useEffect(() => {
         localStorage.setItem('token', state.accessToken!)
         console.log('IN USE EFFECT:', state)
