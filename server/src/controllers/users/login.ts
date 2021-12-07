@@ -4,6 +4,7 @@ import { UserType } from '../../models/user'
 import { createAcessToken } from '../../utils/auth'
 import User from '../../models/user'
 const login = async (req: Request<any, any, UserType>, res: Response) => {
+    console.log('hey')
     try {
         const user = (
             await User.find({ username: req.body.username }).select('+password')

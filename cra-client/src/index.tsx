@@ -4,15 +4,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Landing from './Landing'
 import './styles/main.scss'
 import pages from './pages'
+import AuthContextProvider from './context/AuthContext'
 
 ReactDOM.render(
     <Router>
         <Routes>
             <Route path="/" element={<Landing />} />
-            {Object.values(pages).map(Page => {
-                console.log(pages)
-                return <Route key={Page.name} path={Page.name.toLowerCase()} element={<Page />} />
-            })}
+            <Route path="/app" element={<AuthContextProvider>{<pages.App />}</AuthContextProvider>}></Route>
+            <Route
+                path="/login"
+                element={<AuthContextProvider>{<pages.Login />}</AuthContextProvider>}
+            ></Route>
         </Routes>
     </Router>,
     document.getElementById('root')

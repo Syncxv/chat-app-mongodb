@@ -12,11 +12,11 @@ const Link: React.FC<LinkProps> = ({ children, onClick = () => {}, href = '#' })
         </a>
     )
 }
-// export const LinkP: React.FC<LinkProps> = ({ children, onClick = () => {} }) => {
-//     return (
-//         <p onClick={e => onClick(e)} className="link">
-//             {children}
-//         </p>
-//     )
-// }
+export const LinkP: React.FC<LinkProps> = ({ children, onClick = () => {} }) => {
+    return (
+        <p onClick={e => onClick(e)} className="link">
+            {children}
+        </p>
+    )
+}
 export default Link
