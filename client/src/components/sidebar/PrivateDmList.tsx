@@ -1,6 +1,5 @@
 import { NextPage } from 'next'
-import React, { useContext } from 'react'
-import { AuthContext } from '../../context/Auth/AuthContext'
+import React from 'react'
 import { Channel, RawChannel } from '../../types'
 import DirectMessage from './DirectMessage'
 
@@ -10,6 +9,7 @@ interface PrivateDmListsInterface {
 }
 
 const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
+    console.log(channels)
     return (
         <>
             <div className="channel-users">

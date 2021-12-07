@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Message from '../../models/Message'
 import User, { UserType } from '../../models/user'
+
 const messageController = {
     index: {
         get: async (_: Request, res: Response) => {
@@ -23,9 +24,7 @@ const messageController = {
                     author: user
                 })
                 await message.save()
-                const responseMessage = message.toJSON()
-                responseMessage.author = user!
-                return res.send(responseMessage)
+                return res.send(message)
             } catch (err) {
                 return res.send({ error: err.message })
             }

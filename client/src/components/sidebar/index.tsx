@@ -1,19 +1,15 @@
 import { NextPage } from 'next'
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { AuthContext, initStateType } from '../../context/Auth/AuthContext'
 import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
 import { Channel, RawChannel } from '../../types'
-import { requestWrapper } from '../../util/reqeust'
 import PrivateDmList from './PrivateDmList'
 
 interface Props {
     channels?: Channel[]
 }
-const getRawChannels = async (data: initStateType) => {
-    console.log(data)
-    requestWrapper.updateToken(data.accessToken!)
+const getRawChannels = async () => {
     const channels = await getChannels()
     console.log(channels)
     return Promise.all(
@@ -26,8 +22,8 @@ const getRawChannels = async (data: initStateType) => {
     )
 }
 const Sidebar: NextPage<Props> = ({}) => {
-    const please = useContext(AuthContext)
-    const { isLoading, data } = useQuery('heh', async () => getRawChannels(please))
+    const { isLoading, data } = useQuery('heh', getRawChannels)
+    console.log(data)
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
