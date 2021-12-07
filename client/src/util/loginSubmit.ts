@@ -7,18 +7,17 @@ interface response {
     user: UserType
     acessToken: string
 }
-const loginSubmit = async (username: string, password: string, signUp: boolean, dispatch: Function) => {
+const loginSubmit = async (username: string, password: string, signUp: boolean) => {
     if (!signUp) {
-        dispatch({ type: ACTIONS_TYPES.LOGIN_START })
         try {
             const res: AxiosResponse<response> = await axios.post(`${apiUrl}/users/login`, {
                 username,
                 password
             })
-            dispatch({ type: ACTIONS_TYPES.LOGIN_SUCCESS, payload: res.data.acessToken })
+            window.localStorage.setItem('token', res.data.acessToken)
             router.push('/app')
         } catch {
-            dispatch({ type: ACTIONS_TYPES.LOGIN_FAILURE })
+            console.log('failed eh')
         }
     }
 }

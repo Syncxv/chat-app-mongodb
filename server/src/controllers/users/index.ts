@@ -6,10 +6,15 @@ import login from './login'
 import register from './register'
 const users = {
     index: async (req: Request, res: Response) => {
-        const { id } = req.params
-        const data = await User.findById(id)
-        if (!data) return res.send({ error: 'no user eh' })
-        return res.send({ data })
+        try {
+            const { id } = req.params
+            const data = await User.findById(id)
+            if (!data) return res.send({ error: 'no user eh' })
+            return res.send({ data })
+        } catch (err) {
+            console.error(err)
+            return res.send({ error: err.message })
+        }
     },
     register,
     login,
@@ -18,13 +23,20 @@ const users = {
             req: Request<any, any, any, { jwt: { user: UserType } }>,
             res: Response
         ) => {
-            const { user: jwt_user } = req.query.jwt
-            if (!jwt_user)
-                return res
-                    .status(500)
-                    .send({ error: 'idk mawn jwt user isnt there' })
-            const user = await User.findById(jwt_user.id)
-            return res.send({ user })
+            console.log('BRO WHY')
+            try {
+                const { user: jwt_user } = req.query.jwt
+                console.log(jwt_user)
+                if (!jwt_user)
+                    return res
+                        .status(500)
+                        .send({ error: 'idk mawn jwt user isnt there' })
+                const user = await User.findById(jwt_user.id)
+                return res.send({ user })
+            } catch (err) {
+                console.error(err)
+                return res.send(err.message)
+            }
         },
         createChannel: async (
             req: Request<any, any, { members: string[] }, queryAuthType>,

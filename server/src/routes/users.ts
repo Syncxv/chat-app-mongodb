@@ -6,8 +6,4 @@ const router = Router()
 router.route('/:id').get(users.index)
 router.route('/register').post(users.register)
 router.route('/login').post(users.login)
-router.use('/@me', isAuth)
-router.route('/@me').get(users.me.index)
-router.route('/@me/channels').post(users.me.createChannel)
-router.route('/@me/channels').get(users.me.getChannels)
 export default { path: 'users', router }
