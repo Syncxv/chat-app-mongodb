@@ -7,6 +7,7 @@ const Message: React.FC<MessageProps> = ({ message: { content, author } }) => {
     return (
         <div className="message-wrapper">
             {/* <img src="" alt="" /> */}
+            <h3>{author.username}</h3>
             <p>{content}</p>
         </div>
     )

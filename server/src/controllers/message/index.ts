@@ -24,7 +24,9 @@ const messageController = {
                     author: user
                 })
                 await message.save()
-                return res.send(message)
+                const responseMessage = message.toJSON()
+                responseMessage.author = user!
+                return res.send(responseMessage)
             } catch (err) {
                 return res.send({ error: err.message })
             }

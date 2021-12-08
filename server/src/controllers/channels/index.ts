@@ -11,7 +11,10 @@ const channels = {
             const channel = await Channel.findOne({ id: req.params.id })
             if (!channel)
                 return res.status(404).send({ error: 'channel not found eh' })
-            const messages = await Message.find({ channel_id: channel.id })
+            const messages = await Message.find({
+                channel_id: channel.id
+            }).populate([{ path: 'author', model: 'User' }])
+            console.log(messages)
             return res.send(messages)
         }
     }

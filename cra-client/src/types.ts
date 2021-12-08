@@ -40,5 +40,5 @@ export type _sizes =
 export interface MessageType {
     channel_id: string
     content: string
-    author: Object
+    author: UserType
 }
