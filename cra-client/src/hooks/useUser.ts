@@ -9,3 +9,9 @@ export const getChannels = async () => {
     console.log(channels)
     return channels.data
 }
+
+export const getChannel = async (id: string) => {
+    const channels = await axios.get(`${apiUrl}/channels/${id}`)
+    console.log(channels)
+    return channels.data
+}

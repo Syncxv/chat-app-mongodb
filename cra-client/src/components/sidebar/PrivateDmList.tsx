@@ -8,12 +8,17 @@ interface PrivateDmListsInterface {
 }
 
 const PrivateDmList: React.FC<PrivateDmListsInterface> = ({ channels, isLoading }) => {
-    console.log(channels)
     return (
         <>
             <div className="channel-users">
                 {!isLoading ? (
-                    channels.map(chan => <DirectMessage key={chan.members[0].id} user={chan.members[0]} />)
+                    channels.map(chan => (
+                        <DirectMessage
+                            key={chan.members[0].id}
+                            channel_id={chan._id}
+                            user={chan.members[0]}
+                        />
+                    ))
                 ) : (
                     <div> LOADING </div>
                 )}

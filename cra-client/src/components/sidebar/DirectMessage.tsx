@@ -1,14 +1,17 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserType } from '../../types'
 import { BaseSideButton } from './BaseSidebarButton'
 
 interface DirectMessageProps {
     user: UserType
+    channel_id: string
 }
 
-const DirectMessage: React.FC<DirectMessageProps> = ({ user }) => {
+const DirectMessage: React.FC<DirectMessageProps> = ({ user, channel_id }) => {
+    const router = useNavigate()
     return (
-        <BaseSideButton active={false}>
+        <BaseSideButton onClick={() => router(`/app/channels/@me/${channel_id}`)} active={false}>
             <img
                 className="avatar"
                 src="https://cdn.discordapp.com/avatars/549244932213309442/5b3984903ff4d507f93465a1e1d86ec7.png"

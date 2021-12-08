@@ -1,8 +1,10 @@
 export interface Channel {
     id: string
+    _id: string
     members: string[]
 }
 export interface UserType {
+    _id: string
     id: string
     username: string
     discriminator: number
@@ -11,6 +13,7 @@ export interface UserType {
 }
 export interface RawChannel {
     id: string
+    _id: string
     members: UserType[]
 }
 export interface _Sizes {
@@ -33,3 +36,9 @@ export type _sizes =
     | 'sizeSmall'
     | 'sizeTiny_'
     | 'sizeXlarge'
+
+export interface MessageType {
+    channel_id: string
+    content: string
+    author: Object
+}

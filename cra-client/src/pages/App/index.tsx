@@ -1,26 +1,24 @@
-import React, { useContext } from 'react'
-import { RouteMatch, useNavigate } from 'react-router'
-import Button from '../../components/Button'
+import React from 'react'
+import { useNavigate } from 'react-router'
 import Sidebar from '../../components/sidebar'
-import { AuthContext } from '../../context/AuthContext'
 import useAuth from '../../hooks/useAuth'
 import MainArea from '../../components/main'
 import { useParams } from 'react-router'
+import GlobalStateContextProvider from '../../context/GlobalStateContext'
 
 interface Props {}
 
-const App: React.FC<Props> = props => {
-    const bruh = useParams()
-    console.log(bruh)
-    const { authState, setAuthState } = useContext(AuthContext)
-    const hehe = useAuth()
+const App: React.FC<Props> = () => {
+    const params = useParams()
+    const isLoggedIn = useAuth()
     const router = useNavigate()
-    console.log(authState)
-    if (hehe === undefined) router('/login')
+    if (!isLoggedIn) router('/login')
     return (
         <div className="app-wrapper">
-            <Sidebar />
-            <MainArea match={bruh} />
+            <GlobalStateContextProvider>
+                <Sidebar />
+                <MainArea match={params} />
+            </GlobalStateContextProvider>
         </div>
     )
 }
