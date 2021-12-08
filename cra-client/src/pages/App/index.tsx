@@ -1,23 +1,26 @@
 import React, { useContext } from 'react'
-import { useNavigate } from 'react-router'
+import { RouteMatch, useNavigate } from 'react-router'
 import Button from '../../components/Button'
+import Sidebar from '../../components/sidebar'
 import { AuthContext } from '../../context/AuthContext'
 import useAuth from '../../hooks/useAuth'
+import MainArea from '../../components/main'
+import { useParams } from 'react-router'
 
-const App = () => {
+interface Props {}
+
+const App: React.FC<Props> = props => {
+    const bruh = useParams()
+    console.log(bruh)
     const { authState, setAuthState } = useContext(AuthContext)
     const hehe = useAuth()
     const router = useNavigate()
     console.log(authState)
     if (hehe === undefined) router('/login')
     return (
-        <div>
-            <h1>please</h1>
-            <Button
-                text="MAKE TOKEN BAD"
-                size={Button.Size.Xlarge}
-                onClick={() => setAuthState({ token: 'hehehhehe' })}
-            />
+        <div className="app-wrapper">
+            <Sidebar />
+            <MainArea match={bruh} />
         </div>
     )
 }

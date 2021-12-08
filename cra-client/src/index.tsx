@@ -5,7 +5,7 @@ import Landing from './Landing'
 import './styles/main.scss'
 import pages from './pages'
 import AuthContextProvider from './context/AuthContext'
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query'
 const queryClient = new QueryClient()
 ReactDOM.render(
     <QueryClientProvider client={queryClient}>
@@ -13,7 +13,7 @@ ReactDOM.render(
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route
-                    path="/app"
+                    path="/app/channels/:type/:id"
                     element={<AuthContextProvider>{<pages.App />}</AuthContextProvider>}
                 ></Route>
                 <Route
