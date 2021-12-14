@@ -5,6 +5,7 @@ export interface Channel {
 }
 export interface UserType {
     id: string
+    _id: string
     username: string
     discriminator: number
     email: string

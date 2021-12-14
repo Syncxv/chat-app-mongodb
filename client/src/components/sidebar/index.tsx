@@ -12,7 +12,6 @@ interface Props {
 }
 const getRawChannels = async () => {
     const channels = await getChannels()
-    console.log('CHANNELS IN GETRAWCHANNELS: ', channels)
     return Promise.all(
         channels.map(async (chann: Channel) => {
             console.log(chann.members[0])
@@ -24,8 +23,6 @@ const getRawChannels = async () => {
 }
 const Sidebar: NextPage<Props> = ({ token }) => {
     const { isLoading, data } = useQuery('heh', getRawChannels)
-    console.log('DATA IN SIDEBAR: ', data)
-    console.log(token)
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">

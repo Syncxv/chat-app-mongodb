@@ -10,7 +10,6 @@ interface PrivateDmListsInterface {
 }
 
 const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
-    console.log(channels)
     return (
         <>
             <div className="channel-users">
@@ -18,7 +17,7 @@ const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading 
                     channels.map(chan => (
                         <DirectMessage
                             onClick={() => router.push(`/app/channels/${chan._id}`)}
-                            key={chan.members[0].id}
+                            key={chan.members[0]._id}
                             user={chan.members[0]}
                         />
                     ))

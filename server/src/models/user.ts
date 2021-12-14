@@ -16,7 +16,7 @@ const User = new Schema<UserType>(
         email: { type: String, required: true },
         discriminator: { type: Number },
         password: { required: true, type: String, select: false },
-        avatar: String
+        avatar: { type: String, default: null }
     },
     { timestamps: true }
 )
