@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import router from 'next/router'
 import React from 'react'
 import { Channel, RawChannel } from '../../types'
 import DirectMessage from './DirectMessage'
@@ -14,7 +15,13 @@ const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading 
         <>
             <div className="channel-users">
                 {!isLoading ? (
-                    channels.map(chan => <DirectMessage key={chan.members[0].id} user={chan.members[0]} />)
+                    channels.map(chan => (
+                        <DirectMessage
+                            onClick={() => router.push(`/app/channels/${chan._id}`)}
+                            key={chan.members[0].id}
+                            user={chan.members[0]}
+                        />
+                    ))
                 ) : (
                     <div> LOADING </div>
                 )}

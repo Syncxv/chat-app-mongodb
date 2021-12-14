@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { UserType } from '../../models/user'
 import { createAcessToken } from '../../utils/auth'
 import User from '../../models/user'
+import { COOKIE_NAME } from '../../constants'
 const register = async (req: Request<any, any, UserType>, res: Response) => {
     try {
         const { username, password, email } = req.body
@@ -12,7 +13,8 @@ const register = async (req: Request<any, any, UserType>, res: Response) => {
         const token = createAcessToken(user, user.id)
         console.log(token)
         user.save()
-        res.status(201).send({ user, acessToken: token })
+        res.cookie(COOKIE_NAME, token)
+        res.status(201).send({ user })
     } catch (err) {
         console.error(err)
         res.send({ error: err.message })

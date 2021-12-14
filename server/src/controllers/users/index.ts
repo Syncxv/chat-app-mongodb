@@ -8,7 +8,8 @@ const users = {
     index: async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-            const data = await User.findById(id)
+            const data = await User.findOne({ _id: id })
+            console.log(data)
             if (!data) return res.send({ error: 'no user eh' })
             return res.send({ data })
         } catch (err) {

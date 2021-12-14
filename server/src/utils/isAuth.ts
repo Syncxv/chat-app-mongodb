@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { verify } from 'jsonwebtoken'
+import { COOKIE_NAME } from '../constants'
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
     console.log('AUTH MIDDLEWARE')
-
-    const token = req.headers['authorization']
-    console.log(token)
-    if (!token) {
+    if (!req.cookies) {
         return res.status(401).send({ error: 'No Authorization Present nobba' })
     }
     try {
+        const token = req.cookies[COOKIE_NAME]
+        console.log(token)
         const payload = verify(token, process.env.ACCESS_TOKEN_SECRET!)
         req.query.jwt = payload
     } catch (err) {

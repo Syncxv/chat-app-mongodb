@@ -1,5 +1,6 @@
 export interface Channel {
     id: string
+    _id: string
     members: string[]
 }
 export interface UserType {
@@ -11,6 +12,7 @@ export interface UserType {
 }
 export interface RawChannel {
     id: string
+    _id: string
     members: UserType[]
 }
 export interface _Sizes {

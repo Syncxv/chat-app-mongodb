@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { getUser } from '../../hooks/getUser'
@@ -8,6 +8,7 @@ import PrivateDmList from './PrivateDmList'
 
 interface Props {
     channels?: Channel[]
+    token?: string
 }
 const getRawChannels = async () => {
     const channels = await getChannels()
@@ -21,9 +22,10 @@ const getRawChannels = async () => {
         })
     )
 }
-const Sidebar: NextPage<Props> = ({}) => {
+const Sidebar: NextPage<Props> = ({ token }) => {
     const { isLoading, data } = useQuery('heh', getRawChannels)
     console.log('DATA IN SIDEBAR: ', data)
+    console.log(token)
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
@@ -35,3 +37,8 @@ const Sidebar: NextPage<Props> = ({}) => {
 }
 
 export default Sidebar
+
+export async function getStaticProps({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
+    console.log(req, res)
+    return { props: { token: req.cookies.token } }
+}

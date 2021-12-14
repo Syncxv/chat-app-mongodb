@@ -14,7 +14,6 @@ const loginSubmit = async (username: string, password: string, signUp: boolean) 
                 username,
                 password
             })
-            window.localStorage.setItem('token', res.data.acessToken)
             router.push('/app')
         } catch {
             console.log('failed eh')

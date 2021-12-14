@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { UserType } from '../../models/user'
 import { createAcessToken } from '../../utils/auth'
 import User from '../../models/user'
+import { COOKIE_NAME } from '../../constants'
 const login = async (req: Request<any, any, UserType>, res: Response) => {
     console.log('hey')
     try {
@@ -21,11 +22,14 @@ const login = async (req: Request<any, any, UserType>, res: Response) => {
                     message: 'password is incorrect nobba'
                 }
             })
-        // delete user.password
-        // delete THE FUCKING PASSOWRD from the response pls idk man VSCODE IS SO SLOW FOR SOME REASON
+        const token = createAcessToken(user, user.id)
+        res.cookie(COOKIE_NAME, token, {
+            maxAge: 900000,
+            httpOnly: true,
+            secure: false
+        })
         return res.send({
-            user,
-            acessToken: createAcessToken(user, user.id)
+            user
         })
     } catch (err) {
         console.error(err)

@@ -11,21 +11,26 @@ interface ChannelProps {
 interface ContextParams {
     slug: string
 }
-export const getStaticPaths = async () => {
-    console.log('hi FROM SATIC PATHS')
-    const channels = await getChannels()
-    console.log(channels)
-    const paths = channels.map((channel: Channel) => ({ params: { id: channel.id } }))
-    console.log(paths)
+export const getStaticPaths = async (thing: any) => {
+    console.log('hi FROM SATIC PATHS', thing)
+    // const channels = await getChannels()
+    // console.log(channels)
+    // const paths = channels.map((channel: Channel) => ({ params: { id: channel._id } }))
+    // console.log(paths)
     return {
-        paths,
+        paths: [
+            {
+                params: { channel_id: '61a5b9872fbdfe888b0fa56c' }
+            }
+        ],
         fallback: false
     }
 }
 export const getStaticProps: GetStaticProps<ChannelProps> = async context => {
     console.log(context)
-    const id = context!.params!.id as string
+    const id = context!.params!.channel_id as string
     const user = await getUser(id)
+    console.log(user)
     return {
         props: {
             recipiant: user
