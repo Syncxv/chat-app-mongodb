@@ -1,12 +1,31 @@
+import { NextPage } from 'next'
 import React from 'react'
-import { UserType } from '../types'
+import { defaultPfp } from '../constants'
+import { MessageType } from '../types'
 
 interface MessageProps {
-    author: UserType
+    message: MessageType
 }
 
-const Message = (props: MessageProps) => {
-    return <div className="message"></div>
+const Message: NextPage<MessageProps> = ({ message }) => {
+    return (
+        <div className="message">
+            <div className="avatar-wrapp">
+                <img
+                    className="avatar"
+                    src={message.author.avatar === null ? defaultPfp : message.author.avatar}
+                    alt=""
+                />
+            </div>
+            <div className="message-contents">
+                <div className="message-header">
+                    {/* <div className="date">later</div> */}
+                    <span className="message-username">{message.author.username}</span>
+                </div>
+                <div className="message-text">{message.content}</div>
+            </div>
+        </div>
+    )
 }
 
 export default Message

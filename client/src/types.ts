@@ -9,7 +9,7 @@ export interface UserType {
     username: string
     discriminator: number
     email: string
-    avatar?: string
+    avatar: string | null
 }
 export interface RawChannel {
     id: string
@@ -26,7 +26,11 @@ export interface _Sizes {
     Tiny: 'sizeTiny'
     Xlarge: 'sizeXlarge'
 }
-
+export interface MessageType {
+    channel_id: string
+    content: string
+    author: UserType
+}
 export type _sizes =
     | 'sizeIcon'
     | 'sizeLarge'

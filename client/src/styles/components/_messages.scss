@@ -1,0 +1,48 @@
+@use '../base/colors';
+.main-seciton {
+    width: 100%;
+    height: 100vh;
+    .scrollable {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+        overflow: hidden scroll;
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            gap: 0.7rem;
+            .message-item {
+                list-style-type: none;
+                &:hover {
+                    background-color: lighten(colors.$background, 15%);
+                }
+                .message {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    position: relative;
+                    left: 1%;
+                    .message-contents {
+                        .message-header {
+                            // margin: -0.4rem 0;
+                            .message-username {
+                                color: white;
+                            }
+                        }
+                    }
+                    .avatar-wrapp {
+                        height: 32px;
+                        width: 32px;
+                        .avatar {
+                            height: 100%;
+                            width: 100%;
+                            border-radius: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

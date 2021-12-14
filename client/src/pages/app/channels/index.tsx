@@ -5,7 +5,7 @@ const index = () => {
     return (
         <div className="app-wrapper">
             <Sidebar />
-            <main>SELECT CHNNALE NOGGA</main>
+            <main className="main-seciton">SELECT CHNNALE NOGGA</main>
         </div>
     )
 }

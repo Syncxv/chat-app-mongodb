@@ -2,12 +2,13 @@
 
 .sidebar-outer {
     display: flex;
+    gap: 1rem;
     flex-direction: column;
     align-items: center;
     position: relative;
-    width: 24rem;
+    width: 14rem;
     height: 100vh;
-    background-color: lighten(colors.$background, 5%);
+    background-color: lighten(colors.$background, 10%);
 
     .channel-users {
         width: 100%;
@@ -22,7 +23,7 @@
                 width: 32px;
             }
             &:hover {
-                background-color: lighten(colors.$background, 10%);
+                background-color: lighten(colors.$background, 5%);
             }
         }
     }

@@ -5,11 +5,12 @@ import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
+import Message from '../../../components/Message'
 import Sidebar from '../../../components/sidebar'
 import { apiUrl } from '../../../constants'
 import { getUser } from '../../../hooks/getUser'
 import getChannels from '../../../hooks/useGetChannels'
-import { Channel, UserType } from '../../../types'
+import { Channel, MessageType, UserType } from '../../../types'
 interface ChannelProps {
     params: {
         cid: string
@@ -65,18 +66,28 @@ export const getMessages = async (cid: string) => {
     return messages
 }
 const Channel: NextPage<ChannelProps> = ({ params }) => {
-    const { isLoading, data } = useQuery('messages', async () => getMessages(params.cid))
+    const { isLoading, data } = useQuery<MessageType[]>('messages', async () => getMessages(params.cid))
     console.log('DATA IN CHANNEL PAGE', data)
     return (
         <div className="app-wrapper">
             <Sidebar />
-            <main>
-                <header>
-                    <h1>hehe</h1>
-                </header>
-                <main>
-                    <ul></ul>
-                </main>
+            <main className="main-seciton">
+                <div className="scrollable">
+                    <header>
+                        <h1>hehe</h1>
+                    </header>
+                    <ul className="messages-list">
+                        {data || !isLoading ? (
+                            data?.map(message => (
+                                <li id={message.author._id} className="message-item">
+                                    <Message message={message} />
+                                </li>
+                            ))
+                        ) : (
+                            <h1>welp</h1>
+                        )}
+                    </ul>
+                </div>
             </main>
         </div>
     )
