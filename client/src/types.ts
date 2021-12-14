@@ -27,6 +27,7 @@ export interface _Sizes {
     Xlarge: 'sizeXlarge'
 }
 export interface MessageType {
+    _id: string
     channel_id: string
     content: string
     author: UserType

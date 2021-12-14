@@ -3,12 +3,12 @@ import React from 'react'
 
 interface InputProps {
     label: string
-    onChange: Function
+    onChange?: Function
     type?: React.HTMLInputTypeAttribute
     error?: { isError: boolean; message: string }
 }
 
-const Input: NextPage<InputProps> = ({ label, onChange, type, error = { isError: false } }) => {
+const Input: NextPage<InputProps> = ({ label, onChange = () => {}, type, error = { isError: false } }) => {
     return (
         <>
             <div className="input-wrapper">

@@ -8,6 +8,29 @@
         justify-content: flex-end;
         height: 100%;
         overflow: hidden scroll;
+        .form-wrapper {
+            display: flex;
+            align-items: center;
+            height: 7%;
+            .text-area {
+                height: 100%;
+                width: 100%;
+                border: none;
+                outline: none;
+                text-indent: 10;
+            }
+            .form-send-wrapper {
+                height: 100%;
+                width: 4%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                &:hover {
+                    cursor: pointer;
+                    background-color: lighten(colors.$background, 15%);
+                }
+            }
+        }
         .messages-list {
             display: flex;
             flex-direction: column;

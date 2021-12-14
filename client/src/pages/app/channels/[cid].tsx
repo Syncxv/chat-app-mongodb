@@ -1,70 +1,19 @@
 import axios from 'axios'
-import { GetStaticProps, GetStaticPropsResult, NextPage } from 'next'
-import { getServerSession } from 'next-auth'
-import { useRouter } from 'next/router'
-import { ParsedUrlQuery } from 'querystring'
-import React, { useEffect } from 'react'
+import { NextPage } from 'next'
+import React from 'react'
 import { useQuery } from 'react-query'
+import Input from '../../../components/Input'
 import Message from '../../../components/Message'
 import Sidebar from '../../../components/sidebar'
 import { apiUrl } from '../../../constants'
-import { getUser } from '../../../hooks/getUser'
-import getChannels from '../../../hooks/useGetChannels'
-import { Channel, MessageType, UserType } from '../../../types'
+import { Channel, MessageType } from '../../../types'
 interface ChannelProps {
     params: {
         cid: string
     }
 }
-interface ContextParams {
-    slug: string
-}
-// export const getStaticPaths = async (thing: any) => {
-//     try {
-//         console.log('hi FROM SATIC PATHS', thing)
-//         const { data: channels } = await axios.get(`api/hello`)
-//         console.log(channels)
-//         const paths = channels.map((channel: Channel) => ({ params: { channel_id: channel._id } }))
-//         console.log(paths)
-//         return {
-//             paths,
-//             fallback: false
-//         }
-//     } catch (e) {
-//         console.log(e.message)
-//         return {
-//             paths: [
-//                 {
-//                     params: {
-//                         channel_id: 'ehe'
-//                     }
-//                 }
-//             ],
-//             fallback: false
-//         }
-//     }
-// }
-// export const getStaticProps: GetStaticProps<ChannelProps> = async context => {
-//     const hehe = getServerSession(context, {
-//         providers: [
+export const getMessages = async (cid: string) => (await axios.get(`${apiUrl}/channels/${cid}/messages`)).data
 
-//         ]
-//     })
-//     console.log(context)
-//     const id = context!.params!.channel_id as string
-//     const user = await getUser(id)
-//     console.log(user)
-//     return {
-//         props: {
-//             recipiant: user
-//         }
-//     }
-// }
-export const getMessages = async (cid: string) => {
-    const { data: messages } = await axios.get(`${apiUrl}/channels/${cid}/messages`)
-    console.log('DATA IN GET MESSAGES FUNCTION', messages)
-    return messages
-}
 const Channel: NextPage<ChannelProps> = ({ params }) => {
     const { isLoading, data } = useQuery<MessageType[]>('messages', async () => getMessages(params.cid))
     console.log('DATA IN CHANNEL PAGE', data)
@@ -77,16 +26,22 @@ const Channel: NextPage<ChannelProps> = ({ params }) => {
                         <h1>hehe</h1>
                     </header>
                     <ul className="messages-list">
-                        {data || !isLoading ? (
+                        {!isLoading ? (
                             data?.map(message => (
-                                <li id={message.author._id} className="message-item">
+                                <li key={message._id} id={message.author._id} className="message-item">
                                     <Message message={message} />
                                 </li>
-                            ))
+                            )) || <h1>welp</h1>
                         ) : (
                             <h1>welp</h1>
                         )}
                     </ul>
+                    <div className="form-wrapper">
+                        <input className="text-area" type="text" placeholder="Message Ya mum" />
+                        <div className="form-send-wrapper">
+                            <span className="form-send">Send</span>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
