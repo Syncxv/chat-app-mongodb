@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { NextPage } from 'next'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useQuery } from 'react-query'
 import Input from '../../../components/Input'
 import Message from '../../../components/Message'
@@ -14,8 +14,22 @@ interface ChannelProps {
 }
 export const getMessages = async (cid: string) => (await axios.get(`${apiUrl}/channels/${cid}/messages`)).data
 
+export const sendMessage = async (id: string, content: string) => {
+    await axios.post(`${apiUrl}/messages`, {
+        channel_id: id,
+        content
+    })
+}
 const Channel: NextPage<ChannelProps> = ({ params }) => {
     const { isLoading, data } = useQuery<MessageType[]>('messages', async () => getMessages(params.cid))
+    const ref = useRef<HTMLInputElement | null>(null)
+    const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (!ref.current?.value.length) return
+        console.log(ref.current)
+        sendMessage(params.cid, ref.current.value)
+        ref.current.value = ''
+    }
     console.log('DATA IN CHANNEL PAGE', data)
     return (
         <div className="app-wrapper">
@@ -36,12 +50,14 @@ const Channel: NextPage<ChannelProps> = ({ params }) => {
                             <h1>welp</h1>
                         )}
                     </ul>
-                    <div className="form-wrapper">
-                        <input className="text-area" type="text" placeholder="Message Ya mum" />
-                        <div className="form-send-wrapper">
-                            <span className="form-send">Send</span>
-                        </div>
-                    </div>
+                    {data && (
+                        <form onSubmit={handleSendClick} className="form-wrapper">
+                            <input ref={ref} className="text-area" type="text" placeholder="Message Ya mum" />
+                            <button type="submit" className="form-send-wrapper">
+                                <span className="form-send">Send</span>
+                            </button>
+                        </form>
+                    )}
                 </div>
             </main>
         </div>
