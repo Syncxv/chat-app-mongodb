@@ -1,0 +1,16 @@
+@use '../base/colors';
+.loading-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: colors.$background;
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    .loading-text {
+        font-size: 2rem;
+        font-weight: 300;
+    }
+}

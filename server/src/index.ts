@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import routes from './routes'
+import { Server } from 'socket.io'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -16,10 +17,19 @@ const main = async () => {
     const db = mongoose.connection
     db.on('error', err => console.error(err))
     db.on('open', () => console.log('WOAH'))
-    Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
-    app.listen(PORT, () =>
+    const server = app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
     )
+    const io = new Server(server, {
+        cors: {
+            credentials: true,
+            origin: ['http://localhost:3000']
+        }
+    })
+    io.on('connection', socket => {
+        console.log('a user connected: ', socket.id)
+    })
+    Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
 }
 
 main().catch(err => console.error(err))

@@ -12,12 +12,14 @@
             display: flex;
             align-items: center;
             height: 7%;
+            margin: 1rem;
             .text-area {
                 height: 100%;
                 width: 100%;
                 border: none;
                 outline: none;
-                text-indent: 10;
+                text-indent: 0.5rem;
+                border-radius: 0.3rem;
             }
             .form-send-wrapper {
                 height: 100%;
