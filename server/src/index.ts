@@ -28,6 +28,9 @@ const main = async () => {
     })
     io.on('connection', socket => {
         console.log('a user connected: ', socket.id)
+        socket.on('hey-message', e => {
+            console.log(e)
+        })
     })
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
 }

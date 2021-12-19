@@ -1,5 +1,6 @@
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
-import React, { useEffect } from 'react'
+import router from 'next/router'
+import React, { memo, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
@@ -21,8 +22,11 @@ const getRawChannels = async () => {
         })
     )
 }
-const Sidebar: NextPage<Props> = ({ token }) => {
-    const { isLoading, data } = useQuery('heh', getRawChannels)
+const Sidebar: NextPage<Props> = memo(({ token }) => {
+    const { isLoading, data, isError } = useQuery('heh', getRawChannels)
+    if (isError) {
+        router.push('/login')
+    }
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
@@ -31,7 +35,7 @@ const Sidebar: NextPage<Props> = ({ token }) => {
             <PrivateDmList isLoading={isLoading} channels={data as RawChannel[]} />
         </div>
     )
-}
+})
 
 export default Sidebar
 

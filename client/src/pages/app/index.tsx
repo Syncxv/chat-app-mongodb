@@ -3,16 +3,20 @@ import Sidebar from '../../components/sidebar'
 import { NextPage } from 'next'
 import useConnect from '../../hooks/useConnect'
 import { LoadingWrapper } from '../../components/LoadingWrapper'
+import SocketContextProvider, { SocketContext } from '../../context/SocketContext'
+import { useContext } from 'react'
+import useSocket from '../../hooks/useSocket'
 
 interface AppProps {
     // channels: Channel[]
 }
 
 const App: NextPage<AppProps> = ({}) => {
-    const [isLoading, socket] = useConnect('http://localhost:8000')
+    console.log('HEY IN APP INDEX')
+    const [loading] = useSocket()
     return (
         <>
-            <LoadingWrapper loading={isLoading as boolean} />
+            <LoadingWrapper loading={loading} />
             <div className="app-wrapper">
                 <Sidebar />
                 <Button size={Button.Size.Large} text="hehe" onClick={async () => ''}>
