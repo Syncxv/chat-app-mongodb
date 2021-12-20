@@ -4,7 +4,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useState } from 'react'
 import axios from 'axios'
 import router from 'next/router'
-import SocketContextProvider from '../context/SocketContext'
+import SocketContextProvider from '../context/Socket/SocketContext'
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
     axios.defaults.withCredentials = true
