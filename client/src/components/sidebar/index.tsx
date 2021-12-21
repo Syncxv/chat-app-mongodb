@@ -30,7 +30,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
-                <h3>Friends</h3>
+                <h3>Channels</h3>
             </div>
             <PrivateDmList isLoading={isLoading} channels={data as RawChannel[]} />
         </div>

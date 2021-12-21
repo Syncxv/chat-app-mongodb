@@ -10,23 +10,28 @@ interface PrivateDmListsInterface {
 }
 
 const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
+    const hasChannels = channels.length
     return (
         <>
             <div className="channel-users">
-                {!isLoading ? (
-                    channels.map(chan => (
-                        <DirectMessage
-                            onClick={() => router.push(`/app/channels/${chan._id}`)}
-                            key={chan.members[0]._id}
-                            user={chan.members[0]}
-                        />
-                    ))
+                {hasChannels ? (
+                    !isLoading ? (
+                        channels.map(chan => (
+                            <DirectMessage
+                                onClick={() => router.push(`/app/channels/${chan._id}`)}
+                                key={chan.members[0]._id}
+                                user={chan.members[0]}
+                            />
+                        ))
+                    ) : (
+                        <div> LOADING </div>
+                    )
                 ) : (
-                    <div> LOADING </div>
+                    <div> no channels eh </div>
                 )}
             </div>
         </>
     )
 }
-
+// im not sorry
 export default PrivateDmList

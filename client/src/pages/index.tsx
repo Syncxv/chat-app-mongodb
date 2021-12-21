@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import { Wrapper } from './login'
 const Home: Wrapper = () => {
     return (

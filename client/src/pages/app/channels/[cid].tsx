@@ -1,15 +1,10 @@
 import axios from 'axios'
 import { NextPage } from 'next'
 import React, { useRef } from 'react'
-import { useQuery } from 'react-query'
-import { Socket } from 'socket.io-client'
-import Input from '../../../components/Input'
 import { LoadingWrapper } from '../../../components/LoadingWrapper'
-import Message from '../../../components/Message'
 import MessageList from '../../../components/MessageList'
 import Sidebar from '../../../components/sidebar'
 import { apiUrl } from '../../../constants'
-import useConnect from '../../../hooks/useConnect'
 import useSocket from '../../../hooks/useSocket'
 import { Channel, MessageType } from '../../../types'
 interface ChannelProps {
@@ -27,7 +22,7 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 const Channel: NextPage<ChannelProps> = ({ params, messages }) => {
-    const [loading, socket] = useConnect(apiUrl)
+    const [loading, socket] = useSocket()
     const ref = useRef<HTMLInputElement | null>(null)
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
