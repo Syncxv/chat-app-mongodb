@@ -5,6 +5,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import router from 'next/router'
 import SocketContextProvider from '../context/Socket/SocketContext'
+import { Wrapper } from './login'
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
     axios.defaults.withCredentials = true
@@ -19,12 +20,17 @@ function MyApp({ Component, pageProps }: AppProps) {
             return error
         }
     )
+    const isNotApp = (Component as Wrapper).isNotApp || false
     return (
         <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
-                <SocketContextProvider>
+                {isNotApp ? (
                     <Component {...pageProps} />
-                </SocketContextProvider>
+                ) : (
+                    <SocketContextProvider>
+                        <Component {...pageProps} />
+                    </SocketContextProvider>
+                )}
             </Hydrate>
         </QueryClientProvider>
     )

@@ -4,6 +4,7 @@ import { UserType } from '../../models/user'
 import { createAcessToken } from '../../utils/auth'
 import User from '../../models/user'
 import { COOKIE_NAME } from '../../constants'
+import cleanJson from '../../utils/cleanJson'
 const login = async (req: Request<any, any, UserType>, res: Response) => {
     console.log('hey')
     try {
@@ -28,8 +29,9 @@ const login = async (req: Request<any, any, UserType>, res: Response) => {
             httpOnly: true,
             secure: false
         })
+        const cleanUser = cleanJson(user.toJSON(), ['password'])
         return res.send({
-            user
+            user: cleanUser
         })
     } catch (err) {
         console.error(err)

@@ -4,7 +4,10 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import { LinkP } from '../components/Link'
 import loginSubmit from '../util/loginSubmit'
-const LoginHehe: NextPage = () => {
+export type Wrapper<P = {}> = NextPage & {
+    isNotApp: boolean
+}
+const LoginHehe: Wrapper = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
@@ -50,5 +53,5 @@ const LoginHehe: NextPage = () => {
         </>
     )
 }
-
+LoginHehe.isNotApp = true
 export default LoginHehe

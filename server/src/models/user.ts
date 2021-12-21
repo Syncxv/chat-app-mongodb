@@ -8,6 +8,7 @@ export interface UserType {
     discriminator: number
     email: string
     avatar?: string
+    friends: any
 }
 
 const User = new Schema<UserType>(
@@ -16,7 +17,13 @@ const User = new Schema<UserType>(
         email: { type: String, required: true },
         discriminator: { type: Number },
         password: { required: true, type: String, select: false },
-        avatar: { type: String, default: null }
+        avatar: { type: String, default: null },
+        friends: {
+            type: [Schema.Types.ObjectId],
+            required: true,
+            ref: 'User',
+            default: []
+        }
     },
     { timestamps: true }
 )

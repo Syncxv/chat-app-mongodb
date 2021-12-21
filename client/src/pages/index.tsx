@@ -1,10 +1,11 @@
 import type { NextPage } from 'next'
-const Home: NextPage = () => {
+import { Wrapper } from './login'
+const Home: Wrapper = () => {
     return (
         <>
             <div>jeje</div>
         </>
     )
 }
-
+Home.isNotApp = true
 export default Home
