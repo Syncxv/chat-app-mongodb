@@ -1,6 +1,9 @@
 import { Socket, io } from 'socket.io-client'
 import { apiUrl } from '../../constants'
 
-const socket: Socket = io(apiUrl)
+const socket = () => {
+    return io(apiUrl)
+}
 
-export { socket }
+const fuck = socket()
+export { fuck as socket }

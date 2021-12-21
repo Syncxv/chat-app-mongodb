@@ -10,7 +10,7 @@ interface PrivateDmListsInterface {
 }
 
 const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
-    const hasChannels = channels.length
+    const hasChannels = channels?.length || false
     return (
         <>
             <div className="channel-users">

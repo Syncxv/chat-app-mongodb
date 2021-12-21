@@ -5,6 +5,8 @@ import { useQuery } from 'react-query'
 import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
 import { Channel, RawChannel } from '../../types'
+import Divider from '../Divider'
+import Plus from '../icons/Plus'
 import PrivateDmList from './PrivateDmList'
 
 interface Props {
@@ -23,7 +25,7 @@ const getRawChannels = async () => {
     )
 }
 const Sidebar: NextPage<Props> = memo(({ token }) => {
-    const { isLoading, data, isError } = useQuery('heh', getRawChannels)
+    const { isLoading, data, isError } = useQuery<RawChannel[]>('heh', getRawChannels)
     if (isError) {
         router.push('/login')
     }
@@ -32,7 +34,15 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
             <div className="sidbar-head">
                 <h3>Channels</h3>
             </div>
-            <PrivateDmList isLoading={isLoading} channels={data as RawChannel[]} />
+            <div className="sidebar-main w-full">
+                <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
+                    <span className="text-gray-500 text-sm font-bold">Messages</span>
+                    <div onClick={() => console.log(':|')} className="icon-wrapper">
+                        <Plus size={20} />
+                    </div>
+                </div>
+                <PrivateDmList isLoading={isLoading} channels={data!} />
+            </div>
         </div>
     )
 })
