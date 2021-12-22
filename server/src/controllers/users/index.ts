@@ -20,6 +20,7 @@ const users = {
     register,
     login,
     me: {
+        // get Current User hehe
         index: async (
             req: Request<any, any, any, { jwt: { user: UserType } }>,
             res: Response
@@ -76,6 +77,56 @@ const users = {
                 res.status(200).send(realchannel)
             } catch (err) {
                 res.send({ error: { message: err.message } })
+            }
+        },
+        friends: {
+            //get friends
+            index: async (
+                req: Request<any, any, any, queryAuthType>,
+                res: Response
+            ) => {
+                try {
+                    const { user: jwt_user } = req.query.jwt
+                    const user = await User.findById(jwt_user.id).populate([
+                        { path: 'friends', model: 'User' }
+                    ])
+                    console.log(user)
+                    res.send(user || { well: ':|' })
+                } catch (err) {
+                    res.send({ error: err.message })
+                }
+            },
+            add: async (
+                req: Request<any, any, any, queryAuthType>,
+                res: Response
+            ) => {
+                try {
+                    const { user: jwt_user } = req.query.jwt
+                    const user = await User.findById(jwt_user.id).populate([
+                        { path: 'friends', model: 'User' }
+                    ])
+                    user?.friends.push(req.params.id)
+                    user.save()
+                    res.send({ user })
+                } catch (err) {
+                    res.send({ error: err.message })
+                }
+            },
+            remove: async (
+                req: Request<any, any, any, queryAuthType>,
+                res: Response
+            ) => {
+                try {
+                    const { user: jwt_user } = req.query.jwt
+                    const user = await User.findById(jwt_user.id).populate([
+                        { path: 'friends', model: 'User' }
+                    ])
+                    user.friends.pull({ _id: req.params.id })
+                    user.save()
+                    res.send({ user })
+                } catch (err) {
+                    res.send({ error: err.message })
+                }
             }
         }
     }

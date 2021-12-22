@@ -22,7 +22,8 @@ const User = new Schema<UserType>(
             type: [Schema.Types.ObjectId],
             required: true,
             ref: 'User',
-            default: []
+            default: [],
+            select: false
         }
     },
     { timestamps: true }
