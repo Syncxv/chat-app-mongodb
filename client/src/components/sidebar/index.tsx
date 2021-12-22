@@ -1,7 +1,9 @@
+import axios from 'axios'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import router from 'next/router'
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { useQuery } from 'react-query'
+import { apiUrl } from '../../constants'
 import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
 import { Channel, RawChannel } from '../../types'
@@ -26,13 +28,21 @@ const getRawChannels = async () => {
         })
     )
 }
+const addChannel = async (id: string) => {
+    const { data } = await axios.post(`${apiUrl}/@me/channels`, {
+        members: [id]
+    })
+    return data
+}
 const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
+    const ref = useRef<HTMLInputElement | null>(null)
     return (
         <Modal onClick={onClick}>
             <Modal.Content>
                 <div className="flex flex-col gap-2">
                     <label htmlFor="idkman">User ID</label>
                     <input
+                        ref={ref}
                         id="idkman"
                         type="text"
                         placeholder="User Id"
@@ -41,7 +51,15 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
                 </div>
             </Modal.Content>
             <Modal.Footer>
-                <button>FOOTER NIGGA</button>
+                <button
+                    onClick={() => {
+                        console.log(ref.current!.value)
+                        addChannel(ref.current!.value)
+                    }}
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                >
+                    Add
+                </button>
             </Modal.Footer>
         </Modal>
     )

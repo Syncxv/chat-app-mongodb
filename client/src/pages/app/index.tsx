@@ -2,6 +2,7 @@ import Button from '../../components/Button'
 import Sidebar from '../../components/sidebar'
 import { NextPage } from 'next'
 import useSocket from '../../hooks/useSocket'
+import getCurrentUserFetch from '../../hooks/getCurrentUserFetch'
 
 interface AppProps {
     // channels: Channel[]
@@ -14,7 +15,11 @@ const App: NextPage<AppProps> = ({}) => {
         <>
             <div className="app-wrapper">
                 <Sidebar />
-                <Button size={Button.Size.Large} text="hehe" onClick={async () => ''}>
+                <Button
+                    size={Button.Size.Large}
+                    text="hehe"
+                    onClick={async () => console.log(await getCurrentUserFetch())}
+                >
                     Hehe
                 </Button>
             </div>
