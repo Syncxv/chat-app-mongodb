@@ -5,8 +5,10 @@ import { useQuery } from 'react-query'
 import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
 import { Channel, RawChannel } from '../../types'
+import { open } from '../../util/openModal'
 import Divider from '../Divider'
 import Plus from '../icons/Plus'
+import Modal from '../Modal'
 import PrivateDmList from './PrivateDmList'
 
 interface Props {
@@ -24,6 +26,16 @@ const getRawChannels = async () => {
         })
     )
 }
+const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
+    console.log(onClick)
+    return (
+        <Modal onClick={onClick}>
+            <Modal.Content>
+                <h1>hey</h1>
+            </Modal.Content>
+        </Modal>
+    )
+}
 const Sidebar: NextPage<Props> = memo(({ token }) => {
     const { isLoading, data, isError } = useQuery<RawChannel[]>('heh', getRawChannels)
     if (isError) {
@@ -37,7 +49,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
             <div className="sidebar-main w-full">
                 <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
                     <span className="text-gray-500 text-sm font-bold">Messages</span>
-                    <div onClick={() => console.log(':|')} className="icon-wrapper">
+                    <div onClick={() => open(addChannelModal)} className="icon-wrapper">
                         <Plus size={20} />
                     </div>
                 </div>

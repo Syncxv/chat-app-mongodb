@@ -31,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Component {...pageProps} />
                     </SocketContextProvider>
                 )}
+                <div className="modal-stuff-yk"></div>
             </Hydrate>
         </QueryClientProvider>
     )
