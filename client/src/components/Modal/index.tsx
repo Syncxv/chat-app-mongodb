@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import { MouseEvent, useState } from 'react'
-import { X } from '../icons/X'
+import modalSizes from '../../styles/components/modal/sizes.module.scss'
 import { Backdrop } from './Backdrop'
 interface ModalProps {
     onClick: Function
@@ -19,7 +19,7 @@ const Modal: modalWrapper<ModalProps> = ({ onClick, children }) => {
                         /* https://stackoverflow.com/a/10554459 */
                         e.stopPropagation()
                     }
-                    className="modal-outer"
+                    className={`modal-outer ${modalSizes.sizeSmall}`}
                 >
                     {children}
                 </div>
@@ -30,21 +30,21 @@ const Modal: modalWrapper<ModalProps> = ({ onClick, children }) => {
 const Content: NextPage = ({ children }) => {
     return (
         <>
-            <div>{children}</div>
+            <div className="modal-content">{children}</div>
         </>
     )
 }
 const Header: NextPage = ({ children }) => {
     return (
         <>
-            <div>{children}</div>
+            <div className="modal-header">{children}</div>
         </>
     )
 }
 const Footer: NextPage = ({ children }) => {
     return (
         <>
-            <div>{children}</div>
+            <div className="modal-footer">{children}</div>
         </>
     )
 }
