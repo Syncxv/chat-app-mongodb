@@ -1,0 +1,56 @@
+@use '../../base/colors';
+$padding: 16px;
+.backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.335);
+    .modal-outer {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: space-around;
+        padding: 60px 0;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+        .modal {
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.3rem;
+            background-color: colors.$background;
+            pointer-events: all;
+            .modal-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 1 1 auto;
+                flex-grow: 1;
+                flex-shrink: 1;
+                flex-basis: auto;
+                padding: 0 $padding;
+            }
+            .modal-footer {
+                display: flex;
+                flex-direction: row-reverse;
+                flex: 0 0 auto;
+                flex-grow: 0;
+                flex-shrink: 0;
+                flex-basis: auto;
+                padding: $padding;
+                z-index: 1;
+                overflow-x: hidden;
+                background-color: colors.$lightend-bg;
+            }
+        }
+    }
+}

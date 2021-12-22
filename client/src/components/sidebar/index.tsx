@@ -27,12 +27,22 @@ const getRawChannels = async () => {
     )
 }
 const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
-    console.log(onClick)
     return (
         <Modal onClick={onClick}>
             <Modal.Content>
-                <h1>hey</h1>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="idkman">User ID</label>
+                    <input
+                        id="idkman"
+                        type="text"
+                        placeholder="User Id"
+                        className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-slate-700 rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
+                    />
+                </div>
             </Modal.Content>
+            <Modal.Footer>
+                <button>FOOTER NIGGA</button>
+            </Modal.Footer>
         </Modal>
     )
 }
