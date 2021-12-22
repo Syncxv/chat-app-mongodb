@@ -14,7 +14,6 @@ const channels = {
             const messages = await Message.find({
                 channel_id: channel.id
             }).populate([{ path: 'author', model: 'User' }])
-            console.log(messages)
             return res.send(messages)
         }
     }

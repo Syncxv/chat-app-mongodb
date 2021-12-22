@@ -9,7 +9,6 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
     }
     try {
         const token = req.cookies[COOKIE_NAME]
-        console.log(token)
         const payload = verify(token, process.env.ACCESS_TOKEN_SECRET!)
         req.query.jwt = payload
     } catch (err) {

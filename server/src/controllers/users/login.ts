@@ -26,7 +26,7 @@ const login = async (req: Request<any, any, UserType>, res: Response) => {
         const token = createAcessToken(user, user.id)
         res.cookie(COOKIE_NAME, token, {
             maxAge: 900000,
-            httpOnly: true,
+            httpOnly: false,
             secure: false
         })
         const cleanUser = cleanJson(user.toJSON(), ['password'])

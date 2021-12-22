@@ -69,7 +69,7 @@ const users = {
                 const channels = await DmChannels.find({
                     members: { $in: [jwt_user.id] }
                 })
-                console.log(channels)
+
                 const realchannel = channels.map(chan => {
                     chan.members = chan.members.filter(id => id !== jwt_user.id)
                     return chan
@@ -90,7 +90,6 @@ const users = {
                     const user = await User.findById(jwt_user.id).populate([
                         { path: 'friends', model: 'User' }
                     ])
-                    console.log(user)
                     res.send(user || { well: ':|' })
                 } catch (err) {
                     res.send({ error: err.message })

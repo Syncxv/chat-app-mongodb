@@ -5,9 +5,12 @@ import { Server } from 'socket.io'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import jwt from 'jsonwebtoken'
 import { corsOptions } from './constants'
+import { socketAuth } from './socket/middleware/scoketAuth'
 dotenv.config()
 const PORT = 8000
+let connectedUser = new Map()
 const main = async () => {
     const app = express()
     app.use(cors(corsOptions))
@@ -26,8 +29,9 @@ const main = async () => {
             origin: ['http://localhost:3000']
         }
     })
-    io.on('connection', socket => {
-        console.log('a user connected: ', socket.id)
+    io.use(socketAuth)
+    io.on('connect', socket => {
+        console.log('a user connected: ', socket.data.jwt)
         socket.on('hey-message', e => {
             console.log(e)
         })
