@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
 import { FreindTypes, queryAuthType } from '../../types'
+import getChannels from '../../utils/getChannels'
 import login from './login'
 import register from './register'
 const users = {
@@ -54,15 +55,8 @@ const users = {
         getChannels: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
             const { user: jwt_user } = req.query.jwt
             try {
-                const channels = await DmChannels.find({
-                    members: { $in: [jwt_user.id] }
-                })
-
-                const realchannel = channels.map(chan => {
-                    chan.members = chan.members.filter(id => id !== jwt_user.id)
-                    return chan
-                })
-                res.status(200).send(realchannel)
+                const channel = await getChannels(jwt_user.id, false)
+                res.status(200).send(channel)
             } catch (err) {
                 res.send({ error: { message: err.message } })
             }
