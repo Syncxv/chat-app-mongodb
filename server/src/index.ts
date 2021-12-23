@@ -8,9 +8,16 @@ import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import { corsOptions } from './constants'
 import { socketAuth } from './socket/middleware/scoketAuth'
+import User, { UserType } from './models/user'
 dotenv.config()
 const PORT = 8000
-let connectedUser = new Map()
+let connectedUser = new Map<
+    string,
+    mongoose.Document<any, any, UserType> &
+        UserType & {
+            _id: mongoose.Types.ObjectId
+        }
+>()
 const main = async () => {
     const app = express()
     app.use(cors(corsOptions))
@@ -30,13 +37,31 @@ const main = async () => {
         }
     })
     io.use(socketAuth)
-    io.on('connect', socket => {
+    io.on('connect', async socket => {
         console.log('a user connected: ', socket.data.jwt)
+        const user = await User.findById(socket.data.jwt.user.id)
+        connectedUser.set(socket.data.jwt.user.id as string, user!)
+        const { id }: { id: string } = socket.data.jwt.user
         socket.on('hey-message', e => {
             console.log(e)
         })
+        socket.on('getCurrentUser', () => {
+            console.log('I GOT IT NIGGA')
+            socket.emit(
+                'getCurrentUser',
+                connectedUser.get(socket.data.jwt.user.id)!.toJSON()
+            )
+        })
+        socket.on('inital-data', async () => {
+            const user = await User.findById(id).populate([
+                { path: 'friends', model: 'User' }
+            ])
+            socket.emit('inital-data', { data: user.friends })
+        })
     })
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
+    //@ts-ignore
+    global.users = connectedUser
 }
 
 main().catch(err => console.error(err))

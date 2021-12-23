@@ -1,12 +1,15 @@
 import axios from 'axios'
 import { NextPage } from 'next'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { LoadingWrapper } from '../../../components/LoadingWrapper'
 import MessageList from '../../../components/MessageList'
 import Sidebar from '../../../components/sidebar'
 import { apiUrl } from '../../../constants'
 import useSocket from '../../../hooks/useSocket'
 import { Channel, MessageType } from '../../../types'
+import userStore from '../../../stores/user'
+import Flux from 'flux/utils'
+import { Dispatcher } from 'flux'
 interface ChannelProps {
     params: {
         cid: string
@@ -24,6 +27,10 @@ export const sendMessage = async (id: string, content: string) => {
 const Channel: NextPage<ChannelProps> = ({ params, messages }) => {
     const [loading, socket] = useSocket()
     const ref = useRef<HTMLInputElement | null>(null)
+    // const store = new userStore(socket)
+    useEffect(() => {
+        console.log(userStore)
+    }, [])
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!ref.current?.value.length) return

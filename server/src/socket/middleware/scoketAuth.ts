@@ -6,7 +6,6 @@ export const socketAuth = (
     next: (err?: ExtendedError | undefined) => void
 ) => {
     if (socket.handshake.query && socket.handshake.query.token) {
-        console.log(socket.handshake.query.token)
         try {
             const payload = jwt.verify(
                 socket.handshake.query.token as string,
@@ -18,7 +17,6 @@ export const socketAuth = (
             return next(new Error('auth failed eh'))
         }
     } else {
-        console.log('welp')
         return next(new Error('bruh no auth eh'))
     }
 }
