@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose'
 // 1. Create an interface representing a document in MongoDB.
 export interface UserType {
     id: string
+    _id: any
     username: string
     password: string
     discriminator: number
