@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
-import { queryAuthType } from '../../types'
+import { FreindTypes, queryAuthType } from '../../types'
 import login from './login'
 import register from './register'
 const users = {
@@ -21,18 +21,12 @@ const users = {
     login,
     me: {
         // get Current User hehe
-        index: async (
-            req: Request<any, any, any, { jwt: { user: UserType } }>,
-            res: Response
-        ) => {
+        index: async (req: Request<any, any, any, { jwt: { user: UserType } }>, res: Response) => {
             console.log('BRO WHY')
             try {
                 const { user: jwt_user } = req.query.jwt
                 console.log(jwt_user)
-                if (!jwt_user)
-                    return res
-                        .status(500)
-                        .send({ error: 'idk mawn jwt user isnt there' })
+                if (!jwt_user) return res.status(500).send({ error: 'idk mawn jwt user isnt there' })
                 const user = await User.findById(jwt_user.id)
                 return res.send({ user })
             } catch (err) {
@@ -47,10 +41,7 @@ const users = {
             try {
                 const { members } = req.body
                 const { user: jwt_user } = req.query.jwt
-                if (members.length > 2)
-                    throw new Error(
-                        'can only create channel with 2 people okay'
-                    )
+                if (members.length > 2) throw new Error('can only create channel with 2 people okay')
                 const channel = await DmChannels.create({
                     members: [jwt_user.id, ...members]
                 })
@@ -60,10 +51,7 @@ const users = {
                 res.send({ error: { message: err.message } })
             }
         },
-        getChannels: async (
-            req: Request<any, any, any, queryAuthType>,
-            res: Response
-        ) => {
+        getChannels: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
             const { user: jwt_user } = req.query.jwt
             try {
                 const channels = await DmChannels.find({
@@ -80,47 +68,49 @@ const users = {
             }
         },
         friends: {
-            //get friends
-            index: async (
-                req: Request<any, any, any, queryAuthType>,
-                res: Response
-            ) => {
+            //get all friends
+            index: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt
                     const user = await User.findById(jwt_user.id).populate([
-                        { path: 'friends', model: 'User' }
+                        { path: 'friends', model: 'Friend' }
                     ])
                     res.send(user || { well: ':|' })
                 } catch (err) {
                     res.send({ error: err.message })
                 }
             },
-            add: async (
-                req: Request<any, any, any, queryAuthType>,
-                res: Response
-            ) => {
+            getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {},
+            add: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt
                     const user = await User.findById(jwt_user.id).populate([
-                        { path: 'friends', model: 'User' }
+                        { path: 'friends', model: 'Friend' }
                     ])
-                    user?.friends.push(req.params.id)
+                    console.log(user)
+                    const requestedUser = await User.findById(req.params.id).populate([
+                        { path: 'friends', model: 'Friend' }
+                    ])
+                    if (!requestedUser) return res.send({ error: 'who tf is that' })
+                    user?.friends.push({ user: req.params.id, type: FreindTypes.PENDING_OUTGOING })
+                    requestedUser.friends.push({ user: req.params.id, type: FreindTypes.PENDING_INCOMMING })
                     user.save()
-                    res.send({ user })
+                    requestedUser.save()
+                    console.log(user, requestedUser)
+                    return res.send({ user })
                 } catch (err) {
-                    res.send({ error: err.message })
+                    console.log(err)
+                    return res.send({ error: err.message })
                 }
             },
-            remove: async (
-                req: Request<any, any, any, queryAuthType>,
-                res: Response
-            ) => {
+            //its not done :| ill do it later fuck sake
+            remove: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt
                     const user = await User.findById(jwt_user.id).populate([
-                        { path: 'friends', model: 'User' }
+                        { path: 'friends', model: 'Friend' }
                     ])
-                    user.friends.pull({ _id: req.params.id })
+                    user.friends.pull({ user: { _id: req.params.id } })
                     user.save()
                     res.send({ user })
                 } catch (err) {

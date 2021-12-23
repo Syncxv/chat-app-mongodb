@@ -5,7 +5,6 @@ import { Server } from 'socket.io'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import jwt from 'jsonwebtoken'
 import { corsOptions } from './constants'
 import { socketAuth } from './socket/middleware/scoketAuth'
 import User, { UserType } from './models/user'
@@ -26,7 +25,9 @@ const main = async () => {
     mongoose.connect('mongodb://localhost/chatapp')
     const db = mongoose.connection
     db.on('error', err => console.error(err))
-    db.on('open', () => console.log('WOAH'))
+    db.on('open', async () => {
+        console.log('WOAH')
+    })
     const server = app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
     )
@@ -47,15 +48,10 @@ const main = async () => {
         })
         socket.on('getCurrentUser', () => {
             console.log('I GOT IT NIGGA')
-            socket.emit(
-                'getCurrentUser',
-                connectedUser.get(socket.data.jwt.user.id)!.toJSON()
-            )
+            socket.emit('getCurrentUser', connectedUser.get(socket.data.jwt.user.id)!.toJSON())
         })
         socket.on('inital-data', async () => {
-            const user = await User.findById(id).populate([
-                { path: 'friends', model: 'User' }
-            ])
+            const user = await User.findById(id).populate([{ path: 'friends', model: 'User' }])
             socket.emit('inital-data', { data: user.friends })
         })
     })

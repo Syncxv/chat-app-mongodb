@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose'
-
 // 1. Create an interface representing a document in MongoDB.
 export interface UserType {
     id: string
@@ -11,6 +10,25 @@ export interface UserType {
     friends: any
 }
 
+export interface FriendType {
+    user: UserType
+    type: number
+}
+const Friend = new Schema<FriendType>(
+    {
+        user: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
+        type: {
+            type: Number
+        }
+    },
+    { timestamps: true }
+)
+const FriendModel = model('Friend', Friend)
+export { FriendModel }
+
 const User = new Schema<UserType>(
     {
         username: { type: String, required: true },
@@ -18,13 +36,7 @@ const User = new Schema<UserType>(
         discriminator: { type: Number },
         password: { required: true, type: String, select: false },
         avatar: { type: String, default: null },
-        friends: {
-            type: [Schema.Types.ObjectId],
-            required: true,
-            ref: 'User',
-            default: [],
-            select: false
-        }
+        friends: [Friend]
     },
     { timestamps: true }
 )
