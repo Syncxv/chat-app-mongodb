@@ -75,8 +75,10 @@ const users = {
                     const user = await User.findById(jwt_user.id).populate([
                         { path: 'friends', model: 'Friend' }
                     ])
+                    console.log('IN FRIENDS.INDEX: ', user)
                     res.send(user || { well: ':|' })
                 } catch (err) {
+                    console.error(err)
                     res.send({ error: err.message })
                 }
             },

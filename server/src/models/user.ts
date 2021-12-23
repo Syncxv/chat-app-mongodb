@@ -24,7 +24,7 @@ const Friend = new Schema<FriendType>(
             type: Number
         }
     },
-    { timestamps: true }
+    { timestamps: false, _id: false }
 )
 const FriendModel = model('Friend', Friend)
 export { FriendModel }
@@ -36,7 +36,7 @@ const User = new Schema<UserType>(
         discriminator: { type: Number },
         password: { required: true, type: String, select: false },
         avatar: { type: String, default: null },
-        friends: [Friend]
+        friends: { type: [Friend], select: false }
     },
     { timestamps: true }
 )
