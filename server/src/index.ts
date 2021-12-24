@@ -8,7 +8,9 @@ import cookieParser from 'cookie-parser'
 import { corsOptions } from './constants'
 import { socketAuth } from './socket/middleware/scoketAuth'
 import User, { UserType } from './models/user'
-import onInitalData from './socket/users/initalData'
+import DmChannel from './models/channels'
+import onUserInitalData, { USER_INITAL_DATA_EVENT_NAME } from './socket/users/initalData'
+import onChannelInitalData, { CHANNEL_INITAL_DATA_EVENT_NAME } from './socket/channels/initalData'
 dotenv.config()
 const PORT = 8000
 let connectedUser = new Map<
@@ -28,7 +30,8 @@ const main = async () => {
     db.on('error', err => console.error(err))
     db.on('open', async () => {
         console.log('WOAH')
-        // globalThis.User = User
+        globalThis.User = User
+        globalThis.DmChannel = DmChannel
     })
     const server = app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
@@ -51,8 +54,11 @@ const main = async () => {
             console.log('I GOT IT NIGGA')
             socket.emit('getCurrentUser', connectedUser.get(socket.data.jwt.user.id)!.toJSON())
         })
-        socket.on('inital-data', async () => {
-            onInitalData(socket, 'inital-data')
+        socket.on(USER_INITAL_DATA_EVENT_NAME, async () => {
+            onUserInitalData(socket)
+        })
+        socket.on(CHANNEL_INITAL_DATA_EVENT_NAME, async () => {
+            onChannelInitalData(socket)
         })
     })
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))

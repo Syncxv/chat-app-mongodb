@@ -6,14 +6,16 @@ const users: { [key: string]: UserType } = {}
 class userStoreClass extends Store<any> {
     socket: Socket | null
     ME: string | null
+    eventName: string
     constructor(Dispatcher: any) {
         super(Dispatcher)
         this.socket = null
         this.ME = null
+        this.eventName = 'user-inital-data'
     }
     init(socket: Socket) {
         this.socket = socket
-        this.socket.on('inital-data', e => {
+        this.socket.on(this.eventName, e => {
             console.log(e)
             this.ME = e.currentUser._id
             e.users.forEach((user: UserType) => {
@@ -21,7 +23,7 @@ class userStoreClass extends Store<any> {
             })
             users[this.ME!] = e.currentUser
         })
-        this.socket.emit('inital-data')
+        this.socket.emit(this.eventName)
     }
     getCurrentUser() {
         return users[this.ME!]
@@ -32,6 +34,10 @@ class userStoreClass extends Store<any> {
     getUsers() {
         return users
     }
+    __onDispatch(s: any) {
+        console.log(s)
+    }
 }
 const userStore = new userStoreClass(dispatcher)
+dispatcher.register(userStore.__onDispatch.bind(userStore))
 export default userStore
