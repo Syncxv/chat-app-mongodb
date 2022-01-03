@@ -8,8 +8,9 @@ import { apiUrl } from '../../../constants'
 import useSocket from '../../../hooks/useSocket'
 import { Channel, MessageType } from '../../../types'
 import userStore from '../../../stores/user'
-import Flux from 'flux/utils'
-import { Dispatcher } from 'flux'
+import channelStore from '../../../stores/channel'
+import loadingStore from '../../../stores/loadingStore'
+import AppWrapper from '../../../components/Main'
 interface ChannelProps {
     params: {
         cid: string
@@ -27,27 +28,31 @@ export const sendMessage = async (id: string, content: string) => {
 const Channel: NextPage<ChannelProps> = ({ params, messages }) => {
     const [loading, socket] = useSocket()
     const ref = useRef<HTMLInputElement | null>(null)
-    // const store = new userStore(socket)
+    const channel = channelStore.getChannel(params.cid)
     useEffect(() => {
-        console.log(userStore)
+        console.log('IN [CID]', loadingStore)
+        console.log(channel, console.log)
+        console.log('IN [CID]', userStore)
+        console.log('IN [CID]', channelStore)
     }, [])
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!ref.current?.value.length) return
         // sendMessage(params.cid, ref.current.value)
-        socket.emit('hey-message', { message: { author: {}, content: ref.current.value } })
+        socket.emit('hey-message', {
+            message: { author: userStore.getCurrentUser(), content: ref.current.value }
+        })
         ref.current.value = ''
     }
     console.log('DATA IN CHANNEL PAGE', messages)
     return (
         <>
-            <LoadingWrapper loading={loading} />
-            <div className="app-wrapper">
+            <AppWrapper>
                 <Sidebar />
                 <main className="main-seciton">
                     <div className="scrollable">
                         <header>
-                            <h1>hehe</h1>
+                            <h1>{channel?.members[0].username}</h1>
                         </header>
                         <MessageList data={messages} isLoading={false} />
                         {messages && (
@@ -65,7 +70,7 @@ const Channel: NextPage<ChannelProps> = ({ params, messages }) => {
                         )}
                     </div>
                 </main>
-            </div>
+            </AppWrapper>
         </>
     )
 }

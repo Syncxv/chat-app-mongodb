@@ -9,7 +9,13 @@
     width: 14rem;
     height: 100vh;
     background-color: lighten(colors.$background, 10%);
+    // .sidebar-main {
+    //     .sidebar-sub {
+    //         &:hover {
 
+    //         }
+    //     }
+    // }
     .channel-users {
         width: 100%;
         .sidebar-button {

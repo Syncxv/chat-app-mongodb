@@ -5,6 +5,13 @@ import Cookie from 'js-cookie'
 import { LoadingWrapper } from '../../components/LoadingWrapper'
 import { apiUrl } from '../../constants'
 import userStore from '../../stores/user'
+import channelStore from '../../stores/channel'
+
+interface loading {
+    channelStoreLoading: boolean
+    userStoreLoading: boolean
+    socketLoading: boolean
+}
 type initState = [boolean, null | Socket]
 const initalState: initState = [true, null]
 
@@ -13,8 +20,13 @@ export const SocketContext = createContext(initalState)
 interface Props {}
 
 const SocketContextProvider: NextPage<Props> = ({ children }) => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState<loading>({
+        channelStoreLoading: true,
+        userStoreLoading: false,
+        socketLoading: true
+    })
     const [socket, setSocket] = useState<Socket | null>(null)
+    const isLoading = () => loading.channelStoreLoading && loading.userStoreLoading && loading.socketLoading
     useEffect(() => {
         const socket = io(apiUrl, {
             query: {
@@ -22,14 +34,20 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
             }
         })
         userStore.init(socket)
+        channelStore.init(socket)
+        console.log(channelStore)
+        //@ts-ignore
+        channelStore.__emitter.once('initialized', () =>
+            setLoading(prev => ({ ...prev, channelStoreLoading: false }))
+        )
         setSocket(socket)
-        socket.on('connect', () => setLoading(false))
-        socket.on('disconnect', () => setLoading(true))
+        socket.on('connect', () => setLoading(prev => ({ ...prev, socketLoading: false })))
+        socket.on('disconnect', () => setLoading(prev => ({ ...prev, socketLoading: true })))
     }, [])
     return (
         <>
-            <LoadingWrapper loading={loading} />
-            <SocketContext.Provider value={[loading, socket]}>{children}</SocketContext.Provider>
+            <LoadingWrapper loading={isLoading()} />
+            <SocketContext.Provider value={[isLoading(), socket]}>{children}</SocketContext.Provider>
         </>
     )
 }
