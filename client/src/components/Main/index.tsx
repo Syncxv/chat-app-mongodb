@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { NextPage } from 'next'
 import React, { useEffect, useRef } from 'react'
-import { apiUrl } from '../../constants'
+import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import useSocket from '../../hooks/useSocket'
 import channelStore from '../../stores/channel'
 import loadingStore from '../../stores/loadingStore'
@@ -30,6 +30,7 @@ export const sendMessage = async (id: string, content: string) => {
 const Main: NextPage<ChannelProps> = ({ params, messages }) => {
     const [loading, socket] = useSocket()
     const ref = useRef<HTMLInputElement | null>(null)
+    console.log(params, messages)
     if (!params) {
         return <FriendSection />
     }
@@ -44,12 +45,12 @@ const Main: NextPage<ChannelProps> = ({ params, messages }) => {
         e.preventDefault()
         if (!ref.current?.value.length) return
         // sendMessage(params.cid, ref.current.value)
-        socket.emit('hey-message', {
+        socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
             message: { author: userStore.getCurrentUser(), content: ref.current.value }
         })
         ref.current.value = ''
     }
-    console.log('DATA IN CHANNEL PAGE', messages)
+    console.log('DATA IN CHANNEL PAGE', messages, channel)
     return (
         <>
             <AppWrapper>
