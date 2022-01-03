@@ -11,6 +11,7 @@ import MessageList from '../MessageList'
 import Sidebar from '../sidebar'
 import AppWrapper from '../Wrapper'
 import FriendSection from './FriendSection'
+import UnknownChannel from './UnkownChannel'
 
 interface ChannelProps {
     params?: {
@@ -30,23 +31,27 @@ export const sendMessage = async (id: string, content: string) => {
 const Main: NextPage<ChannelProps> = ({ params, messages }) => {
     const [loading, socket] = useSocket()
     const ref = useRef<HTMLInputElement | null>(null)
+    useEffect(() => {
+        console.log('IN [CID]', loadingStore)
+        console.log('IN [CID]', userStore)
+        console.log('IN [CID]', channelStore)
+    }, [])
     console.log(params, messages)
     if (!params) {
         return <FriendSection />
     }
     const channel = channelStore.getChannel(params!.cid)
-    useEffect(() => {
-        console.log('IN [CID]', loadingStore)
-        console.log(channel, console.log)
-        console.log('IN [CID]', userStore)
-        console.log('IN [CID]', channelStore)
-    }, [])
+    if (!channel) return <UnknownChannel />
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!ref.current?.value.length) return
         // sendMessage(params.cid, ref.current.value)
         socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
-            message: { author: userStore.getCurrentUser(), content: ref.current.value }
+            message: {
+                author: userStore.getCurrentUser(),
+                content: ref.current.value,
+                channel_id: params.cid
+            }
         })
         ref.current.value = ''
     }

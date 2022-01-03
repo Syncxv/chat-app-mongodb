@@ -5,15 +5,15 @@ import AppWrapper from '../Wrapper'
 
 interface Props {}
 
-const FriendSection: NextPage<Props> = props => {
+const UnknownChannel: NextPage<Props> = props => {
     return (
         <>
             <AppWrapper>
                 <Sidebar />
-                <div>FRIENDS NIGGA</div>
+                <div>What channel is this eh never head of it</div>
             </AppWrapper>
         </>
     )
 }
 
-export default FriendSection
+export default UnknownChannel
