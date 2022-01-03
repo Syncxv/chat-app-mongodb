@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import router from 'next/router'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useRef } from 'react'
 import { useQuery } from 'react-query'
 import { apiUrl } from '../../constants'
-import { getUser } from '../../hooks/getUser'
 import getChannels from '../../hooks/useGetChannels'
+import useSocket from '../../hooks/useSocket'
+import channelStore from '../../stores/channel'
 import { Channel, RawChannel } from '../../types'
 import { open } from '../../util/openModal'
-import Divider from '../Divider'
 import Plus from '../icons/Plus'
 import Modal from '../Modal'
 import PrivateDmList from './PrivateDmList'
@@ -16,17 +16,6 @@ import PrivateDmList from './PrivateDmList'
 interface Props {
     channels?: Channel[]
     token?: string
-}
-const getRawChannels = async () => {
-    const channels = await getChannels()
-    return Promise.all(
-        channels.map(async (chann: Channel) => {
-            console.log(chann.members[0])
-            const members = await Promise.all(chann.members.map(async id => await getUser(id)))
-            chann.members = members
-            return chann
-        })
-    )
 }
 const addChannel = async (id: string) => {
     const { data } = await axios.post(`${apiUrl}/@me/channels`, {
@@ -65,10 +54,10 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
     )
 }
 const Sidebar: NextPage<Props> = memo(({ token }) => {
-    const { isLoading, data, isError } = useQuery<RawChannel[]>('heh', getRawChannels)
-    if (isError) {
-        router.push('/login')
-    }
+    const [loading, socket] = useSocket()
+    if (loading) return <h1>Loading Nigga</h1>
+    const channels = Object.values(channelStore.getChannels())
+    console.log('CHANNELS IN SIDEBAR: ', channels)
     return (
         <div className="sidebar-outer">
             <div className="sidbar-head">
@@ -81,7 +70,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                         <Plus size={20} />
                     </div>
                 </div>
-                <PrivateDmList isLoading={isLoading} channels={data!} />
+                <PrivateDmList isLoading={false} channels={channels!} />
             </div>
         </div>
     )

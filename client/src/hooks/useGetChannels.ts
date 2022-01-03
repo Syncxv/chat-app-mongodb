@@ -1,8 +1,8 @@
-import axios from 'axios'
-import { apiUrl } from '../constants'
+import channelStore from '../stores/channel'
+import { RawChannel } from '../types'
+import sleep from '../util/sleep'
 
-const getChannels = async () => {
-    const channels = await axios.get(`${apiUrl}/@me/channels`)
-    return channels.data
+const getChannels = (): RawChannel[] => {
+    return Object.values(channelStore.getChannels())
 }
 export default getChannels
