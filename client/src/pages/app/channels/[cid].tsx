@@ -10,7 +10,7 @@ import { Channel, MessageType } from '../../../types'
 import userStore from '../../../stores/user'
 import channelStore from '../../../stores/channel'
 import loadingStore from '../../../stores/loadingStore'
-import AppWrapper from '../../../components/Main'
+import AppWrapper from '../../../components/Wrapper'
 interface ChannelProps {
     params: {
         cid: string

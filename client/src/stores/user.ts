@@ -2,20 +2,19 @@ import { Socket } from 'socket.io-client'
 import { UserType } from '../types'
 import { Store } from 'flux/utils'
 import dispatcher from './dispatcher'
+import { SOCKET_ACTIONS } from '../constants'
 const users: { [key: string]: UserType } = {}
 class userStoreClass extends Store<any> {
     socket: Socket | null
     ME: string | null
-    eventName: string
     constructor(Dispatcher: any) {
         super(Dispatcher)
         this.socket = null
         this.ME = null
-        this.eventName = 'user-inital-data'
     }
     init(socket: Socket) {
         this.socket = socket
-        this.socket.on(this.eventName, e => {
+        this.socket.on(SOCKET_ACTIONS.USER_INIT, e => {
             console.log(e)
             this.ME = e.currentUser._id
             e.users.forEach((user: UserType) => {
@@ -23,7 +22,7 @@ class userStoreClass extends Store<any> {
             })
             users[this.ME!] = e.currentUser
         })
-        this.socket.emit(this.eventName)
+        this.socket.emit(SOCKET_ACTIONS.USER_INIT)
     }
     getCurrentUser() {
         return users[this.ME!]

@@ -1,5 +1,5 @@
 import React from 'react'
-import AppWrapper from '../../../components/Main'
+import AppWrapper from '../../../components/Wrapper'
 import Sidebar from '../../../components/sidebar'
 
 const index = () => {

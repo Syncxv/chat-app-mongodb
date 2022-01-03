@@ -30,8 +30,8 @@ const main = async () => {
     db.on('error', err => console.error(err))
     db.on('open', async () => {
         console.log('WOAH')
-        globalThis.User = User
-        globalThis.DmChannel = DmChannel
+        ;(globalThis as any).User = User
+        ;(globalThis as any).DmChannel = DmChannel
     })
     const server = app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
@@ -43,11 +43,11 @@ const main = async () => {
         }
     })
     io.use(socketAuth)
-    io.on('connect', async socket => {
+    io.on('connection', async socket => {
         console.log('a user connected: ', socket.data.jwt)
         const user = await User.findById(socket.data.jwt.user.id)
         connectedUser.set(socket.data.jwt.user.id as string, user!)
-        socket.on('hey-message', e => {
+        socket.on('create-message', e => {
             console.log(e)
         })
         socket.on('getCurrentUser', () => {

@@ -1,10 +1,8 @@
 import { Socket } from 'socket.io'
 import { ExtendedError } from 'socket.io/dist/namespace'
 import jwt from 'jsonwebtoken'
-export const socketAuth = (
-    socket: Socket,
-    next: (err?: ExtendedError | undefined) => void
-) => {
+export const socketAuth = (socket: Socket, next: (err?: ExtendedError | undefined) => void) => {
+    console.log('hey from socket auth middleware')
     if (socket.handshake.query && socket.handshake.query.token) {
         try {
             const payload = jwt.verify(
