@@ -1,14 +1,8 @@
 import React from 'react'
-import AppWrapper from '../../../components/Main'
-import Sidebar from '../../../components/sidebar'
+import Main from '../../../components/Main'
 
 const index = () => {
-    return (
-        <AppWrapper>
-            <Sidebar />
-            <main className="main-seciton">SELECT CHNNALE NOGGA</main>
-        </AppWrapper>
-    )
+    return <Main />
 }
 
 export default index

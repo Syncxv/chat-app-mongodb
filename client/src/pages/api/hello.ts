@@ -8,6 +8,5 @@ type Data = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-    const channels = await getChannels()
-    res.status(200).send(channels)
+    res.status(200).send({ name: 'bruh' })
 }

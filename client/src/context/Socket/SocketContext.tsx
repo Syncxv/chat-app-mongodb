@@ -26,7 +26,9 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         socketLoading: true
     })
     const [socket, setSocket] = useState<Socket | null>(null)
-    const isLoading = () => loading.channelStoreLoading && loading.userStoreLoading && loading.socketLoading
+    const isLoading = () => {
+        return Object.values(loading).some(s => s === true)
+    }
     useEffect(() => {
         const socket = io(apiUrl, {
             query: {
@@ -37,9 +39,14 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         channelStore.init(socket)
         console.log(channelStore)
         //@ts-ignore
-        channelStore.__emitter.once('initialized', () =>
+        channelStore.__emitter.once('initialized', () => {
+            console.log('WOAH initalized eh,', loading)
             setLoading(prev => ({ ...prev, channelStoreLoading: false }))
-        )
+            console.log('WOAH initalized after eh,', loading)
+            console.log(isLoading())
+        })
+        console.log(isLoading(), loading)
+
         setSocket(socket)
         socket.on('connect', () => setLoading(prev => ({ ...prev, socketLoading: false })))
         socket.on('disconnect', () => setLoading(prev => ({ ...prev, socketLoading: true })))
