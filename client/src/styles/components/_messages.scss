@@ -30,7 +30,7 @@
                 align-items: center;
                 &:hover {
                     cursor: pointer;
-                    background-color: lighten(colors.$background, 15%);
+                    background-color: lighten(colors.$background-primary, 15%);
                 }
             }
         }
@@ -42,7 +42,7 @@
             .message-item {
                 list-style-type: none;
                 &:hover {
-                    background-color: lighten(colors.$background, 15%);
+                    background-color: lighten(colors.$background-primary, 15%);
                 }
                 .message {
                     display: flex;
@@ -58,17 +58,18 @@
                             }
                         }
                     }
-                    .avatar-wrapp {
-                        height: 32px;
-                        width: 32px;
-                        .avatar {
-                            height: 100%;
-                            width: 100%;
-                            border-radius: 100%;
-                        }
-                    }
                 }
             }
         }
+    }
+}
+
+.avatar-wrapp {
+    height: 32px;
+    width: 32px;
+    .avatar {
+        height: 100%;
+        width: 100%;
+        border-radius: 100%;
     }
 }

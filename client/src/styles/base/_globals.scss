@@ -5,6 +5,17 @@
 @tailwind components;
 @tailwind utilities;
 /* Box sizing rules */
+:root {
+    --background-primary: colors.$background-primary;
+    --background-secondary: colors.$background-secondary;
+    --background-secondary-alt: colors.$background-secondary-alt;
+    --background-tertiary: colors.$background-tertiary;
+    --channeltextarea-background: colors.$channeltextarea-background;
+    --background-floating: colors.$lightend-bg;
+    --scrollbar-auto-thumb: colors.$scrollbar-auto-thumb;
+    --scrollbar-auto-track: colors.$scrollbar-auto-track;
+    --background-modifier-accent: $background-modifier-accent;
+}
 *,
 *::before,
 *::after {
@@ -42,7 +53,7 @@ body {
     text-rendering: optimizeSpeed;
     line-height: 1.5;
     font-family: 'Poppins', sans-serif;
-    background-color: lighten(colors.$background, 5%);
+    background-color: lighten(colors.$background-primary, 5%);
     color: hsl(0, 0%, 87%);
 }
 

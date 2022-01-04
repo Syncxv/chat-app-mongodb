@@ -3,10 +3,11 @@ import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import router from 'next/router'
 import React, { memo, useRef } from 'react'
 import { useQuery } from 'react-query'
-import { apiUrl } from '../../constants'
+import { apiUrl, defaultPfp } from '../../constants'
 import getChannels from '../../hooks/useGetChannels'
 import useSocket from '../../hooks/useSocket'
 import channelStore from '../../stores/channel'
+import userStore from '../../stores/user'
 import { Channel, RawChannel } from '../../types'
 import { open } from '../../util/openModal'
 import Plus from '../icons/Plus'
@@ -54,8 +55,9 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
     )
 }
 const Sidebar: NextPage<Props> = memo(({ token }) => {
-    const [loading, socket] = useSocket()
+    const [loading] = useSocket()
     if (loading) return <h1>Loading Nigga</h1>
+    const currentUser = userStore.getCurrentUser()
     const channels = Object.values(channelStore.getChannels())
     console.log('CHANNELS IN SIDEBAR: ', channels)
     return (
@@ -71,6 +73,18 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                     </div>
                 </div>
                 <PrivateDmList isLoading={false} channels={channels!} />
+            </div>
+            <div className="current-user mt-auto">
+                <div className="cu-container">
+                    <div className="avatar-wrapp">
+                        <img
+                            src={currentUser.avatar ? currentUser.avatar : defaultPfp}
+                            alt=""
+                            className="avatar"
+                        />
+                    </div>
+                    <h2 className="text-lg font-semibold">{currentUser.username}</h2>
+                </div>
             </div>
         </div>
     )

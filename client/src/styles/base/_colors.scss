@@ -1,5 +1,13 @@
 $primary: #18dcff;
-$background: #0a0e0e;
-$lightend-bg: lighten(#0a0e0e, 5%);
+$background-primary: #23272a;
+$background-secondary: #1a1e21;
+$background-secondary-alt: #15181b;
+$background-tertiary: #111416;
+$channeltextarea-background: #1a1e21;
+$background-floating: #111416;
+$scrollbar-auto-thumb: #0000004a;
+$scrollbar-auto-track: #00000036;
+$background-modifier-accent: hsla(0, 0%, 100%, 0.03);
+$lightend-bg: lighten($background-primary, 5%);
 $text-color: hsl(0, 0%, 87%);
 $text-dark: hsl(0, 0%, 20%);
