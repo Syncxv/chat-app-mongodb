@@ -6,15 +6,20 @@
 @tailwind utilities;
 /* Box sizing rules */
 :root {
-    --background-primary: colors.$background-primary;
-    --background-secondary: colors.$background-secondary;
-    --background-secondary-alt: colors.$background-secondary-alt;
-    --background-tertiary: colors.$background-tertiary;
-    --channeltextarea-background: colors.$channeltextarea-background;
-    --background-floating: colors.$lightend-bg;
-    --scrollbar-auto-thumb: colors.$scrollbar-auto-thumb;
-    --scrollbar-auto-track: colors.$scrollbar-auto-track;
-    --background-modifier-accent: $background-modifier-accent;
+    --background-primary: #{colors.$background-primary};
+    --background-secondary: #{colors.$background-secondary};
+    --background-secondary-alt: #{colors.$background-secondary-alt};
+    --background-tertiary: #{colors.$background-tertiary};
+    --channeltextarea-background: #{colors.$channeltextarea-background};
+    --background-floating: #{colors.$lightend-bg};
+    --scrollbar-auto-thumb: #{colors.$scrollbar-auto-thumb};
+    --scrollbar-auto-track: #{colors.$scrollbar-auto-track};
+    --background-modifier-accent: #{colors.$background-modifier-accent};
+    --text-input-bg: #{colors.$text-input-bg};
+    --text-input-border: #{colors.$text-input-border};
+    --text-input-border-hover: #{colors.$text-input-border-hover};
+    --text-input-border-disabled: #{colors.$text-input-border-disabled};
+    --text-input-prefix: #{colors.$text-input-prefix};
 }
 *,
 *::before,
@@ -53,7 +58,7 @@ body {
     text-rendering: optimizeSpeed;
     line-height: 1.5;
     font-family: 'Poppins', sans-serif;
-    background-color: lighten(colors.$background-primary, 5%);
+    background-color: var(--background-primary);
     color: hsl(0, 0%, 87%);
 }
 

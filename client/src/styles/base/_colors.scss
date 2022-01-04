@@ -11,3 +11,8 @@ $background-modifier-accent: hsla(0, 0%, 100%, 0.03);
 $lightend-bg: lighten($background-primary, 5%);
 $text-color: hsl(0, 0%, 87%);
 $text-dark: hsl(0, 0%, 20%);
+$text-input-bg: rgba(0, 0, 0, 0.1);
+$text-input-border: rgba(0, 0, 0, 0.3);
+$text-input-border-hover: #040405;
+$text-input-border-disabled: #202225;
+$text-input-prefix: #dcddde;
