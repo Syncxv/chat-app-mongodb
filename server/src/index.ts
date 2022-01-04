@@ -11,14 +11,18 @@ import User, { UserType } from './models/user'
 import DmChannel from './models/channels'
 import onUserInitalData, { USER_INITAL_DATA_EVENT_NAME } from './socket/users/initalData'
 import onChannelInitalData, { CHANNEL_INITAL_DATA_EVENT_NAME } from './socket/channels/initalData'
+import { handleMessagePost } from './socket/messages'
 dotenv.config()
 const PORT = 8000
-let connectedUser = new Map<
+export const connectedUser = new Map<
     string,
-    mongoose.Document<any, any, UserType> &
-        UserType & {
-            _id: mongoose.Types.ObjectId
-        }
+    {
+        user: mongoose.Document<any, any, UserType> &
+            UserType & {
+                _id: mongoose.Types.ObjectId
+            }
+        socket_id: string
+    }
 >()
 const main = async () => {
     const app = express()
@@ -46,13 +50,18 @@ const main = async () => {
     io.on('connection', async socket => {
         console.log('a user connected: ', socket.data.jwt)
         const user = await User.findById(socket.data.jwt.user.id)
-        connectedUser.set(socket.data.jwt.user.id as string, user!)
+        connectedUser.set(socket.data.jwt.user.id as string, { user: user!, socket_id: socket.id })
+        // socket.on('disconnect', scoketId => {
+        //     const id = [...connectedUser.values()].find(thing => thing.socket_id === socket.id)!.user.id
+        //     connectedUser.delete(id)
+        //     console.log(connectedUser)
+        // }) later idk man im stupid
         socket.on('create-message', e => {
-            console.log(e)
+            handleMessagePost(e, socket)
         })
         socket.on('getCurrentUser', () => {
             console.log('I GOT IT NIGGA')
-            socket.emit('getCurrentUser', connectedUser.get(socket.data.jwt.user.id)!.toJSON())
+            socket.emit('getCurrentUser', connectedUser.get(socket.data.jwt.user.id)?.user.toJSON())
         })
         socket.on(USER_INITAL_DATA_EVENT_NAME, async () => {
             onUserInitalData(socket)
