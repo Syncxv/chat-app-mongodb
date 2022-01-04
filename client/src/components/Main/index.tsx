@@ -32,16 +32,20 @@ export const sendMessage = async (id: string, content: string) => {
 
 const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket }) => {
     const [messages, setMessages] = useState<MessageType[]>()
-    const ref = useRef<HTMLInputElement | null>(null)
+    const textAreaRef = useRef<HTMLInputElement | null>(null)
+    const scrollableRef = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         console.log('IN [MAIN]', messageStore)
         console.log('IN [MAIN]', userStore)
         console.log('IN [MAIN]', channelStore)
-        setMessages(messagesProps)
+        console.log(socket)
         socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             console.log('WOAH NEW MESSAGE EH?')
             setMessages(prev => [...prev!, message])
+            //it aint stupid if it works
+            scrollableRef?.current?.lastElementChild?.lastElementChild?.lastElementChild?.scrollIntoView()
         })
+        setMessages(messagesProps)
     }, [])
     console.log(params, messages)
     if (!params) {
@@ -51,16 +55,18 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
     if (!channel) return <UnknownChannel />
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (!ref.current?.value.length) return
+        if (!textAreaRef.current?.value.length) return
         // sendMessage(params.cid, ref.current.value)
         socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
             message: {
                 author: userStore.getCurrentUser(),
-                content: ref.current.value,
+                content: textAreaRef.current.value,
                 channel_id: params.cid
             }
         })
-        ref.current.value = ''
+        console.log(scrollableRef)
+        textAreaRef.current.value = ''
+        // scrollableRef.current?.lastElementChild?.lastElementChild?.scrollIntoView()
     }
 
     console.log('DATA IN CHANNEL PAGE', messages, channel)
@@ -69,7 +75,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
             <AppWrapper>
                 <Sidebar />
                 <main className="hey flex flex-col  h-screen w-full">
-                    <div className="main-seciton">
+                    <div ref={scrollableRef} className="main-seciton">
                         <div className="scrollable">
                             <header>
                                 <h1>{channel?.members[0].username}</h1>
@@ -80,7 +86,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
                     {messages && (
                         <form onSubmit={handleSendClick} className="form-wrapper">
                             <input
-                                ref={ref}
+                                ref={textAreaRef}
                                 className="text-area"
                                 type="text"
                                 placeholder={`Message ${channel.members[0].username}`}

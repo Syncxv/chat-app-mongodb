@@ -1,17 +1,13 @@
 import axios from 'axios'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
-import router from 'next/router'
 import { GearSix } from 'phosphor-react'
 import React, { memo, useRef } from 'react'
-import { useQuery } from 'react-query'
 import { apiUrl, defaultPfp } from '../../constants'
-import getChannels from '../../hooks/useGetChannels'
 import useSocket from '../../hooks/useSocket'
 import channelStore from '../../stores/channel'
 import userStore from '../../stores/user'
-import { Channel, RawChannel } from '../../types'
+import { Channel } from '../../types'
 import { open } from '../../util/openModal'
-import Cog from '../icons/Cog'
 import Plus from '../icons/Plus'
 import Modal from '../Modal'
 import PrivateDmList from './PrivateDmList'
@@ -71,7 +67,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                 <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
                     <span className="text-gray-500 text-sm font-bold">Messages</span>
                     <div onClick={() => open(addChannelModal)} className="icon-wrapper">
-                        <Plus size={20} />
+                        <Plus size={16} />
                     </div>
                 </div>
                 <PrivateDmList isLoading={false} channels={channels!} />
