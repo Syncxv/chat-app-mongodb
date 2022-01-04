@@ -7,10 +7,12 @@ const users: { [key: string]: UserType } = {}
 class userStoreClass extends Store<any> {
     socket: Socket | null
     ME: string | null
+    initialized: boolean
     constructor(Dispatcher: any) {
         super(Dispatcher)
         this.socket = null
         this.ME = null
+        this.initialized = false
     }
     init(socket: Socket) {
         this.socket = socket
@@ -21,6 +23,8 @@ class userStoreClass extends Store<any> {
                 users[user._id] = user
             })
             users[this.ME!] = e.currentUser
+            this.initialized = true
+            this.__emitter.emit('initialized')
         })
         this.socket.emit(SOCKET_ACTIONS.USER_INIT)
     }

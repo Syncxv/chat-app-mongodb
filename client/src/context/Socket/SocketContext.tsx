@@ -23,7 +23,7 @@ interface Props {}
 const SocketContextProvider: NextPage<Props> = ({ children }) => {
     const [loading, setLoading] = useState<loading>({
         channelStoreLoading: true,
-        userStoreLoading: false,
+        userStoreLoading: true,
         socketLoading: true
     })
     const [socket, setSocket] = useState<Socket | null>(null)
@@ -42,10 +42,11 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         console.log(channelStore)
         //@ts-ignore
         channelStore.__emitter.once('initialized', () => {
-            console.log('WOAH initalized eh,', loading)
             setLoading(prev => ({ ...prev, channelStoreLoading: false }))
-            console.log('WOAH initalized after eh,', loading)
-            console.log(isLoading())
+        })
+        //@ts-ignore
+        userStore.__emitter.once('initialized', () => {
+            setLoading(prev => ({ ...prev, userStoreLoading: false }))
         })
         console.log(isLoading(), loading)
 
@@ -56,7 +57,9 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
     return (
         <>
             <LoadingWrapper loading={isLoading()} />
-            <SocketContext.Provider value={[isLoading(), socket]}>{children}</SocketContext.Provider>
+            {!isLoading() && (
+                <SocketContext.Provider value={[isLoading(), socket]}>{children}</SocketContext.Provider>
+            )}
         </>
     )
 }
