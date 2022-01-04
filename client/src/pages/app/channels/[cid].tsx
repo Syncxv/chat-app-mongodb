@@ -11,7 +11,8 @@ interface ChannelProps {
     }
     messages: MessageType[]
 }
-export const getMessages = async (cid: string) => (await axios.get(`${apiUrl}/channels/${cid}/messages`)).data
+export const getMessages = async (cid: string) =>
+    (await axios.get(`${apiUrl}/channels/${cid}/messages?limit=50`)).data
 
 export const sendMessage = async (id: string, content: string) => {
     await axios.post(`${apiUrl}/messages`, {
