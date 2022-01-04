@@ -26,4 +26,4 @@ const MessageList: NextPage<Props> = memo(({ data, isLoading }) => {
     )
 })
 
-export default MessageList
+export default memo(MessageList)
