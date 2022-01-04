@@ -12,9 +12,11 @@ export const socketAuth = (socket: Socket, next: (err?: ExtendedError | undefine
             socket.data.jwt = payload
             next()
         } catch (err) {
+            console.error(err)
             return next(new Error('auth failed eh'))
         }
     } else {
+        console.log('no auth eh')
         return next(new Error('bruh no auth eh'))
     }
 }
