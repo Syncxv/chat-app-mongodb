@@ -18,7 +18,7 @@
             .message-item {
                 list-style-type: none;
                 &:hover {
-                    background-color: lighten(colors.$background-primary, 15%);
+                    background-color: var(--background-message-hover);
                 }
                 .message {
                     display: flex;
