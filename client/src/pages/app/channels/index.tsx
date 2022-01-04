@@ -1,8 +1,10 @@
 import React from 'react'
 import Main from '../../../components/Main'
+import useSocket from '../../../hooks/useSocket'
 
 const index = () => {
-    return <Main />
+    const [_, socket] = useSocket()
+    return <Main socket={socket} />
 }
 
 export default index

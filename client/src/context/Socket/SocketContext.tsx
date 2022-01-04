@@ -6,6 +6,7 @@ import { LoadingWrapper } from '../../components/LoadingWrapper'
 import { apiUrl } from '../../constants'
 import userStore from '../../stores/user'
 import channelStore from '../../stores/channel'
+import messageStore from '../../stores/messages'
 
 interface loading {
     channelStoreLoading: boolean
@@ -37,6 +38,7 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         })
         userStore.init(socket)
         channelStore.init(socket)
+        messageStore.init(socket)
         console.log(channelStore)
         //@ts-ignore
         channelStore.__emitter.once('initialized', () => {

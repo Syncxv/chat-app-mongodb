@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { NextPage } from 'next'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import useSocket from '../../hooks/useSocket'
 import channelStore from '../../stores/channel'
-import loadingStore from '../../stores/loadingStore'
+import messageStore from '../../stores/messages'
 import userStore from '../../stores/user'
 import { MessageType } from '../../types'
 import MessageList from '../MessageList'
@@ -18,6 +19,7 @@ interface ChannelProps {
         cid: string
     }
     messages?: MessageType[]
+    socket: Socket
 }
 export const getMessages = async (cid: string) => (await axios.get(`${apiUrl}/channels/${cid}/messages`)).data
 
@@ -28,13 +30,18 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 
-const Main: NextPage<ChannelProps> = ({ params, messages }) => {
-    const [loading, socket] = useSocket()
+const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket }) => {
+    const [messages, setMessages] = useState<MessageType[]>()
     const ref = useRef<HTMLInputElement | null>(null)
     useEffect(() => {
-        console.log('IN [CID]', loadingStore)
-        console.log('IN [CID]', userStore)
-        console.log('IN [CID]', channelStore)
+        console.log('IN [MAIN]', messageStore)
+        console.log('IN [MAIN]', userStore)
+        console.log('IN [MAIN]', channelStore)
+        setMessages(messagesProps)
+        socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
+            console.log('WOAH NEW MESSAGE EH?')
+            setMessages(prev => [...prev!, message])
+        })
     }, [])
     console.log(params, messages)
     if (!params) {
@@ -55,6 +62,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages }) => {
         })
         ref.current.value = ''
     }
+
     console.log('DATA IN CHANNEL PAGE', messages, channel)
     return (
         <>
@@ -72,11 +80,11 @@ const Main: NextPage<ChannelProps> = ({ params, messages }) => {
                                     ref={ref}
                                     className="text-area"
                                     type="text"
-                                    placeholder="Message Ya mum"
+                                    placeholder={`Message ${channel.members[0].username}`}
                                 />
-                                <button type="submit" className="form-send-wrapper">
+                                {/* <button type="submit" className="form-send-wrapper">
                                     <span className="form-send">Send</span>
-                                </button>
+                                </button> */}
                             </form>
                         )}
                     </div>
@@ -92,4 +100,4 @@ export const getServerSideProps = async (context: any) => {
         props: { params: context.params, messages }
     }
 }
-export default Main
+export default /*  React.memo(Main) */ Main

@@ -4,6 +4,7 @@ import React from 'react'
 import { apiUrl } from '../../../constants'
 import { Channel, MessageType } from '../../../types'
 import Main from '../../../components/Main'
+import useSocket from '../../../hooks/useSocket'
 interface ChannelProps {
     params: {
         cid: string
@@ -19,7 +20,8 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 const Channel: NextPage<ChannelProps> = ({ messages, params }) => {
-    return <Main messages={messages} params={params} />
+    const [_, socket] = useSocket()
+    return <Main messages={messages} params={params} socket={socket} />
 }
 export const getServerSideProps = async (context: any) => {
     const messages = await getMessages(context.params.cid)
