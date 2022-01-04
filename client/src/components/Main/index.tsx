@@ -68,26 +68,28 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
         <>
             <AppWrapper>
                 <Sidebar />
-                <main className="main-seciton">
-                    <div className="scrollable">
-                        <header>
-                            <h1>{channel?.members[0].username}</h1>
-                        </header>
-                        <MessageList data={messages} isLoading={false} />
-                        {messages && (
-                            <form onSubmit={handleSendClick} className="form-wrapper">
-                                <input
-                                    ref={ref}
-                                    className="text-area"
-                                    type="text"
-                                    placeholder={`Message ${channel.members[0].username}`}
-                                />
-                                {/* <button type="submit" className="form-send-wrapper">
-                                    <span className="form-send">Send</span>
-                                </button> */}
-                            </form>
-                        )}
+                <main className="hey flex flex-col  h-screen w-full">
+                    <div className="main-seciton">
+                        <div className="scrollable">
+                            <header>
+                                <h1>{channel?.members[0].username}</h1>
+                            </header>
+                            <MessageList data={messages} isLoading={false} />
+                        </div>
                     </div>
+                    {messages && (
+                        <form onSubmit={handleSendClick} className="form-wrapper">
+                            <input
+                                ref={ref}
+                                className="text-area"
+                                type="text"
+                                placeholder={`Message ${channel.members[0].username}`}
+                            />
+                            {/* <button type="submit" className="form-send-wrapper">
+                                        <span className="form-send">Send</span>
+                                    </button> */}
+                        </form>
+                    )}
                 </main>
             </AppWrapper>
         </>

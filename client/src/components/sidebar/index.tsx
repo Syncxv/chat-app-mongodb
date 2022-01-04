@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import router from 'next/router'
+import { GearSix } from 'phosphor-react'
 import React, { memo, useRef } from 'react'
 import { useQuery } from 'react-query'
 import { apiUrl, defaultPfp } from '../../constants'
@@ -10,6 +11,7 @@ import channelStore from '../../stores/channel'
 import userStore from '../../stores/user'
 import { Channel, RawChannel } from '../../types'
 import { open } from '../../util/openModal'
+import Cog from '../icons/Cog'
 import Plus from '../icons/Plus'
 import Modal from '../Modal'
 import PrivateDmList from './PrivateDmList'
@@ -84,6 +86,9 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                         />
                     </div>
                     <h2 className="text-lg font-semibold">{currentUser.username}</h2>
+                </div>
+                <div className="settings-icon sizeIcon">
+                    <GearSix size={18} />
                 </div>
             </div>
         </div>
