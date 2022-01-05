@@ -66,8 +66,9 @@ const main = async () => {
         socket.on(USER_INITAL_DATA_EVENT_NAME, async () => {
             onUserInitalData(socket)
         })
-        socket.on(CHANNEL_INITAL_DATA_EVENT_NAME, async () => {
-            onChannelInitalData(socket)
+        socket.on(CHANNEL_INITAL_DATA_EVENT_NAME, async (data: any, cb: any) => {
+            console.log(cb)
+            onChannelInitalData(socket, cb)
         })
     })
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))

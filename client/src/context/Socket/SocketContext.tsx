@@ -7,16 +7,19 @@ import { apiUrl } from '../../constants'
 import userStore from '../../stores/user'
 import channelStore from '../../stores/channel'
 import messageStore from '../../stores/messages'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import socketAPI from './SocketClient'
 import { Actiontypes } from '../../types'
+import { socketClient } from '../../pages/_app'
+import { connectionOpen, isInitialized } from '../../reducers/initialize'
+import { AppState } from '../../stores/store'
 
 interface loading {
     channelStoreLoading: boolean
     userStoreLoading: boolean
     socketLoading: boolean
 }
-type initState = [boolean, null | Socket]
+type initState = [boolean, null | socketAPI]
 const initalState: initState = [true, null]
 
 export const SocketContext = createContext(initalState)
@@ -25,23 +28,10 @@ interface Props {}
 
 const SocketContextProvider: NextPage<Props> = ({ children }) => {
     const dispatch = useDispatch()
-    const store = useStore()
-    console.log(store.getState())
-    const [loading, setLoading] = useState<loading>({
-        channelStoreLoading: true,
-        userStoreLoading: true,
-        socketLoading: true
-    })
-    const [socket, setSocket] = useState<Socket | null>(null)
-    const isLoading = () => {
-        return Object.values(loading).some(s => s === true)
-    }
+    const { initialized, failed } = useSelector((state: AppState) => state.connection)
+    const isLoading = () => !initialized
     useEffect(() => {
-        dispatch({
-            type: 'socket',
-            types: [Actiontypes.CONNECTION_OPEN, Actiontypes.CONNECTION_SUCCESS, Actiontypes.CONNECTION_FAIL],
-            promise: (socket: socketAPI) => socket.connect()
-        })
+        dispatch(connectionOpen())
         // userStore.init(socket)
         // channelStore.init(socket)
         // messageStore.init(socket)
@@ -64,7 +54,9 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         <>
             <LoadingWrapper loading={isLoading()} />
             {!isLoading() && (
-                <SocketContext.Provider value={[isLoading(), socket]}>{children}</SocketContext.Provider>
+                <SocketContext.Provider value={[isLoading(), socketClient]}>
+                    {children}
+                </SocketContext.Provider>
             )}
         </>
     )

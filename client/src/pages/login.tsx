@@ -1,8 +1,10 @@
 import type { NextPage } from 'next'
 import React, { useContext, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import { LinkP } from '../components/Link'
+import { incrementAsync } from '../reducers/counter'
 import loginSubmit from '../util/loginSubmit'
 export type Wrapper<P = {}> = NextPage & {
     isNotApp: boolean
@@ -12,6 +14,8 @@ const LoginHehe: Wrapper = () => {
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     // const [invalid, setError] = useState<ErrorResponse>()
+    const dispatch = useDispatch()
+    dispatch(incrementAsync(20))
     const [signUp, setSignUp] = useState(false)
     const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

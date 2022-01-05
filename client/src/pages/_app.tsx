@@ -7,11 +7,10 @@ import router from 'next/router'
 import SocketContextProvider from '../context/Socket/SocketContext'
 import { Wrapper } from './login'
 import { Provider } from 'react-redux'
-import configureStore from '../stores/store'
+import store from '../stores/store'
 import SocketClient from '../context/Socket/SocketClient'
 
-const socketClient = new SocketClient()
-const store = configureStore({}, socketClient)
+export const socketClient = new SocketClient()
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
     axios.defaults.withCredentials = true

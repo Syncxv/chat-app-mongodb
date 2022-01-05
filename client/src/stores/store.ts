@@ -1,14 +1,20 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
-import rootReducer from '../reducers'
-import socketMiddleware from '../context/Socket/SocketMiddleware'
-import { Socket } from 'socket.io-client'
-const initialState = {}
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 
-export default function configureStore(initialState: any, socketClient: any) {
-    // const middleware = [
-    //   socketMiddleware(socketClient as Socket),
-    // ];
-    const store = createStore(rootReducer, initialState, applyMiddleware(socketMiddleware(socketClient)))
-    return store
+import counterReducer from '../reducers/counter'
+import connectionReducer from '../reducers/initialize'
+
+export function makeStore() {
+    return configureStore({
+        reducer: { counter: counterReducer, connection: connectionReducer }
+    })
 }
+
+const store = makeStore()
+
+export type AppState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
+
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<string>>
+
+export default store
