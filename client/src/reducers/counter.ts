@@ -4,11 +4,13 @@ import { socketClient } from '../pages/_app'
 import type { AppState, AppThunk } from '../stores/store'
 
 export interface CounterState {
+    initialized: boolean
     value: number
     status: 'idle' | 'loading' | 'failed'
 }
 
 const initialState: CounterState = {
+    initialized: true,
     value: 0,
     status: 'idle'
 }

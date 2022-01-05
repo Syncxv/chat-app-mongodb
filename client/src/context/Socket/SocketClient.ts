@@ -23,7 +23,7 @@ export default class socketAPI {
         })
     }
 
-    emit(event: string, data: any) {
+    emit(event: string, data?: any) {
         return new Promise((resolve, reject) => {
             if (!this.socket) return reject('No socket connection.')
 

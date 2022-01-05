@@ -15,7 +15,7 @@ const LoginHehe: Wrapper = () => {
     const [email, setEmail] = useState('')
     // const [invalid, setError] = useState<ErrorResponse>()
     const dispatch = useDispatch()
-    dispatch(incrementAsync(20))
+    // dispatch(incrementAsync(20))
     const [signUp, setSignUp] = useState(false)
     const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

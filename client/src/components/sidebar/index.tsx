@@ -2,9 +2,11 @@ import axios from 'axios'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import { GearSix } from 'phosphor-react'
 import React, { memo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { apiUrl, defaultPfp } from '../../constants'
 import useSocket from '../../hooks/useSocket'
 import channelStore from '../../stores/channel'
+import { AppState } from '../../stores/store'
 import userStore from '../../stores/user'
 import { Channel } from '../../types'
 import { open } from '../../util/openModal'
@@ -55,7 +57,9 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
 const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
     if (loading) return <h1>Loading Nigga</h1>
-    const currentUser = userStore.getCurrentUser()
+    const { users, currentUserId } = useSelector((state: AppState) => state.userStore)
+    console.log(users, currentUserId)
+    const currentUser = users[currentUserId!]
     const channels = Object.values(channelStore.getChannels())
     console.log('CHANNELS IN SIDEBAR: ', channels)
     return (
