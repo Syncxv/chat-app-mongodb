@@ -57,7 +57,6 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
         // sendMessage(params.cid, ref.current.value)
         socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
             message: {
-                author: getCurrentUser(state),
                 content: textAreaRef.current.value,
                 channel_id: params.cid
             }
