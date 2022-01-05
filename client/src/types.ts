@@ -10,11 +10,15 @@ export interface UserType {
     discriminator: number
     email: string
     avatar: string | null
+    createdAt: string
+    updatedAt: string
 }
 export interface RawChannel {
     id: string
     _id: string
     members: UserType[]
+    createdAt: string
+    updatedAt: string
 }
 export interface _Sizes {
     Icon: 'sizeIcon'
@@ -31,6 +35,8 @@ export interface MessageType {
     channel_id: string
     content: string
     author: UserType
+    createdAt: string
+    updatedAt: string
 }
 export type _sizes =
     | 'sizeIcon'

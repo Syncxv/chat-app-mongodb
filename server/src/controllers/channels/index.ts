@@ -14,9 +14,10 @@ const channels = {
             const messages = await Message.find({
                 channel_id: channel.id
             })
+                .sort({ $natural: -1 })
                 .limit(limit)
                 .populate([{ path: 'author', model: 'User' }])
-            return res.send(messages)
+            return res.send(messages.reverse())
         }
     }
 }
