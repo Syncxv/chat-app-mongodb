@@ -14,6 +14,7 @@ import { socketClient } from '../../pages/_app'
 import { connectionOpen, isInitialized } from '../../reducers/initialize'
 import { AppState } from '../../stores/store'
 import { initalizeUsers } from '../../reducers/user'
+import { initalizeChannels } from '../../reducers/channel'
 
 interface loading {
     channelStoreLoading: boolean
@@ -33,12 +34,9 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
     useEffect(() => {
         dispatch(connectionOpen())
         dispatch(initalizeUsers())
+        dispatch(initalizeChannels())
     }, [])
-    const isLoading = () => {
-        console.log(state)
-
-        return Boolean(Object.values(state).filter(s => !s.initialized).length)
-    }
+    const isLoading = () => Boolean(Object.values(state).filter(s => !s.initialized).length)
     console.log(!isLoading())
     return (
         <>

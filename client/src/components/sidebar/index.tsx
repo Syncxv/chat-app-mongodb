@@ -57,10 +57,14 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
 const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
     if (loading) return <h1>Loading Nigga</h1>
-    const { users, currentUserId } = useSelector((state: AppState) => state.userStore)
+    const {
+        channelStore: { channels: storeChannels },
+        userStore: { users, currentUserId }
+    } = useSelector((state: AppState) => state)
     console.log(users, currentUserId)
     const currentUser = users[currentUserId!]
-    const channels = Object.values(channelStore.getChannels())
+
+    const channels = Object.values(storeChannels)
     console.log('CHANNELS IN SIDEBAR: ', channels)
     return (
         <div className="sidebar-outer">
