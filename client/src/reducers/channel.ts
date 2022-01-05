@@ -48,5 +48,7 @@ export const channelSlice = createSlice({
             })
     }
 })
-
+export const getChannel = (id: string, state: AppState): RawChannel | undefined => {
+    return state.channelStore.channels[id]
+}
 export default channelSlice.reducer

@@ -55,5 +55,7 @@ export const userSlice = createSlice({
             })
     }
 })
-
+export const getCurrentUser = (state: AppState): UserType | undefined => {
+    return state.userStore.users[state.userStore.currentUserId!]
+}
 export default userSlice.reducer

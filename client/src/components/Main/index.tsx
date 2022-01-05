@@ -1,11 +1,15 @@
 import axios from 'axios'
 import { NextPage } from 'next'
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import useSocket from '../../hooks/useSocket'
+import { getChannel } from '../../reducers/channel'
+import { getCurrentUser } from '../../reducers/user'
 import channelStore from '../../stores/channel'
 import messageStore from '../../stores/messages'
+import { AppState } from '../../stores/store'
 import userStore from '../../stores/user'
 import { MessageType } from '../../types'
 import MessageList from '../MessageList'
@@ -34,6 +38,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
     const [messages, setMessages] = useState<MessageType[]>()
     const textAreaRef = useRef<HTMLInputElement | null>(null)
     const scrollableRef = useRef<HTMLDivElement | null>(null)
+    const state = useSelector((state: AppState) => state)
     useEffect(() => {
         console.log('IN [MAIN]', messageStore)
         console.log('IN [MAIN]', userStore)
@@ -51,7 +56,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
     if (!params) {
         return <FriendSection />
     }
-    const channel = channelStore.getChannel(params!.cid)
+    const channel = getChannel(params!.cid, state)
     if (!channel) return <UnknownChannel />
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -59,7 +64,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
         // sendMessage(params.cid, ref.current.value)
         socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
             message: {
-                author: userStore.getCurrentUser(),
+                author: getCurrentUser(state),
                 content: textAreaRef.current.value,
                 channel_id: params.cid
             }
