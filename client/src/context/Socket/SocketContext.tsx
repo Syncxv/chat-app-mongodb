@@ -7,6 +7,9 @@ import { apiUrl } from '../../constants'
 import userStore from '../../stores/user'
 import channelStore from '../../stores/channel'
 import messageStore from '../../stores/messages'
+import { useDispatch, useStore } from 'react-redux'
+import socketAPI from './SocketClient'
+import { Actiontypes } from '../../types'
 
 interface loading {
     channelStoreLoading: boolean
@@ -21,6 +24,9 @@ export const SocketContext = createContext(initalState)
 interface Props {}
 
 const SocketContextProvider: NextPage<Props> = ({ children }) => {
+    const dispatch = useDispatch()
+    const store = useStore()
+    console.log(store.getState())
     const [loading, setLoading] = useState<loading>({
         channelStoreLoading: true,
         userStoreLoading: true,
@@ -31,28 +37,28 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
         return Object.values(loading).some(s => s === true)
     }
     useEffect(() => {
-        const socket = io(apiUrl, {
-            query: {
-                token: Cookie.get('token')
-            }
+        dispatch({
+            type: 'socket',
+            types: [Actiontypes.CONNECTION_OPEN, Actiontypes.CONNECTION_SUCCESS, Actiontypes.CONNECTION_FAIL],
+            promise: (socket: socketAPI) => socket.connect()
         })
-        userStore.init(socket)
-        channelStore.init(socket)
-        messageStore.init(socket)
-        console.log(channelStore)
-        //@ts-ignore
-        channelStore.__emitter.once('initialized', () => {
-            setLoading(prev => ({ ...prev, channelStoreLoading: false }))
-        })
-        //@ts-ignore
-        userStore.__emitter.once('initialized', () => {
-            setLoading(prev => ({ ...prev, userStoreLoading: false }))
-        })
-        console.log(isLoading(), loading)
+        // userStore.init(socket)
+        // channelStore.init(socket)
+        // messageStore.init(socket)
+        // console.log(channelStore)
+        // //@ts-ignore
+        // channelStore.__emitter.once('initialized', () => {
+        //     setLoading(prev => ({ ...prev, channelStoreLoading: false }))
+        // })
+        // //@ts-ignore
+        // userStore.__emitter.once('initialized', () => {
+        //     setLoading(prev => ({ ...prev, userStoreLoading: false }))
+        // })
+        // console.log(isLoading(), loading)
 
-        setSocket(socket)
-        socket.on('connect', () => setLoading(prev => ({ ...prev, socketLoading: false })))
-        socket.on('disconnect', () => setLoading(prev => ({ ...prev, socketLoading: true })))
+        // setSocket(socket)
+        // socket.on('connect', () => setLoading(prev => ({ ...prev, socketLoading: false })))
+        // socket.on('disconnect', () => setLoading(prev => ({ ...prev, socketLoading: true })))
     }, [])
     return (
         <>

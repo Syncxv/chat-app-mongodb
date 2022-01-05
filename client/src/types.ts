@@ -41,3 +41,14 @@ export type _sizes =
     | 'sizeSmall'
     | 'sizeTiny_'
     | 'sizeXlarge'
+
+export enum Actiontypes {
+    TEST_1 = 'TEST_1',
+    START_INITIALIZE = 'START_INITIALIZE',
+    CONNECTION_OPEN = 'CONNECTION_OPEN',
+    CONNECTION_SUCCESS = 'CONNECTION_SUCCESS',
+    CONNECTION_FAIL = 'CONNECTION_FAIL',
+    LOGIN_START = 'LOGIN_START',
+    LOGIN_SUCCESS = 'LOGIN_SUCCESS',
+    LOGIN_FAILURE = 'LOGIN_FAILURE'
+}

@@ -1,8 +1,3 @@
-export enum ACTIONS_TYPES {
-    LOGIN_START = 'LOGIN_START',
-    LOGIN_SUCCESS = 'LOGIN_SUCCESS',
-    LOGIN_FAILURE = 'LOGIN_FAILURE'
-}
 export enum SOCKET_ACTIONS {
     CREATE_MESSAGE = 'create-message',
     CHANNEL_INIT = 'channel-inital-data',
