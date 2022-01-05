@@ -4,13 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
-import useSocket from '../../hooks/useSocket'
 import { getChannel } from '../../reducers/channel'
 import { getCurrentUser } from '../../reducers/user'
-import channelStore from '../../stores/channel'
-import messageStore from '../../stores/messages'
 import { AppState } from '../../stores/store'
-import userStore from '../../stores/user'
 import { MessageType } from '../../types'
 import MessageList from '../MessageList'
 import Sidebar from '../sidebar'
@@ -40,9 +36,6 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
     const scrollableRef = useRef<HTMLDivElement | null>(null)
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
-        console.log('IN [MAIN]', messageStore)
-        console.log('IN [MAIN]', userStore)
-        console.log('IN [MAIN]', channelStore)
         console.log(socket)
         socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             console.log('WOAH NEW MESSAGE EH?')
