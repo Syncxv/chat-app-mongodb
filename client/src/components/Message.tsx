@@ -8,6 +8,7 @@ interface MessageProps {
 }
 
 const Message: NextPage<MessageProps> = ({ message }) => {
+    const date = new Date(message.createdAt)
     return (
         <div className="message">
             <div className="avatar-wrapp">
@@ -19,7 +20,9 @@ const Message: NextPage<MessageProps> = ({ message }) => {
             </div>
             <div className="message-contents">
                 <div className="message-header">
-                    {/* <div className="date">later</div> */}
+                    <div className="date">
+                        {date.toDateString()} {date.toLocaleTimeString()}
+                    </div>
                     <span className="message-username">{message.author.username}</span>
                 </div>
                 <div className="message-text">{message.content}</div>
