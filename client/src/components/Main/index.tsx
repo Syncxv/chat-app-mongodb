@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { NextPage } from 'next'
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import { getChannel } from '../../reducers/channel'
+import { fetchMessages, messageCreate, receiveMessage } from '../../reducers/message'
 import { getCurrentUser } from '../../reducers/user'
 import { AppState } from '../../stores/store'
 import { MessageType } from '../../types'
@@ -31,39 +32,37 @@ export const sendMessage = async (id: string, content: string) => {
 }
 
 const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket }) => {
-    const [messages, setMessages] = useState<MessageType[]>()
     const textAreaRef = useRef<HTMLInputElement | null>(null)
     const scrollableRef = useRef<HTMLDivElement | null>(null)
+    const dispatch = useDispatch()
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
         console.log(socket)
+        if (params) {
+            dispatch(fetchMessages({ channel_id: params.cid }))
+        }
         socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
-            console.log('WOAH NEW MESSAGE EH?')
-            setMessages(prev => [...prev!, message])
+            dispatch(receiveMessage({ message, channel_id: params!.cid }))
             //it aint stupid if it works
             scrollableRef?.current?.lastElementChild?.lastElementChild?.lastElementChild?.scrollIntoView()
         })
-        setMessages(messagesProps)
     }, [])
-    console.log(params, messages)
     if (!params) {
         return <FriendSection />
     }
     const channel = getChannel(params!.cid, state)
     if (!channel) return <UnknownChannel />
+    const messages = state.messageStore.channelMessages[params!.cid]
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!textAreaRef.current?.value.length) return
-        // sendMessage(params.cid, ref.current.value)
-        socket.emit(SOCKET_ACTIONS.CREATE_MESSAGE, {
-            message: {
-                content: textAreaRef.current.value,
-                channel_id: params.cid
-            }
-        })
-        console.log(scrollableRef)
+        dispatch(
+            messageCreate({
+                channel_id: params!.cid,
+                content: textAreaRef.current.value
+            })
+        )
         textAreaRef.current.value = ''
-        // scrollableRef.current?.lastElementChild?.lastElementChild?.scrollIntoView()
     }
 
     console.log('DATA IN CHANNEL PAGE', messages, channel)
@@ -98,11 +97,5 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
         </>
     )
 }
-export const getServerSideProps = async (context: any) => {
-    const messages = await getMessages(context.params.cid)
 
-    return {
-        props: { params: context.params, messages }
-    }
-}
 export default /*  React.memo(Main) */ Main
