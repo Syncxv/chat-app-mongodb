@@ -9,20 +9,25 @@ interface createMessageEvent {
     message: { author: UserType; content: string; channel_id: string }
 }
 export const handleMessagePost = async (event: createMessageEvent, socket: Socket) => {
-    const message = await new Message({
-        content: event.message.content,
-        author: event.message.author,
-        channel_id: event.message.channel_id
-    }).populate([{ path: 'author', model: 'User' }])
-    const channel = await DmChannel.findById(event.message.channel_id)
-    if (!channel) return
-    await message.save()
-    console.log(message)
-    channel.members.forEach(member => {
-        const person = connectedUser.get(member)
-        if (!person) return
-        console.log(person)
-        socket.nsp.to(person.socket_id).emit(SOCKET_ACTIONS.RECIVE_MESSAGE, message.toJSON())
-    })
+    try {
+        const socketUser = connectedUser.get(socket.data.jwt.user.id!)
+        const message = await new Message({
+            content: event.message.content,
+            author: socketUser!.user,
+            channel_id: event.message.channel_id
+        }).populate([{ path: 'author', model: 'User' }])
+        const channel = await DmChannel.findById(event.message.channel_id)
+        if (!channel) return
+        await message.save()
+        console.log(message)
+        channel.members.forEach(member => {
+            const person = connectedUser.get(member)
+            if (!person) return
+            console.log(person)
+            socket.nsp.to(person.socket_id).emit(SOCKET_ACTIONS.RECIVE_MESSAGE, message.toJSON())
+        })
+    } catch (err) {
+        console.error(err)
+    }
 }
 // i dont think ill use this

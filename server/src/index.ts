@@ -63,11 +63,12 @@ const main = async () => {
             console.log('I GOT IT NIGGA')
             socket.emit('getCurrentUser', connectedUser.get(socket.data.jwt.user.id)?.user.toJSON())
         })
-        socket.on(USER_INITAL_DATA_EVENT_NAME, async () => {
-            onUserInitalData(socket)
+        socket.on(USER_INITAL_DATA_EVENT_NAME, async (data: any, cb) => {
+            onUserInitalData(socket, cb)
         })
-        socket.on(CHANNEL_INITAL_DATA_EVENT_NAME, async () => {
-            onChannelInitalData(socket)
+        socket.on(CHANNEL_INITAL_DATA_EVENT_NAME, async (data: any, cb: any) => {
+            console.log(cb)
+            onChannelInitalData(socket, cb)
         })
     })
     Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))

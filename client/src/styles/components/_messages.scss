@@ -28,7 +28,13 @@
                     left: 1%;
                     .message-contents {
                         .message-header {
-                            // margin: -0.4rem 0;
+                            display: flex;
+                            flex-direction: row-reverse;
+                            gap: 0.5rem;
+                            .date {
+                                color: rgba(colors.$text-color, 0.8);
+                                font-size: 0.85rem;
+                            }
                             .message-username {
                                 color: white;
                             }

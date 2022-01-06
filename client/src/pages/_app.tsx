@@ -6,6 +6,11 @@ import axios from 'axios'
 import router from 'next/router'
 import SocketContextProvider from '../context/Socket/SocketContext'
 import { Wrapper } from './login'
+import { Provider } from 'react-redux'
+import store from '../stores/store'
+import SocketClient from '../context/Socket/SocketClient'
+
+export const socketClient = new SocketClient()
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
     axios.defaults.withCredentials = true
@@ -24,14 +29,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
-                {isNotApp ? (
-                    <Component {...pageProps} />
-                ) : (
-                    <SocketContextProvider>
+                <Provider store={store}>
+                    {isNotApp ? (
                         <Component {...pageProps} />
-                    </SocketContextProvider>
-                )}
-                <div className="modal-stuff-yk"></div>
+                    ) : (
+                        <SocketContextProvider>
+                            <Component {...pageProps} />
+                        </SocketContextProvider>
+                    )}
+                    <div className="modal-stuff-yk"></div>
+                </Provider>
             </Hydrate>
         </QueryClientProvider>
     )
