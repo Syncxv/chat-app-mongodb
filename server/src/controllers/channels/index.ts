@@ -23,7 +23,8 @@ const channels = {
             const message = await Message.findOne({ _id: req.query.before })
             if (!message) return res.status(404).send({ error: 'wot message is that eh' })
             const messages = await Message.aggregate([{ $match: { _id: { $lt: message._id } } }])
-            return res.status(200).send(messages.reverse())
+            const real = await Message.populate(messages, { path: 'author', model: 'User' })
+            return res.status(200).send(real)
         }
     }
 }

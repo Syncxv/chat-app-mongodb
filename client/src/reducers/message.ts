@@ -86,7 +86,14 @@ export const messageSlice = createSlice({
             })
             .addCase(fetchMessages.fulfilled, (state, action) => {
                 if (!action.payload.cached) {
-                    state.channelMessages[action.payload.channel_id] = action.payload.messages
+                    if (!action.payload.before)
+                        state.channelMessages[action.payload.channel_id] = action.payload.messages
+                    else {
+                        console.log(state)
+                        state.channelMessages[action.payload.channel_id].unshift(
+                            ...(action.payload.messages || [])
+                        )
+                    }
                 }
             })
             .addCase(fetchMessages.rejected, state => {

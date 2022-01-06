@@ -84,9 +84,17 @@ const Main: NextPage<ChannelProps> = ({ params, socket }) => {
                                 type="text"
                                 placeholder={`Message ${channel.members[0].username}`}
                             />
-                            {/* <button type="submit" className="form-send-wrapper">
-                                        <span className="form-send">Send</span>
-                                    </button> */}
+                            <button
+                                onClick={() =>
+                                    dispatch(
+                                        fetchMessages({ channel_id: params.cid, before: messages[0]._id })
+                                    )
+                                }
+                                type="button"
+                                className="form-send-wrapper"
+                            >
+                                <span className="form-send">Load Messages</span>
+                            </button>
                         </form>
                     )}
                 </main>
