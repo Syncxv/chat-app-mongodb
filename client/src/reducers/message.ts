@@ -33,7 +33,7 @@ interface fetchMessagesReturnType {
 //     }
 // )
 interface fetchMessagesArguments {
-    channel_id: string
+    channel_id?: string
     before?: string
 }
 export const fetchMessages = createAsyncThunk(
@@ -43,6 +43,7 @@ export const fetchMessages = createAsyncThunk(
         { getState }
     ): Promise<fetchMessagesReturnType> => {
         const url = `${apiUrl}/channels/${channel_id}/messages${before ? '?before=' + before : ''}`
+        if (!channel_id) return { cached: true, messages: [], before: false, channel_id: '' }
         if (!before) {
             const messages = (getState() as AppState).messageStore.channelMessages[channel_id]
             if (Array.isArray(messages)) {

@@ -19,7 +19,6 @@ interface ChannelProps {
     params?: {
         cid: string
     }
-    messages?: MessageType[]
     socket: Socket
 }
 export const getMessages = async (cid: string) => (await axios.get(`${apiUrl}/channels/${cid}/messages`)).data
@@ -31,16 +30,13 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 
-const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket }) => {
+const Main: NextPage<ChannelProps> = ({ params, socket }) => {
     const textAreaRef = useRef<HTMLInputElement | null>(null)
     const scrollableRef = useRef<HTMLDivElement | null>(null)
     const dispatch = useDispatch()
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
         console.log(socket)
-        if (params) {
-            dispatch(fetchMessages({ channel_id: params.cid }))
-        }
         socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             dispatch(receiveMessage({ message, channel_id: params!.cid }))
             //it aint stupid if it works
@@ -52,6 +48,7 @@ const Main: NextPage<ChannelProps> = ({ params, messages: messagesProps, socket 
     }
     const channel = getChannel(params!.cid, state)
     if (!channel) return <UnknownChannel />
+    dispatch(fetchMessages({ channel_id: params?.cid }))
     const messages = state.messageStore.channelMessages[params!.cid]
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

@@ -20,15 +20,13 @@ export const sendMessage = async (id: string, content: string) => {
         content
     })
 }
-const Channel: NextPage<ChannelProps> = ({ messages, params }) => {
+const Channel: NextPage<ChannelProps> = ({ params }) => {
     const [_, socket] = useSocket()
-    return <Main messages={messages} params={params} socket={socket} />
+    return <Main params={params} socket={socket} />
 }
 export const getServerSideProps = async (context: any) => {
-    const messages = await getMessages(context.params.cid)
-
     return {
-        props: { params: context.params, messages }
+        props: { params: context.params }
     }
 }
 export default Channel
