@@ -10,7 +10,7 @@ const Blob: React.FC<Props> = ({ width, opacity }) => {
         <>
             <div
                 style={{ width: `${width}rem`, opacity }}
-                className="p-header h-4 leading-5 bg-text-normal rounded-3xl mt-2"
+                className="p-blob h-4 leading-5 bg-text-normal rounded-3xl mt-2"
             ></div>
         </>
     )
