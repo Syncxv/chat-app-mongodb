@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import { GearSix } from 'phosphor-react'
-import React, { memo, useRef } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { apiUrl, defaultPfp } from '../../constants'
 import useSocket from '../../hooks/useSocket'
@@ -54,6 +55,7 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
 }
 const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
+    const [isOpen, setOpen] = useState(false)
     if (loading) return <h1>Loading Nigga</h1>
     const {
         channelStore: { channels: storeChannels },
@@ -65,35 +67,57 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
     const channels = Object.values(storeChannels)
     console.log('CHANNELS IN SIDEBAR: ', channels)
     return (
-        <div className="sidebar-outer">
-            <div className="sidbar-head">
-                <h3>Channels</h3>
+        <>
+            <div onClick={() => setOpen(!isOpen)} className={`mobile-bar-icon ${isOpen ? 'close' : ''}`}>
+                <div className="bar1"></div>
+                <div className="bar2"></div>
+                <div className="bar3"></div>
             </div>
-            <div className="sidebar-main w-full">
-                <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
-                    <span className="text-gray-500 text-sm font-bold">Messages</span>
-                    <div onClick={() => open(addChannelModal)} className="icon-wrapper">
-                        <Plus size={16} />
+            <div
+                style={{ zIndex: '2', transform: isOpen ? 'none' : 'translateX(-100%)' }}
+                className="sidebar-outer"
+            >
+                <div className="sidbar-head">
+                    <h3>Channels</h3>
+                </div>
+                <div className="sidebar-main w-full">
+                    <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
+                        <span className="text-gray-500 text-sm font-bold">Messages</span>
+                        <div onClick={() => open(addChannelModal)} className="icon-wrapper">
+                            <Plus size={16} />
+                        </div>
+                    </div>
+                    <PrivateDmList isLoading={false} channels={channels!} />
+                </div>
+                <div className="current-user mt-auto">
+                    <div className="cu-container">
+                        <div className="avatar-wrapp">
+                            <img
+                                src={currentUser.avatar ? currentUser.avatar : defaultPfp}
+                                alt=""
+                                className="avatar"
+                            />
+                        </div>
+                        <h2 className="text-lg font-semibold">{currentUser.username}</h2>
+                    </div>
+                    <div className="settings-icon sizeIcon">
+                        <GearSix size={18} />
                     </div>
                 </div>
-                <PrivateDmList isLoading={false} channels={channels!} />
             </div>
-            <div className="current-user mt-auto">
-                <div className="cu-container">
-                    <div className="avatar-wrapp">
-                        <img
-                            src={currentUser.avatar ? currentUser.avatar : defaultPfp}
-                            alt=""
-                            className="avatar"
-                        />
-                    </div>
-                    <h2 className="text-lg font-semibold">{currentUser.username}</h2>
-                </div>
-                <div className="settings-icon sizeIcon">
-                    <GearSix size={18} />
-                </div>
-            </div>
-        </div>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{ zIndex: '1' }}
+                        onClick={() => setOpen(false)}
+                        className="backdrop"
+                    ></motion.div>
+                )}
+            </AnimatePresence>
+        </>
     )
 })
 

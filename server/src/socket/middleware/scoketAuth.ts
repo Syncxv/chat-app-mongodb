@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 export const socketAuth = (socket: Socket, next: (err?: ExtendedError | undefined) => void) => {
     console.log('hey from socket auth middleware')
     if (socket.handshake.query && socket.handshake.query.token) {
+        console.log(socket.handshake.query.token)
         try {
             const payload = jwt.verify(
                 socket.handshake.query.token as string,

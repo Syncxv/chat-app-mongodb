@@ -1,5 +1,7 @@
 @use '../base/colors';
-
+.mobile-bar-icon {
+    display: none;
+}
 .sidebar-outer {
     display: flex;
     gap: 1rem;
@@ -10,6 +12,7 @@
     height: 100vh;
     padding: 0.5rem;
     background-color: var(--background-secondary);
+    transition: all 1s ease;
     // .sidebar-main {
     //     .sidebar-sub {
     //         &:hover {
@@ -60,6 +63,61 @@
                 background-color: var(--background-primary);
                 cursor: pointer;
             }
+        }
+    }
+}
+$barHeight: 2px;
+$width: 30px;
+//mobile
+@media (max-width: 35em) {
+    .sidebar-outer {
+        position: fixed;
+        transform: translateX(-100%);
+        .sidbar-head {
+            margin-top: 2.5rem;
+        }
+    }
+    .mobile-bar-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        height: 36px;
+        gap: 6px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 3;
+        margin: 1rem;
+        &.close {
+            .bar2 {
+                transform: translateX(100px);
+            }
+            .bar1 {
+                transform: rotate(-45deg) translate(-3px, 7px);
+            }
+            .bar3 {
+                transform: rotate(45deg) translate(-4px, -8px);
+            }
+        }
+        .bar1 {
+            height: $barHeight;
+            width: $width;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .bar2 {
+            height: $barHeight;
+            width: $width;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .bar3 {
+            height: $barHeight;
+            width: $width;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
     }
 }
