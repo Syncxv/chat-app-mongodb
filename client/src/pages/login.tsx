@@ -23,7 +23,7 @@ const LoginHehe: Wrapper = () => {
     }
     return (
         <>
-            <div className="form-wrapper" style={{ width: '18rem', margin: '0 auto' }}>
+            <div className="login-form-wrapper" style={{ width: '100%', margin: '0 auto' }}>
                 <form onSubmit={handleLogin} className="login-form">
                     <Input
                         label="Username"

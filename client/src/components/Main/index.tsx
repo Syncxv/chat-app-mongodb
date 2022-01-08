@@ -5,9 +5,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import { getChannel } from '../../reducers/channel'
-import { fetchMessages, messageCreate, receiveMessage } from '../../reducers/message'
+import {
+    fetchMessages,
+    fetchMessagesLoad,
+    fetchMessagesSuccess,
+    messageCreate,
+    receiveMessage
+} from '../../reducers/message'
 import { getCurrentUser } from '../../reducers/user'
-import { AppState } from '../../stores/store'
+import { AppDispatch, AppState } from '../../stores/store'
 import { MessageType } from '../../types'
 import MessageList from '../MessageList'
 import Sidebar from '../sidebar'
@@ -74,7 +80,7 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
                             <header>
                                 <h1>{channel?.members[0].username}</h1>
                             </header>
-                            <MessageList data={messages} isLoading={false} />
+                            <MessageList data={messages} />
                         </div>
                     </div>
                     {messages && (

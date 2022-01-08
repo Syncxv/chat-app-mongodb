@@ -8,6 +8,7 @@ import { AppState } from '../stores/store'
 export interface MessageStoreState {
     failed: boolean
     initialized: boolean
+    loading: boolean
     channelMessages: {
         [key: string]: MessageType[]
     }
@@ -17,6 +18,7 @@ export interface MessageStoreState {
 const initialState: MessageStoreState = {
     failed: false,
     initialized: true,
+    loading: false,
     channelMessages: {},
     currentUserId: null
 }
@@ -75,6 +77,15 @@ export const messageSlice = createSlice({
     reducers: {
         receiveMessage: (state, { payload: { channel_id, message } }: receiveMessageArgsType) => {
             state.channelMessages[channel_id].push(message)
+        },
+        fetchMessagesLoad: state => {
+            state.loading = true
+        },
+        fetchMessagesSuccess: state => {
+            state.loading = false
+        },
+        fetchMessagesFail: state => {
+            state.loading = false
         }
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -102,6 +113,7 @@ export const messageSlice = createSlice({
     }
 })
 
-export const { receiveMessage } = messageSlice.actions
+export const { receiveMessage, fetchMessagesFail, fetchMessagesLoad, fetchMessagesSuccess } =
+    messageSlice.actions
 
 export default messageSlice.reducer
