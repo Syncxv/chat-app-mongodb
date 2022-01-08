@@ -5,7 +5,7 @@ import connectionReducer from '../reducers/initialize'
 import userStore from '../reducers/user'
 import channelStore from '../reducers/channel'
 import messageStore from '../reducers/message'
-
+import modalStore from '../reducers/modal'
 export function makeStore() {
     return configureStore({
         reducer: {
@@ -13,9 +13,10 @@ export function makeStore() {
             connection: connectionReducer,
             userStore,
             channelStore,
-            messageStore
+            messageStore,
+            modalStore
         },
-        middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger)
+        middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }).concat(logger)
     })
 }
 

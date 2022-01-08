@@ -9,6 +9,7 @@ import { Wrapper } from './login'
 import { Provider } from 'react-redux'
 import store from '../stores/store'
 import SocketClient from '../context/Socket/SocketClient'
+import ModalLayer from '../components/ModalLayer'
 
 export const socketClient = new SocketClient()
 function MyApp({ Component, pageProps }: AppProps) {
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                             <Component {...pageProps} />
                         </SocketContextProvider>
                     )}
-                    <div className="modal-stuff-yk"></div>
+                    <ModalLayer />
                 </Provider>
             </Hydrate>
         </QueryClientProvider>

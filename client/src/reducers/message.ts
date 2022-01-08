@@ -26,6 +26,9 @@ interface fetchMessagesReturnType {
     before: boolean
     cached: boolean
 }
+interface receiveMessageArgsType {
+    payload: { channel_id: string; message: MessageType }
+}
 // export const initalizeMessages = createAsyncThunk(
 //     'messageStore/initalizeUsers',
 //     async (): Promise<initUserReturnType> => {
@@ -70,10 +73,7 @@ export const messageSlice = createSlice({
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
-        receiveMessage: (
-            state,
-            { payload: { channel_id, message } }: { payload: { channel_id: string; message: MessageType } }
-        ) => {
+        receiveMessage: (state, { payload: { channel_id, message } }: receiveMessageArgsType) => {
             state.channelMessages[channel_id].push(message)
         }
     },
