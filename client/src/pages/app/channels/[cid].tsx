@@ -21,8 +21,7 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 const Channel: NextPage<ChannelProps> = ({ params }) => {
-    const [_, socket] = useSocket()
-    return <Main params={params} socket={socket} />
+    return <Main params={params} />
 }
 export const getServerSideProps = async (context: any) => {
     return {
