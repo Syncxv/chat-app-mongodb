@@ -40,11 +40,18 @@ export default class socketAPI {
     }
 
     on(event: string, fun: any) {
-        // No promise is needed here, but we're expecting one in the middleware.
         return new Promise((resolve, reject) => {
             if (!this.socket) return reject('No socket connection.')
 
             this.socket.on(event, fun)
+            resolve(true)
+        })
+    }
+    off(event: string) {
+        return new Promise((resolve, reject) => {
+            if (!this.socket) return reject('No socket connection.')
+
+            this.socket.off(event)
             resolve(true)
         })
     }

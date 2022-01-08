@@ -14,7 +14,7 @@ import Sidebar from '../sidebar'
 import AppWrapper from '../Wrapper'
 import FriendSection from './FriendSection'
 import UnknownChannel from './UnkownChannel'
-
+import { socketClient } from '../../pages/_app'
 interface ChannelProps {
     params?: {
         cid: string
@@ -37,12 +37,16 @@ const Main: NextPage<ChannelProps> = ({ params, socket }) => {
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
         console.log(socket)
-        socket?.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
+
+        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             dispatch(receiveMessage({ message, channel_id: params!.cid }))
             //it aint stupid if it works
             scrollableRef?.current?.lastElementChild?.lastElementChild?.lastElementChild?.scrollIntoView()
         })
-    }, [])
+        return () => {
+            socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE)
+        }
+    }, [params])
     if (!params) {
         return <FriendSection />
     }
