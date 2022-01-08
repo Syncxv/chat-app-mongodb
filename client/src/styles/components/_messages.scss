@@ -87,3 +87,39 @@
         }
     }
 }
+
+@keyframes fadeAnim {
+    from {
+        filter: opacity(1);
+    }
+    to {
+        filter: opacity(0.4);
+    }
+}
+.p-blob:nth-child(1) {
+    animation: fadeAnim 0.7s 0.1s infinite alternate !important;
+}
+.p-blob:nth-child(2) {
+    animation: fadeAnim 0.7s 0.2s infinite alternate !important;
+}
+.p-blob:nth-child(3) {
+    animation: fadeAnim 0.7s 0.3s infinite alternate !important;
+}
+.p-blob:nth-child(4) {
+    animation: fadeAnim 0.7s 0.4s infinite alternate !important;
+}
+.p-blob:nth-child(5) {
+    animation: fadeAnim 0.7s 0.5s infinite alternate !important;
+}
+.p-blob:nth-child(6) {
+    animation: fadeAnim 0.7s 0.6s infinite alternate !important;
+}
+.p-avatar {
+    animation: fadeAnim 0.7s 0.6s infinite alternate !important;
+}
+// why tf does this not work LIEK WHAT
+// @for $row from 1 through 10 {
+//     p-blob:nth-child(#{$row}) {
+//         animation: fadeAnim 0.7s 0.1s * $row infinite alternate !important;
+//     }
+// }
