@@ -9,6 +9,7 @@ export interface MessageStoreState {
     failed: boolean
     initialized: boolean
     loading: boolean
+    hasMore: boolean
     channelMessages: {
         [key: string]: MessageType[]
     }
@@ -19,6 +20,7 @@ const initialState: MessageStoreState = {
     failed: false,
     initialized: true,
     loading: false,
+    hasMore: false,
     channelMessages: {},
     currentUserId: null
 }
@@ -27,6 +29,7 @@ interface fetchMessagesReturnType {
     channel_id: string
     before: boolean
     cached: boolean
+    hasMore: boolean
 }
 interface receiveMessageArgsType {
     payload: { channel_id: string; message: MessageType }
@@ -40,23 +43,37 @@ interface receiveMessageArgsType {
 interface fetchMessagesArguments {
     channel_id?: string
     before?: string
+    cache?: boolean
 }
 export const fetchMessages = createAsyncThunk(
     'messageStore/fetchMessages',
     async (
-        { channel_id, before }: fetchMessagesArguments,
+        { channel_id, before, cache }: fetchMessagesArguments,
         { getState }
     ): Promise<fetchMessagesReturnType> => {
         const url = `${apiUrl}/channels/${channel_id}/messages${before ? '?before=' + before : ''}`
-        if (!channel_id) return { cached: true, messages: [], before: false, channel_id: '' }
-        if (!before) {
+        if (!channel_id) return { cached: true, messages: [], before: false, channel_id: '', hasMore: false }
+        if (cache) {
             const messages = (getState() as AppState).messageStore.channelMessages[channel_id]
             if (Array.isArray(messages)) {
-                return { cached: true, messages: [], before: Boolean(before), channel_id }
+                return {
+                    cached: true,
+                    messages: [],
+                    before: Boolean(before),
+                    channel_id,
+                    hasMore: messages.length === 50
+                }
             }
         }
         const { data } = await axios.get(url)
-        return { messages: data, before: Boolean(before), channel_id, cached: false }
+
+        return {
+            messages: data,
+            before: Boolean(before),
+            channel_id,
+            cached: false,
+            hasMore: data.length === 50
+        }
     }
 )
 export const messageCreate = createAsyncThunk(
@@ -89,13 +106,15 @@ export const messageSlice = createSlice({
             })
             .addCase(fetchMessages.fulfilled, (state, action) => {
                 if (!action.payload.cached) {
-                    if (!action.payload.before)
+                    if (!action.payload.before) {
                         state.channelMessages[action.payload.channel_id] = action.payload.messages
-                    else {
+                        state.hasMore = action.payload.hasMore
+                    } else {
                         console.log(state)
                         state.channelMessages[action.payload.channel_id].unshift(
                             ...(action.payload.messages || [])
                         )
+                        state.hasMore = action.payload.hasMore
                     }
                 }
                 state.loading = false

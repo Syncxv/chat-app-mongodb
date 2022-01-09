@@ -10,7 +10,7 @@ interface MessageProps {
 const Message: NextPage<MessageProps> = ({ message }) => {
     const date = new Date(message.createdAt)
     return (
-        <div className="message">
+        <div className="message" id={message._id}>
             <div className="avatar-wrapp">
                 <img
                     className="avatar"

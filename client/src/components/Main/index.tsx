@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
-import { getChannel } from '../../reducers/channel'
+import { getChannel, setCurrentChannel } from '../../reducers/channel'
 import { fetchMessages, messageCreate, receiveMessage } from '../../reducers/message'
 import { getCurrentUser } from '../../reducers/user'
 import { AppDispatch, AppState } from '../../stores/store'
@@ -35,7 +35,10 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
     const dispatch = useDispatch()
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
-        if (params) dispatch(fetchMessages({ channel_id: params?.cid }))
+        if (params) {
+            dispatch(setCurrentChannel(params.cid))
+            dispatch(fetchMessages({ channel_id: params?.cid }))
+        }
         socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             dispatch(receiveMessage({ message, channel_id: params!.cid }))
             //it aint stupid if it works
@@ -62,14 +65,16 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
         )
         textAreaRef.current.value = ''
     }
-
-    console.log('DATA IN CHANNEL PAGE', messages, channel)
     return (
         <>
             <AppWrapper>
                 <Sidebar />
                 <main className="hey flex flex-col  h-screen w-full">
-                    <div ref={scrollableRef} className="main-seciton">
+                    <div
+                        // style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                        ref={scrollableRef}
+                        className="main-seciton"
+                    >
                         <div className="scrollable">
                             <header>
                                 <h1>{channel?.members[0].username}</h1>
@@ -84,15 +89,6 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
                             type="text"
                             placeholder={`Message ${channel.members[0].username}`}
                         />
-                        <button
-                            onClick={() =>
-                                dispatch(fetchMessages({ channel_id: params.cid, before: messages[0]._id }))
-                            }
-                            type="button"
-                            className="form-send-wrapper"
-                        >
-                            <span className="form-send">Load Messages</span>
-                        </button>
                     </form>
                 </main>
             </AppWrapper>

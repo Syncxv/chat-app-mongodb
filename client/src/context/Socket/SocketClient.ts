@@ -1,4 +1,5 @@
 import Cookie from 'js-cookie'
+import router from 'next/router'
 import io, { Socket } from 'socket.io-client'
 import { apiUrl } from '../../constants'
 export default class socketAPI {
@@ -58,5 +59,6 @@ export default class socketAPI {
 
     handleError(error: Error) {
         console.error(error)
+        if (error.message === 'auth failed eh') router.push('/login')
     }
 }
