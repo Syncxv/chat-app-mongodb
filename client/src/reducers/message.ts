@@ -77,15 +77,6 @@ export const messageSlice = createSlice({
     reducers: {
         receiveMessage: (state, { payload: { channel_id, message } }: receiveMessageArgsType) => {
             state.channelMessages[channel_id].push(message)
-        },
-        fetchMessagesLoad: state => {
-            state.loading = true
-        },
-        fetchMessagesSuccess: state => {
-            state.loading = false
-        },
-        fetchMessagesFail: state => {
-            state.loading = false
         }
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -94,6 +85,7 @@ export const messageSlice = createSlice({
         builder
             .addCase(fetchMessages.pending, (state, actions) => {
                 console.log('FETCHING MESSAGES')
+                state.loading = true
             })
             .addCase(fetchMessages.fulfilled, (state, action) => {
                 if (!action.payload.cached) {
@@ -106,14 +98,15 @@ export const messageSlice = createSlice({
                         )
                     }
                 }
+                state.loading = false
             })
             .addCase(fetchMessages.rejected, state => {
                 state.failed = true
+                state.loading = false
             })
     }
 })
 
-export const { receiveMessage, fetchMessagesFail, fetchMessagesLoad, fetchMessagesSuccess } =
-    messageSlice.actions
+export const { receiveMessage } = messageSlice.actions
 
 export default messageSlice.reducer
