@@ -13,9 +13,10 @@ const getChannels = async (id: string, raw: boolean = false) => {
     const channels = await DmChannels.find({
         members: { $in: [id] }
     }).populate({ path: 'members', model: 'User' })
+    console.log(channels, id)
     const rawRealchannel = channels.map(item => ({
         ...item.toJSON(),
-        members: item.toJSON().members.filter((member: any) => member._id.toString() !== id)
+        members: (item.toJSON() as any).members.filter((member: any) => member._id.toString() !== id)
     }))
     return rawRealchannel
 }

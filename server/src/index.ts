@@ -57,7 +57,7 @@ const main = async () => {
         //     console.log(connectedUser)
         // }) later idk man im stupid
         socket.on('create-message', e => {
-            handleMessagePost(e, socket)
+            handleMessagePost(e, socket, io)
         })
         socket.on('getCurrentUser', () => {
             console.log('I GOT IT NIGGA')

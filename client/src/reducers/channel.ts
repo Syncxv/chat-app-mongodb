@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SOCKET_ACTIONS } from '../constants'
+import axios from 'axios'
+import { apiUrl, SOCKET_ACTIONS } from '../constants'
 import { socketClient } from '../pages/_app'
 
 import type { AppState, AppThunk } from '../stores/store'
@@ -27,6 +28,15 @@ export const initalizeChannels = createAsyncThunk(
         return (await socketClient.emit(SOCKET_ACTIONS.CHANNEL_INIT)) as initChannelReturnType
     }
 )
+export const addChannel = createAsyncThunk(
+    'channelStore/addChannel',
+    async (user_id: string): Promise<{ channel: RawChannel }> => {
+        const { data } = await axios.post(`${apiUrl}/@me/channels`, {
+            members: [user_id]
+        })
+        return { channel: data }
+    }
+)
 export const channelSlice = createSlice({
     name: 'channelStore',
     initialState,
@@ -45,6 +55,12 @@ export const channelSlice = createSlice({
             })
             .addCase(initalizeChannels.rejected, state => {
                 state.failed = true
+            })
+            .addCase(addChannel.pending, state => {
+                console.log('ADDING CHANNEL')
+            })
+            .addCase(addChannel.fulfilled, (state, action) => {
+                state.channels[action.payload.channel._id] = action.payload.channel
             })
     }
 })

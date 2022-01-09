@@ -43,19 +43,27 @@ const users = {
                 const { members } = req.body
                 const { user: jwt_user } = req.query.jwt
                 if (members.length > 2) throw new Error('can only create channel with 2 people okay')
-                const channel = await DmChannels.create({
-                    members: [jwt_user.id, ...members]
-                })
-                await channel.save()
-                res.send({ data: channel })
+                const currentUser = await User.findOne({ _id: jwt_user.id })
+                const sheesh = await Promise.all(
+                    members.map(async s => (await User.findOne({ _id: s }))?._id.toString())
+                )
+                if (currentUser && sheesh.some(s => s !== undefined)) {
+                    console.log(currentUser, sheesh, members)
+                    const channel = await DmChannels.create({
+                        members: [currentUser?._id.toString(), ...sheesh]
+                    })
+                    await channel.save()
+                    return res.status(201).send({ data: channel })
+                }
+                return res.status(404).send({ error: ':| member mismatch ig' })
             } catch (err) {
-                res.send({ error: { message: err.message } })
+                return res.send({ error: { message: err.message } })
             }
         },
         getChannels: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
             const { user: jwt_user } = req.query.jwt
             try {
-                const channel = await getChannels(jwt_user.id, false)
+                const channel = await getChannels(jwt_user.id, true)
                 res.status(200).send(channel)
             } catch (err) {
                 res.send({ error: { message: err.message } })

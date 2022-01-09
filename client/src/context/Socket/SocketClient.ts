@@ -12,7 +12,7 @@ export default class socketAPI {
         })
         return new Promise((resolve, reject) => {
             this.socket.on('connect', () => resolve(true))
-            this.socket.on('connect_error', error => reject(error))
+            this.socket.on('connect_error', error => this.handleError(error))
         })
     }
 
@@ -54,5 +54,9 @@ export default class socketAPI {
             this.socket.off(event)
             resolve(true)
         })
+    }
+
+    handleError(error: Error) {
+        console.error(error)
     }
 }

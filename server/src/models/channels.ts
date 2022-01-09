@@ -1,14 +1,13 @@
 import { Schema, model } from 'mongoose'
+import { User } from './user'
 
 export interface DmChannelType {
-    members: string[]
+    members: any[]
 }
 
 const DmChannel = new Schema<DmChannelType>(
     {
-        members: {
-            // required: true
-        }
+        members: [{ type: 'ObjectId', ref: 'User' }]
     },
     { timestamps: true }
 )

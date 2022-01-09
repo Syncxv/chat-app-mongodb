@@ -5,13 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Socket } from 'socket.io-client'
 import { apiUrl, SOCKET_ACTIONS } from '../../constants'
 import { getChannel } from '../../reducers/channel'
-import {
-    fetchMessages,
-    fetchMessagesLoad,
-    fetchMessagesSuccess,
-    messageCreate,
-    receiveMessage
-} from '../../reducers/message'
+import { fetchMessages, messageCreate, receiveMessage } from '../../reducers/message'
 import { getCurrentUser } from '../../reducers/user'
 import { AppDispatch, AppState } from '../../stores/store'
 import { MessageType } from '../../types'
@@ -41,6 +35,7 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
     const dispatch = useDispatch()
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
+        if (params) dispatch(fetchMessages({ channel_id: params?.cid }))
         socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
             dispatch(receiveMessage({ message, channel_id: params!.cid }))
             //it aint stupid if it works
@@ -55,7 +50,6 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
     }
     const channel = getChannel(params!.cid, state)
     if (!channel) return <UnknownChannel />
-    dispatch(fetchMessages({ channel_id: params?.cid }))
     const messages = state.messageStore.channelMessages[params!.cid]
     const handleSendClick = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -83,27 +77,23 @@ const Main: NextPage<ChannelProps> = ({ params }) => {
                             <MessageList data={messages} />
                         </div>
                     </div>
-                    {messages && (
-                        <form onSubmit={handleSendClick} className="form-wrapper">
-                            <input
-                                ref={textAreaRef}
-                                className="text-area"
-                                type="text"
-                                placeholder={`Message ${channel.members[0].username}`}
-                            />
-                            <button
-                                onClick={() =>
-                                    dispatch(
-                                        fetchMessages({ channel_id: params.cid, before: messages[0]._id })
-                                    )
-                                }
-                                type="button"
-                                className="form-send-wrapper"
-                            >
-                                <span className="form-send">Load Messages</span>
-                            </button>
-                        </form>
-                    )}
+                    <form onSubmit={handleSendClick} className="form-wrapper">
+                        <input
+                            ref={textAreaRef}
+                            className="text-area"
+                            type="text"
+                            placeholder={`Message ${channel.members[0].username}`}
+                        />
+                        <button
+                            onClick={() =>
+                                dispatch(fetchMessages({ channel_id: params.cid, before: messages[0]._id }))
+                            }
+                            type="button"
+                            className="form-send-wrapper"
+                        >
+                            <span className="form-send">Load Messages</span>
+                        </button>
+                    </form>
                 </main>
             </AppWrapper>
         </>

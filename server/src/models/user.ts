@@ -30,7 +30,7 @@ const Friend = new Schema<FriendType>(
 const FriendModel = model('Friend', Friend)
 export { FriendModel }
 
-const User = new Schema<UserType>(
+export const User = new Schema<UserType>(
     {
         username: { type: String, required: true },
         email: { type: String, required: true },
