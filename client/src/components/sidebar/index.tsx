@@ -5,6 +5,7 @@ import { GearSix } from 'phosphor-react'
 import React, { memo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { apiUrl, defaultPfp } from '../../constants'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import useSocket from '../../hooks/useSocket'
 import { AppState } from '../../stores/store'
 import { Channel } from '../../types'
@@ -56,6 +57,7 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
 const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
     const [isOpen, setOpen] = useState(false)
+    const isMobile = useMediaQuery('(max-width: 35em)')
     if (loading) return <h1>Loading Nigga</h1>
     const {
         channelStore: { channels: storeChannels },
@@ -74,7 +76,10 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                 <div className="bar3"></div>
             </div>
             <div
-                style={{ zIndex: '2', transform: isOpen ? 'none' : 'translateX(-100%)' }}
+                style={{
+                    zIndex: '2',
+                    transform: isMobile ? (isOpen ? 'none' : 'translateX(-100%)') : 'none'
+                }}
                 className="sidebar-outer"
             >
                 <div className="sidbar-head">
