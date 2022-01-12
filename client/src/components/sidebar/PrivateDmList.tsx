@@ -7,9 +7,10 @@ import DirectMessage from './DirectMessage'
 interface PrivateDmListsInterface {
     channels: RawChannel[]
     isLoading: boolean
+    closeSidebar: any
 }
 
-const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading }) => {
+const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading, closeSidebar }) => {
     const hasChannels = channels?.length || false
     return (
         <>
@@ -18,7 +19,10 @@ const PrivateDmList: NextPage<PrivateDmListsInterface> = ({ channels, isLoading 
                     !isLoading ? (
                         channels.map(chan => (
                             <DirectMessage
-                                onClick={() => router.push(`/app/channels/${chan._id}`)}
+                                onClick={() => {
+                                    router.push(`/app/channels/${chan._id}`)
+                                    closeSidebar()
+                                }}
                                 key={chan.members[0]._id}
                                 user={chan.members[0]}
                             />

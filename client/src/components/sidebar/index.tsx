@@ -57,6 +57,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
     const [isOpen, setOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 35em)')
+    const close = () => setOpen(false)
     if (loading) return <h1>Loading Nigga</h1>
     const {
         channelStore: { channels: storeChannels },
@@ -91,7 +92,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                             <Plus size={16} />
                         </div>
                     </div>
-                    <PrivateDmList isLoading={false} channels={channels!} />
+                    <PrivateDmList isLoading={false} channels={channels!} closeSidebar={close} />
                 </div>
                 <div className="current-user mt-auto">
                     <div className="cu-container">
