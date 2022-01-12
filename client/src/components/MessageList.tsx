@@ -15,7 +15,11 @@ interface Props {
 
 const MessageList: NextPage<Props> = memo(({ data }) => {
     const {
-        messageStore: { loading: isLoading, channelMessages, hasMore },
+        messageStore: {
+            fetching: { loading: isLoading },
+            channelMessages,
+            hasMore
+        },
         channelStore: { currentChanel }
     } = useSelector((state: AppState) => state)
     const refthingy = useRef<HTMLDivElement>(null)

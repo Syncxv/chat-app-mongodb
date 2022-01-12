@@ -7,6 +7,7 @@ import { FetchingType, fetchMessages } from '../../reducers/message'
 import { AppDispatch, AppState } from '../../stores/store'
 import { MessageType } from '../../types'
 import Message from '../Message'
+import MessagePlaceholder from '../MessagePlaceholder'
 import AppWrapper from '../Wrapper'
 interface InitalChannelProps {
     params?: {
@@ -22,7 +23,8 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const mapStateToProps = (state: AppState, ownProps: InitalChannelProps) => ({
     fetching: state.messageStore.fetching,
-    messages: state.messageStore.channelMessages[ownProps.params?.cid || '']
+    messages: state.messageStore.channelMessages[ownProps.params?.cid || ''],
+    hasMore: state.messageStore.hasMore
 })
 const mapDispatchToProps = (dispatch: AppDispatch) =>
     bindActionCreators(
@@ -33,27 +35,44 @@ const mapDispatchToProps = (dispatch: AppDispatch) =>
     )
 class MainClass extends React.Component<Props> {
     ref: React.RefObject<HTMLDivElement>
+    messageListRef: React.RefObject<HTMLUListElement>
+    resizeObserver: ResizeObserver
     constructor(props: Props) {
         super(props)
         this.ref = React.createRef()
+        this.messageListRef = React.createRef()
+        this.resizeObserver = new ResizeObserver(this.handleResize.bind(this))
         this.getScrollState = this.getScrollState.bind(this)
         this.handleScroll = this.handleScroll.bind(this)
         this.props.fetchMessages({ channel_id: this.props.params?.cid })
     }
     componentDidMount() {
-        console.log('MOUNTED')
+        console.log('MOUNTED', this.ref)
+        this.resizeObserver.observe(this.messageListRef.current!)
     }
-
+    componentWillUnmount() {
+        this.resizeObserver.disconnect()
+    }
     render() {
         const {
             fetching: { loading, finishedFetching },
-            messages
+            messages,
+            hasMore
         } = this.props
         return (
             <AppWrapper>
                 <div ref={this.ref} onScroll={this.handleScroll} className="main-seciton">
-                    <ul className="messages-list">
-                        {finishedFetching ? messages.map(message => <Message message={message} />) : 'aw'}
+                    <ul ref={this.messageListRef} className="messages-list">
+                        {hasMore && (
+                            <div className="placeholder-wrapper-iguess-idk-man">
+                                {Array.from(Array(10)).map(() => (
+                                    <MessagePlaceholder />
+                                ))}
+                            </div>
+                        )}
+                        {finishedFetching
+                            ? messages.map(message => <Message key={message._id} message={message} />)
+                            : 'aw'}
                     </ul>
                 </div>
             </AppWrapper>
@@ -64,7 +83,10 @@ class MainClass extends React.Component<Props> {
         console.log(e)
         console.log(this.getScrollState())
     }
-
+    handleResize(e: ResizeObserverEntry[]) {
+        console.log(e, e[0].target.childElementCount)
+        this.ref.current?.scrollTo(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER)
+    }
     getScrollState() {
         const div = this.ref.current
         if (div) {
