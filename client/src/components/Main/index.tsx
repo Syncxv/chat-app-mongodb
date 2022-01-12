@@ -2,8 +2,15 @@ import { bindActionCreators } from '@reduxjs/toolkit'
 import axios from 'axios'
 import React, { Dispatch } from 'react'
 import { connect } from 'react-redux'
-import { apiUrl } from '../../constants'
-import message, { FetchingType, fetchMessages, initalizeMessagesForChannel } from '../../reducers/message'
+import { apiUrl, SOCKET_ACTIONS } from '../../constants'
+import { socketClient } from '../../pages/_app'
+import message, {
+    FetchingType,
+    fetchMessages,
+    initalizeMessagesForChannel,
+    messageCreate,
+    receiveMessage
+} from '../../reducers/message'
 import { AppDispatch, AppState } from '../../stores/store'
 import { MessageType } from '../../types'
 import Message from '../Message'
@@ -24,13 +31,16 @@ type Props = ReturnType<typeof mapStateToProps> &
 const mapStateToProps = (state: AppState, ownProps: InitalChannelProps) => ({
     fetching: state.messageStore.fetching,
     messages: state.messageStore.channelMessages[ownProps.params?.cid || ''],
+    channel: state.channelStore.channels[ownProps.params?.cid || ''],
     hasMore: state.messageStore.hasMore
 })
 const mapDispatchToProps = (dispatch: AppDispatch) =>
     bindActionCreators(
         {
             fetchMessages,
-            initalizeMessagesForChannel
+            initalizeMessagesForChannel,
+            messageCreate,
+            receiveMessage
         },
         dispatch
     )
@@ -38,6 +48,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
     ref: React.RefObject<HTMLDivElement>
     placeholderRef: React.RefObject<HTMLDivElement>
     messageListRef: React.RefObject<HTMLUListElement>
+    textAreaRef: React.RefObject<HTMLInputElement>
     inited: React.RefObject<boolean>
     resizeObserver: ResizeObserver
     intersectionObserver: IntersectionObserver
@@ -50,6 +61,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         this.ref = React.createRef()
         this.messageListRef = React.createRef()
         this.placeholderRef = React.createRef()
+        this.textAreaRef = React.createRef()
         this.inited = React.createRef()
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this))
         this.intersectionObserver = new IntersectionObserver(this.handleIntersection.bind(this), {
@@ -57,6 +69,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         })
         this.getScrollState = this.getScrollState.bind(this)
         this.handleScroll = this.handleScroll.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
         this.props.fetchMessages({ channel_id: this.props.params?.cid })
     }
     componentDidMount() {
@@ -65,9 +78,15 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         if (this.placeholderRef.current) {
             this.intersectionObserver.observe(this.placeholderRef.current)
         }
+        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
+            this.props.receiveMessage({ message, channel_id: this.props.params.cid })
+            //it aint stupid if it works
+            this.messageListRef.current?.lastElementChild?.scrollIntoView()
+        })
     }
     componentWillUnmount() {
         this.resizeObserver.disconnect()
+        socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE)
     }
     render() {
         const {
@@ -95,13 +114,30 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
                               ))
                             : 'aw'}
                     </ul>
+                    <form onSubmit={this.handleSubmit} className="form-wrapper">
+                        <input
+                            ref={this.textAreaRef}
+                            className="text-area"
+                            type="text"
+                            placeholder={`Message ${this.props.channel.members[0].username}`}
+                        />
+                    </form>
                 </div>
             </AppWrapper>
         )
     }
-
+    handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        if (this.textAreaRef.current?.value) {
+            this.props.messageCreate({
+                content: this.textAreaRef.current.value,
+                channel_id: this.props.params.cid
+            })
+            this.textAreaRef.current.value = ''
+        }
+    }
     handleScroll(e: React.UIEvent<HTMLDivElement, UIEvent>) {
-        console.log(this.getScrollState())
+        // console.log(this.getScrollState())
     }
 
     handleIntersection([entry]: IntersectionObserverEntry[]) {
