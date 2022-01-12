@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { NextPage } from 'next'
-import sizes from '../styles/base/_sizes.module.scss'
-import { _Sizes, _sizes } from '../types'
+import sizes from '../../styles/base/_sizes.module.scss'
+import { _Sizes, _sizes } from '../../types'
 
 interface ButtonProps {
     onClick?: Function
