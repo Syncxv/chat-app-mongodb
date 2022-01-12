@@ -106,6 +106,20 @@ export const messageSlice = createSlice({
     reducers: {
         receiveMessage: (state, { payload: { channel_id, message } }: receiveMessageArgsType) => {
             state.channelMessages[channel_id].push(message)
+        },
+        initalizeMessagesForChannel: state => {
+            return {
+                ...state,
+                failed: false,
+                initialized: true,
+                hasMore: false,
+                fetching: {
+                    loading: false,
+                    startedFetching: false,
+                    finishedFetching: false,
+                    fetchingFailed: false
+                }
+            }
         }
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -140,6 +154,6 @@ export const messageSlice = createSlice({
     }
 })
 
-export const { receiveMessage } = messageSlice.actions
+export const { receiveMessage, initalizeMessagesForChannel } = messageSlice.actions
 
 export default messageSlice.reducer

@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { Dispatch } from 'react'
 import { connect } from 'react-redux'
 import { apiUrl } from '../../constants'
-import { FetchingType, fetchMessages } from '../../reducers/message'
+import message, { FetchingType, fetchMessages, initalizeMessagesForChannel } from '../../reducers/message'
 import { AppDispatch, AppState } from '../../stores/store'
 import { MessageType } from '../../types'
 import Message from '../Message'
@@ -29,7 +29,8 @@ const mapStateToProps = (state: AppState, ownProps: InitalChannelProps) => ({
 const mapDispatchToProps = (dispatch: AppDispatch) =>
     bindActionCreators(
         {
-            fetchMessages
+            fetchMessages,
+            initalizeMessagesForChannel
         },
         dispatch
     )
@@ -45,6 +46,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         this.state = {
             initalized: false
         }
+        this.props.initalizeMessagesForChannel()
         this.ref = React.createRef()
         this.messageListRef = React.createRef()
         this.placeholderRef = React.createRef()
@@ -73,6 +75,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
             messages,
             hasMore
         } = this.props
+        console.log(messages, console.log(this.props.params))
         return (
             <AppWrapper>
                 <div ref={this.ref} onScroll={this.handleScroll} className="main-seciton">
@@ -87,7 +90,9 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
                             )}
                         </div>
                         {finishedFetching
-                            ? messages.map(message => <Message key={message._id} message={message} />)
+                            ? this.props?.messages?.map(message => (
+                                  <Message key={message._id} message={message} />
+                              ))
                             : 'aw'}
                     </ul>
                 </div>
