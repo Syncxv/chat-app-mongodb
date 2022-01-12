@@ -101,7 +101,7 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
 
     handleIntersection([entry]: IntersectionObserverEntry[]) {
         setTimeout(() => {
-            console.log(this.state)
+            console.log(this.state, this.props)
             const scrollState = this.getScrollState()
             const heightTakeAwayOffesetHeight = scrollState.scrollHeight - scrollState.offsetHeight
             console.log(
@@ -115,7 +115,8 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
                 !this.props.fetching.loading &&
                 this.state.initalized &&
                 entry.isIntersecting &&
-                !(heightTakeAwayOffesetHeight === scrollState.scrollTop)
+                !(heightTakeAwayOffesetHeight === scrollState.scrollTop) &&
+                this.props.hasMore
             ) {
                 //CAN FETCH MESSAGES :D HOLY SHIT
                 console.log(entry, this.getScrollState())
