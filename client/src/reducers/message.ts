@@ -5,11 +5,18 @@ import { MessageType } from '../types'
 import { socketClient } from '../pages/_app'
 import { channel } from 'diagnostics_channel'
 import { AppState } from '../stores/store'
+
+export interface FetchingType {
+    loading: boolean
+    startedFetching: boolean
+    finishedFetching: boolean
+    fetchingFailed: boolean
+}
 export interface MessageStoreState {
     failed: boolean
     initialized: boolean
-    loading: boolean
     hasMore: boolean
+    fetching: FetchingType
     channelMessages: {
         [key: string]: MessageType[]
     }
@@ -19,8 +26,13 @@ export interface MessageStoreState {
 const initialState: MessageStoreState = {
     failed: false,
     initialized: true,
-    loading: false,
     hasMore: false,
+    fetching: {
+        loading: false,
+        startedFetching: false,
+        finishedFetching: false,
+        fetchingFailed: false
+    },
     channelMessages: {},
     currentUserId: null
 }
@@ -102,7 +114,8 @@ export const messageSlice = createSlice({
         builder
             .addCase(fetchMessages.pending, (state, actions) => {
                 console.log('FETCHING MESSAGES')
-                state.loading = true
+                state.fetching.startedFetching = true
+                state.fetching.loading = true
             })
             .addCase(fetchMessages.fulfilled, (state, action) => {
                 if (!action.payload.cached) {
@@ -117,11 +130,12 @@ export const messageSlice = createSlice({
                         state.hasMore = action.payload.hasMore
                     }
                 }
-                state.loading = false
+                state.fetching.loading = false
+                state.fetching.finishedFetching = true
             })
             .addCase(fetchMessages.rejected, state => {
-                state.failed = true
-                state.loading = false
+                state.fetching.fetchingFailed = true
+                state.fetching.loading = false
             })
     }
 })

@@ -10,24 +10,26 @@ interface MessageProps {
 const Message: NextPage<MessageProps> = ({ message }) => {
     const date = new Date(message.createdAt)
     return (
-        <div className="message" id={message._id}>
-            <div className="avatar-wrapp">
-                <img
-                    className="avatar"
-                    src={message.author.avatar === null ? defaultPfp : message.author.avatar}
-                    alt=""
-                />
-            </div>
-            <div className="message-contents">
-                <div className="message-header">
-                    <div className="date">
-                        {date.toDateString()} {date.toLocaleTimeString()}
-                    </div>
-                    <span className="message-username">{message.author.username}</span>
+        <li className="message-item">
+            <div className="message" id={message._id}>
+                <div className="avatar-wrapp">
+                    <img
+                        className="avatar"
+                        src={message.author.avatar === null ? defaultPfp : message.author.avatar}
+                        alt=""
+                    />
                 </div>
-                <div className="message-text">{message.content}</div>
+                <div className="message-contents">
+                    <div className="message-header">
+                        <div className="date">
+                            {date.toDateString()} {date.toLocaleTimeString()}
+                        </div>
+                        <span className="message-username">{message.author.username}</span>
+                    </div>
+                    <div className="message-text">{message.content}</div>
+                </div>
             </div>
-        </div>
+        </li>
     )
 }
 

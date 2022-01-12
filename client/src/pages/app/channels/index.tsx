@@ -1,10 +1,14 @@
 import React from 'react'
 import Main from '../../../components/Main'
+import AppWrapper from '../../../components/Wrapper'
 import useSocket from '../../../hooks/useSocket'
 
 const index = () => {
-    const [_, socket] = useSocket()
-    return <Main socket={socket} />
+    return (
+        <AppWrapper>
+            <div>OK THIS IS NOT HTE MAIN COMPINENT GNAG channels/index.tsx</div>
+        </AppWrapper>
+    )
 }
 
 export default index

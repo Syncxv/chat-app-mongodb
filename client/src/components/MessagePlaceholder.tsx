@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import React from 'react'
 import { randomNumberBetweenDecimalToo } from '../util/randomNumberBetweenDecimalToo'
-import Blob from './Blob'
+import Blob from './atoms/Blob'
 const CONTENT_BLOB_WITH_OFFSET_MIN = 2
 const CONTENT_BLOB_WITH_OFFSET_MAX = 5
 interface Props {}

@@ -1,16 +1,16 @@
 import { NextPage } from 'next'
-import Main from '../../components/Main'
-import useSocket from '../../hooks/useSocket'
+import AppWrapper from '../../components/Wrapper'
 
 interface AppProps {
     // channels: Channel[]
 }
 
 const App: NextPage<AppProps> = ({}) => {
-    const [_, socket] = useSocket()
     return (
         <>
-            <Main socket={socket} />
+            <AppWrapper>
+                <div>OK THIS IS NOT HTE MAIN COMPINENT GNAG app/index.tsx</div>
+            </AppWrapper>
         </>
     )
 }

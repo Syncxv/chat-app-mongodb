@@ -43,7 +43,6 @@ const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
             <Modal.Footer>
                 <button
                     onClick={() => {
-                        console.log(ref.current!.value)
                         addChannel(ref.current!.value)
                     }}
                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
@@ -63,11 +62,11 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
         channelStore: { channels: storeChannels },
         userStore: { users, currentUserId }
     } = useSelector((state: AppState) => state)
-    console.log(users, currentUserId)
+
     const currentUser = users[currentUserId!]
 
     const channels = Object.values(storeChannels)
-    console.log('CHANNELS IN SIDEBAR: ', channels)
+
     return (
         <>
             <div onClick={() => setOpen(!isOpen)} className={`mobile-bar-icon ${isOpen ? 'close' : ''}`}>
@@ -129,6 +128,5 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
 export default Sidebar
 
 export async function getStaticProps({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
-    console.log(req, res)
     return { props: { token: req.cookies.token } }
 }
