@@ -124,7 +124,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
         </>
     )
 })
-
+Sidebar.displayName = 'Sidebar'
 export default Sidebar
 
 export async function getStaticProps({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
