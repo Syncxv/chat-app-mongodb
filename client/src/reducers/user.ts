@@ -71,13 +71,20 @@ interface registerUserArgumentsTypes {
 }
 export const registerUser = createAsyncThunk(
     'userStore/registerUser',
-    async ({ username, password, email }: registerUserArgumentsTypes): Promise<{ user: UserType }> => {
-        const { data } = await axios.post<{ user: UserType }>(`${apiUrl}/users/register`, {
-            username,
-            password,
-            email
-        })
-        return data
+    async (
+        { username, password, email }: registerUserArgumentsTypes,
+        { rejectWithValue }
+    ): Promise<{ user: UserType }> => {
+        try {
+            const { data } = await axios.post<{ user: UserType }>(`${apiUrl}/users/register`, {
+                username,
+                password,
+                email
+            })
+            return data
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.error) as any
+        }
     }
 )
 export const userSlice = createSlice({
@@ -118,6 +125,21 @@ export const userSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 console.log('ACTION IN REJECTED', action)
+                state.loginOrRegister.loading = false
+                state.loginOrRegister.failed = true
+                state.loginOrRegister.error = action.payload as { feild: string; message: string }
+            })
+            .addCase(registerUser.pending, state => {
+                console.log('REGISTERING THEM IN :O')
+                state.loginOrRegister.loading = true
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                console.log(action)
+                state.loginOrRegister.loading = false
+                state.loginOrRegister.success = true
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                console.log('ACTION IN REJECTED IN REGISTER', action)
                 state.loginOrRegister.loading = false
                 state.loginOrRegister.failed = true
                 state.loginOrRegister.error = action.payload as { feild: string; message: string }

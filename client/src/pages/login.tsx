@@ -7,7 +7,7 @@ import Button from '../components/atoms/Button'
 import Input from '../components/atoms/Input'
 import { LinkP } from '../components/atoms/Link'
 import { incrementAsync } from '../reducers/counter'
-import { clearLoginOrRegisterState, loginUser } from '../reducers/user'
+import { clearLoginOrRegisterState, loginUser, registerUser } from '../reducers/user'
 import { AppState } from '../stores/store'
 import loginSubmit from '../util/loginSubmit'
 export type Wrapper<P = {}> = NextPage & {
@@ -28,8 +28,13 @@ const LoginHehe: Wrapper = () => {
     const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         // loginSubmit(username, password, email, signUp)
-        dispatch(clearLoginOrRegisterState())
-        dispatch(loginUser({ username, password }))
+        if (!signUp) {
+            dispatch(clearLoginOrRegisterState())
+            dispatch(loginUser({ username, password }))
+        } else {
+            dispatch(clearLoginOrRegisterState())
+            dispatch(registerUser({ username, password, email }))
+        }
     }
     console.log(loading, success, failed)
     // ;(window as any).axios = axios
