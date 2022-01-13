@@ -29,7 +29,7 @@ const main = async () => {
     app.use(cors(corsOptions))
     app.use(cookieParser())
     app.use(express.json())
-    mongoose.connect('mongodb://localhost/chatapp')
+    mongoose.connect(process.env.MONGODB_URL! || 'mongodb://localhost/chatapp')
     const db = mongoose.connection
     db.on('error', err => console.error(err))
     db.on('open', async () => {
