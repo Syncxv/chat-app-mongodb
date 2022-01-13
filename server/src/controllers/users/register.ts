@@ -25,7 +25,9 @@ const register = async (req: Request<any, any, UserType>, res: Response) => {
         const token = createAcessToken(user, user.id)
         console.log(token)
         user.save()
-        res.cookie(COOKIE_NAME, token)
+        res.cookie(COOKIE_NAME, token, {
+            domain: process.env.FRONT_END_DOMAIN!
+        })
         return res.status(201).send({ user })
     } catch (err) {
         console.error(err)
