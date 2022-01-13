@@ -24,7 +24,7 @@ const addChannel = async (id: string) => {
     })
     return data
 }
-const addChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
+const AddChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
     const ref = useRef<HTMLInputElement | null>(null)
     return (
         <Modal onClick={onClick}>
@@ -57,13 +57,12 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
     const [loading] = useSocket()
     const [isOpen, setOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 35em)')
-    const close = () => setOpen(false)
-    if (loading) return <h1>Loading Nigga</h1>
     const {
         channelStore: { channels: storeChannels },
         userStore: { users, currentUserId }
     } = useSelector((state: AppState) => state)
-
+    const close = () => setOpen(false)
+    if (loading) return <h1>Loading Nigga</h1>
     const currentUser = users[currentUserId!]
 
     const channels = Object.values(storeChannels)
@@ -88,7 +87,7 @@ const Sidebar: NextPage<Props> = memo(({ token }) => {
                 <div className="sidebar-main w-full">
                     <div className="sidebar-sub-heading w-full flex justify-between hover:cursor-pointer">
                         <span className="text-gray-500 text-sm font-bold">Messages</span>
-                        <div onClick={() => open(addChannelModal)} className="icon-wrapper">
+                        <div onClick={() => open(AddChannelModal)} className="icon-wrapper">
                             <Plus size={16} />
                         </div>
                     </div>

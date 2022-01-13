@@ -1,11 +1,9 @@
 import { bindActionCreators } from '@reduxjs/toolkit'
-import axios from 'axios'
-import React, { Dispatch } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { apiUrl, SOCKET_ACTIONS } from '../../constants'
+import { SOCKET_ACTIONS } from '../../constants'
 import { socketClient } from '../../pages/_app'
-import message, {
-    FetchingType,
+import {
     fetchMessages,
     initalizeMessagesForChannel,
     messageCreate,
@@ -100,8 +98,8 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
                             <div ref={this.placeholderRef} className="placeholder-wrapper">
                                 {hasMore && (
                                     <div className="placeholder-wrapper-iguess-idk-man">
-                                        {Array.from(Array(10)).map(() => (
-                                            <MessagePlaceholder />
+                                        {Array.from(Array(10)).map((_, i) => (
+                                            <MessagePlaceholder key={i} />
                                         ))}
                                     </div>
                                 )}

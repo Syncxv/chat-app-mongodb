@@ -22,10 +22,11 @@ const MessagePlaceholder: NextPage<Props> = () => {
                         />
                     </div>
                     {/* //love these people fuck https://stackoverflow.com/questions/50898165/react-render-a-certain-number-of-components-dynamically */}
-                    {Array.from(Array(parseInt(randomNumberBetweenDecimalToo(3, 5)))).map(() => (
-                        <div className="line-1 flex gap-1">
-                            {Array.from(Array(parseInt(randomNumberBetweenDecimalToo(4, 7)))).map(() => (
+                    {Array.from(Array(parseInt(randomNumberBetweenDecimalToo(3, 5)))).map((_, i) => (
+                        <div key={i} className="line-1 flex gap-1">
+                            {Array.from(Array(parseInt(randomNumberBetweenDecimalToo(4, 7)))).map((_, i) => (
                                 <Blob
+                                    key={i}
                                     opacity={randomNumberBetweenDecimalToo(0.3, 0.4)}
                                     width={randomNumberBetweenDecimalToo(
                                         CONTENT_BLOB_WITH_OFFSET_MIN,
