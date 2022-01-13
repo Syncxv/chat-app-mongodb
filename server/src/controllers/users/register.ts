@@ -25,9 +25,7 @@ const register = async (req: Request<any, any, UserType>, res: Response) => {
         const token = createAcessToken(user, user.id)
         console.log(token)
         user.save()
-        res.cookie(COOKIE_NAME, token, {
-            domain: '.herokuapp.com'
-        })
+        res.cookie(COOKIE_NAME, token)
         return res.status(201).send({ user })
     } catch (err) {
         console.error(err)

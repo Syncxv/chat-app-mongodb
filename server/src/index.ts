@@ -72,7 +72,7 @@ const main = async () => {
             onChannelInitalData(socket, cb)
         })
     })
-    Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
+    Object.values(routes).forEach(well => app.use(`/api/${well.path}`, well.router))
     //@ts-ignore
     global.users = connectedUser
 }
