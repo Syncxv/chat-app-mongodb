@@ -60,7 +60,8 @@ export const loginUser = createAsyncThunk(
             })
             return data
         } catch (e: any) {
-            return rejectWithValue(e.response.data.error)
+            const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
+            return rejectWithValue(error) as any
         }
     }
 )
@@ -83,7 +84,8 @@ export const registerUser = createAsyncThunk(
             })
             return data
         } catch (e: any) {
-            return rejectWithValue(e.response.data.error) as any
+            const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
+            return rejectWithValue(error) as any
         }
     }
 )
