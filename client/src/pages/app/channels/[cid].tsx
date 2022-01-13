@@ -21,7 +21,8 @@ export const sendMessage = async (id: string, content: string) => {
     })
 }
 const Channel: NextPage<ChannelProps> = ({ params }) => {
-    return <Main params={params} />
+    const getMain = () => <Main key={params.cid + (Math.random() * 1000).toString(36)} params={params} />
+    return getMain()
 }
 export const getServerSideProps = async (context: any) => {
     return {

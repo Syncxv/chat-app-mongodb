@@ -48,13 +48,8 @@ export default class socketAPI {
             resolve(true)
         })
     }
-    off(event: string) {
-        return new Promise((resolve, reject) => {
-            if (!this.socket) return reject('No socket connection.')
-
-            this.socket.off(event)
-            resolve(true)
-        })
+    off(event: string, cb?: any) {
+        this.socket.off(event, cb)
     }
 
     handleError(error: Error) {

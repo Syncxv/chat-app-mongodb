@@ -58,11 +58,12 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
             initalized: false
         }
         this.props.initalizeMessagesForChannel()
-        this.ref = React.createRef()
         this.messageListRef = React.createRef()
         this.placeholderRef = React.createRef()
         this.textAreaRef = React.createRef()
         this.inited = React.createRef()
+        this.props.fetchMessages({ channel_id: this.props.params?.cid })
+        this.ref = React.createRef()
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this))
         this.intersectionObserver = new IntersectionObserver(this.handleIntersection.bind(this), {
             threshold: 0
@@ -70,7 +71,6 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         this.getScrollState = this.getScrollState.bind(this)
         this.handleScroll = this.handleScroll.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.props.fetchMessages({ channel_id: this.props.params?.cid })
     }
     componentDidMount() {
         console.log('MOUNTED', this.ref)
@@ -78,15 +78,12 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         if (this.placeholderRef.current) {
             this.intersectionObserver.observe(this.placeholderRef.current)
         }
-        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, (message: MessageType) => {
-            this.props.receiveMessage({ message, channel_id: this.props.params.cid })
-            //it aint stupid if it works
-            this.messageListRef.current?.lastElementChild?.scrollIntoView()
-        })
+        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage)
     }
     componentWillUnmount() {
-        this.resizeObserver.disconnect()
-        socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE)
+        this.resizeObserver.unobserve(this.placeholderRef.current!)
+        // this.resizeObserver.disconnect()
+        socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage)
     }
     render() {
         const {
@@ -98,22 +95,24 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         return (
             <AppWrapper>
                 <div ref={this.ref} onScroll={this.handleScroll} className="main-seciton">
-                    <ul ref={this.messageListRef} className="messages-list">
-                        <div ref={this.placeholderRef} className="placeholder-wrapper">
-                            {hasMore && (
-                                <div className="placeholder-wrapper-iguess-idk-man">
-                                    {Array.from(Array(10)).map(() => (
-                                        <MessagePlaceholder />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {finishedFetching
-                            ? this.props?.messages?.map(message => (
-                                  <Message key={message._id} message={message} />
-                              ))
-                            : 'aw'}
-                    </ul>
+                    <div className="message-list-wrapper">
+                        <ul ref={this.messageListRef} className="messages-list">
+                            <div ref={this.placeholderRef} className="placeholder-wrapper">
+                                {hasMore && (
+                                    <div className="placeholder-wrapper-iguess-idk-man">
+                                        {Array.from(Array(10)).map(() => (
+                                            <MessagePlaceholder />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            {finishedFetching
+                                ? this.props?.messages?.map(message => (
+                                      <Message key={message._id} message={message} />
+                                  ))
+                                : 'aw'}
+                        </ul>
+                    </div>
                     <form onSubmit={this.handleSubmit} className="form-wrapper">
                         <input
                             ref={this.textAreaRef}
@@ -126,6 +125,11 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
             </AppWrapper>
         )
     }
+    handleReciveMessage(message: MessageType) {
+        this.props.receiveMessage({ message, channel_id: this.props.params.cid })
+        //it aint stupid if it works
+        this.messageListRef.current?.lastElementChild?.scrollIntoView()
+    }
     handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         if (this.textAreaRef.current?.value) {
@@ -137,42 +141,43 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         }
     }
     handleScroll(e: React.UIEvent<HTMLDivElement, UIEvent>) {
-        // console.log(this.getScrollState())
+        console.log(this.getScrollState())
     }
 
     handleIntersection([entry]: IntersectionObserverEntry[]) {
         setTimeout(() => {
             console.log(this.state, this.props)
             const scrollState = this.getScrollState()
-            const heightTakeAwayOffesetHeight = scrollState.scrollHeight - scrollState.offsetHeight
-            console.log(
-                'heightTakeAwayOffesetHeight:',
-                heightTakeAwayOffesetHeight,
-                'scrollTop',
-                scrollState.scrollTop
-            )
+            if (scrollState) {
+                const heightTakeAwayOffesetHeight = scrollState.scrollHeight - scrollState.offsetHeight
+                console.log(
+                    'heightTakeAwayOffesetHeight:',
+                    heightTakeAwayOffesetHeight,
+                    'scrollTop',
+                    scrollState.scrollTop
+                )
 
-            if (
-                !this.props.fetching.loading &&
-                this.state.initalized &&
-                entry.isIntersecting &&
-                !(heightTakeAwayOffesetHeight === scrollState.scrollTop) &&
-                this.props.hasMore
-            ) {
-                //CAN FETCH MESSAGES :D HOLY SHIT
-                console.log(entry, this.getScrollState())
-                this.props.fetchMessages({
-                    channel_id: this.props.params.cid,
-                    before: this.props.messages[0]._id
-                })
+                if (
+                    !this.props.fetching.loading &&
+                    this.state.initalized &&
+                    entry.isIntersecting &&
+                    !(heightTakeAwayOffesetHeight === scrollState.scrollTop) &&
+                    this.props.hasMore
+                ) {
+                    //CAN FETCH MESSAGES :D HOLY SHIT
+                    console.log(entry, this.getScrollState())
+                    this.props.fetchMessages({
+                        channel_id: this.props.params.cid,
+                        before: this.props.messages[0]._id
+                    })
+                }
             }
         }, 100)
     }
 
     handleResize(e: ResizeObserverEntry[]) {
         console.log(e, e[0].target.childElementCount)
-        const scrollState = this.getScrollState()
-        if (scrollState?.scrollTop === 0 && this.props.hasMore) {
+        if (this.getScrollState()?.scrollTop === 0 && this.props.hasMore) {
             this.ref.current?.scrollTo(0, Number.MAX_SAFE_INTEGER)
             this.setState({ initalized: true })
         }
@@ -180,26 +185,30 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
     getScrollState(elem?: HTMLDivElement) {
         if (!elem) {
             const div = this.ref.current!
-            return {
-                scrollTop: div.scrollTop,
-                scrollLeft: div.scrollLeft,
-                scrollHeight: div.scrollHeight,
-                scrollWidth: div.scrollWidth,
-                offsetHeight: div.offsetHeight,
-                offsetWidth: div.offsetWidth,
-                clientHeight: div.clientHeight,
-                offsetTop: div.offsetTop
+            if (div) {
+                return {
+                    scrollTop: div.scrollTop,
+                    scrollLeft: div.scrollLeft,
+                    scrollHeight: div.scrollHeight,
+                    scrollWidth: div.scrollWidth,
+                    offsetHeight: div.offsetHeight,
+                    offsetWidth: div.offsetWidth,
+                    clientHeight: div.clientHeight,
+                    offsetTop: div.offsetTop
+                }
             }
         }
-        return {
-            scrollTop: elem.scrollTop,
-            scrollLeft: elem.scrollLeft,
-            scrollHeight: elem.scrollHeight,
-            scrollWidth: elem.scrollWidth,
-            offsetHeight: elem.offsetHeight,
-            offsetWidth: elem.offsetWidth,
-            clientHeight: elem.clientHeight,
-            offsetTop: elem.offsetTop
+        if (elem) {
+            return {
+                scrollTop: elem.scrollTop,
+                scrollLeft: elem.scrollLeft,
+                scrollHeight: elem.scrollHeight,
+                scrollWidth: elem.scrollWidth,
+                offsetHeight: elem.offsetHeight,
+                offsetWidth: elem.offsetWidth,
+                clientHeight: elem.clientHeight,
+                offsetTop: elem.offsetTop
+            }
         }
     }
 }
