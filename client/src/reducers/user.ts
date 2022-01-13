@@ -75,7 +75,7 @@ export const registerUser = createAsyncThunk(
     async (
         { username, password, email }: registerUserArgumentsTypes,
         { rejectWithValue }
-    ): Promise<{ user: UserType }> => {
+    ): Promise<{ user: UserType } | unknown> => {
         try {
             const { data } = await axios.post<{ user: UserType }>(`${apiUrl}/users/register`, {
                 username,
@@ -120,8 +120,9 @@ export const userSlice = createSlice({
                 console.log('LOGGING THEM IN :O')
                 state.loginOrRegister.loading = true
             })
-            .addCase(loginUser.fulfilled, (state, action) => {
-                console.log(action)
+            .addCase(loginUser.fulfilled, (state, action: any) => {
+                console.log('LOGIN FUFFILED', action, window)
+                window.localStorage.setItem('token', action.payload.accessToken)
                 state.loginOrRegister.loading = false
                 state.loginOrRegister.success = true
             })

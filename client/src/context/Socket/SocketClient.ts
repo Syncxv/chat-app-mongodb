@@ -6,9 +6,10 @@ export default class socketAPI {
     socket!: Socket
 
     connect() {
+        console.log(window)
         this.socket = io(apiUrl, {
             query: {
-                token: Cookie.get('token')
+                token: Cookie.get('token') || window.localStorage.getItem('token')
             }
         })
         return new Promise((resolve, reject) => {

@@ -30,7 +30,8 @@ const login = async (req: Request<any, any, UserType>, res: Response) => {
         })
         const cleanUser = cleanJson(user.toJSON(), ['password'])
         return res.send({
-            user: cleanUser
+            user: cleanUser,
+            accessToken: token
         })
     } catch (err) {
         console.error(err)

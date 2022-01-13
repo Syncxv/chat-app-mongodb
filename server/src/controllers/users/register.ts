@@ -26,7 +26,7 @@ const register = async (req: Request<any, any, UserType>, res: Response) => {
         console.log(token)
         user.save()
         res.cookie(COOKIE_NAME, token)
-        return res.status(201).send({ user })
+        return res.status(201).send({ user, accessToken: token })
     } catch (err) {
         console.error(err)
         return res.send({ error: err.message })

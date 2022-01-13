@@ -26,10 +26,10 @@ export const connectedUser = new Map<
 >()
 const main = async () => {
     const app = express()
+    app.set('trust proxy', 1)
     app.use(cors(corsOptions))
     app.use(cookieParser())
     app.use(express.json())
-    app.set('trust proxy', 1)
     console.log(process.env.MONGODB_URL!)
     mongoose.connect(process.env.MONGODB_URL! || 'mongodb://localhost/chatapp')
     const db = mongoose.connection
@@ -73,7 +73,7 @@ const main = async () => {
             onChannelInitalData(socket, cb)
         })
     })
-    Object.values(routes).forEach(well => app.use(`/api/${well.path}`, well.router))
+    Object.values(routes).forEach(well => app.use(`/${well.path}`, well.router))
     //@ts-ignore
     global.users = connectedUser
 }
