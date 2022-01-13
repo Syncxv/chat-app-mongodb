@@ -1,4 +1,4 @@
 # chat-app-mongodb
 
 :D 
-https://chat-app-mongodb.vercel.app/app
+https://chat-app-mongodb.vercel.app/login
