@@ -78,12 +78,12 @@ class MainClass extends React.Component<Props, { initalized: boolean }> {
         if (this.placeholderRef.current) {
             this.intersectionObserver.observe(this.placeholderRef.current)
         }
-        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage)
+        socketClient.on(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage.bind(this))
     }
     componentWillUnmount() {
         this.resizeObserver.unobserve(this.placeholderRef.current!)
         // this.resizeObserver.disconnect()
-        socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage)
+        socketClient.off(SOCKET_ACTIONS.RECIVE_MESSAGE, this.handleReciveMessage.bind(this))
     }
     render() {
         const {
