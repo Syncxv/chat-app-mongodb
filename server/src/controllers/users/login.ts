@@ -8,16 +8,15 @@ import cleanJson from '../../utils/cleanJson'
 const login = async (req: Request<any, any, UserType>, res: Response) => {
     console.log('hey')
     try {
-        const user = (
-            await User.find({ username: req.body.username }).select('+password')
-        )[0]
+        ;(global as any).User = User
+        const user = (await User.find({ username: req.body.username }).select('+password'))[0]
         if (!user)
-            return res.send({
+            return res.status(403).send({
                 error: { feild: 'username', message: 'unkown username' }
             })
         const valid = await argon2.verify(user.password, req.body.password)
         if (!valid)
-            return res.send({
+            return res.status(403).send({
                 error: {
                     feild: 'password',
                     message: 'password is incorrect nobba'

@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             if (error.response.status === 401) {
                 router.push('/login')
             }
-            return error
+            return Promise.reject(error)
         }
     )
     const isNotApp = (Component as Wrapper).isNotApp || false

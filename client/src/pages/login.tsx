@@ -1,10 +1,14 @@
+import axios from 'axios'
 import type { NextPage } from 'next'
-import React, { useContext, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/router'
+import React, { useContext, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Button from '../components/atoms/Button'
 import Input from '../components/atoms/Input'
 import { LinkP } from '../components/atoms/Link'
 import { incrementAsync } from '../reducers/counter'
+import { clearLoginOrRegisterState, loginUser } from '../reducers/user'
+import { AppState } from '../stores/store'
 import loginSubmit from '../util/loginSubmit'
 export type Wrapper<P = {}> = NextPage & {
     isNotApp: boolean
@@ -13,14 +17,27 @@ const LoginHehe: Wrapper = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
+    const router = useRouter()
     // const [invalid, setError] = useState<ErrorResponse>()
     const dispatch = useDispatch()
+    const { loading, failed, success, error } = useSelector(
+        (state: AppState) => state.userStore.loginOrRegister
+    )
     // dispatch(incrementAsync(20))
     const [signUp, setSignUp] = useState(false)
     const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        loginSubmit(username, password, signUp)
+        // loginSubmit(username, password, email, signUp)
+        dispatch(clearLoginOrRegisterState())
+        dispatch(loginUser({ username, password }))
     }
+    console.log(loading, success, failed)
+    // ;(window as any).axios = axios
+    if (success) {
+        dispatch(clearLoginOrRegisterState())
+        router.push('/app')
+    }
+    console.log(error)
     return (
         <>
             <div className="login-form-wrapper" style={{ width: '100%', margin: '0 auto' }}>
@@ -46,12 +63,14 @@ const LoginHehe: Wrapper = () => {
                         {signUp ? 'already have an account :|' : 'sign up nig'}
                     </LinkP>
                     <Button
-                        disabled={false}
+                        disabled={loading}
                         className="w-full"
                         text="Continue"
                         size={Button.Size.Small}
                         type="submit"
                     ></Button>
+                    {loading && <h1>LOADING</h1>}
+                    {failed && <h1>{error?.message}</h1>}
                 </form>
             </div>
         </>
