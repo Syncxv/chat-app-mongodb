@@ -29,6 +29,7 @@ const main = async () => {
     app.use(cors(corsOptions))
     app.use(cookieParser())
     app.use(express.json())
+    console.log(process.env.MONGODB_URL!)
     mongoose.connect(process.env.MONGODB_URL! || 'mongodb://localhost/chatapp')
     const db = mongoose.connection
     db.on('error', err => console.error(err))
@@ -38,12 +39,14 @@ const main = async () => {
         ;(globalThis as any).DmChannel = DmChannel
     })
     const server = app.listen(PORT, () =>
-        console.log(`listening on port ${PORT} url: http://localhost:${process.env.PORT || PORT}`)
+        console.log(
+            `listening on port ${process.env.PORT || PORT} url: http://localhost:${process.env.PORT || PORT}`
+        )
     )
     const io = new Server(server, {
         cors: {
             credentials: true,
-            origin: [/* 'http://localhost:3000' */ process.env.FRONT_END_DOMAIN!]
+            origin: [process.env.FRONT_END_DOMAIN || 'http://localhost:3000']
         }
     })
     io.use(socketAuth)
