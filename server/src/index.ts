@@ -38,12 +38,12 @@ const main = async () => {
         ;(globalThis as any).DmChannel = DmChannel
     })
     const server = app.listen(PORT, () =>
-        console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
+        console.log(`listening on port ${PORT} url: http://localhost:${process.env.PORT || PORT}`)
     )
     const io = new Server(server, {
         cors: {
             credentials: true,
-            origin: ['http://localhost:3000']
+            origin: [/* 'http://localhost:3000' */ process.env.FRONT_END_DOMAIN!]
         }
     })
     io.use(socketAuth)
