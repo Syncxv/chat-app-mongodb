@@ -9,7 +9,6 @@ import { LinkP } from '../components/atoms/Link'
 import { incrementAsync } from '../reducers/counter'
 import { clearLoginOrRegisterState, loginUser, registerUser } from '../reducers/user'
 import { AppState } from '../stores/store'
-import loginSubmit from '../util/loginSubmit'
 export type Wrapper<P = {}> = NextPage & {
     isNotApp: boolean
 }
