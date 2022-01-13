@@ -1,10 +1,10 @@
 import { useContext } from 'react'
-import { Socket } from 'socket.io-client'
+import socketAPI from '../context/Socket/SocketClient'
 import { SocketContext } from '../context/Socket/SocketContext'
 
-const useSocket = (): [boolean, Socket] => {
+const useSocket = (): [boolean, socketAPI] => {
     const [loading, socket] = useContext(SocketContext)
-    return [loading, socket as Socket]
+    return [loading, socket as socketAPI]
 }
 
 export default useSocket
