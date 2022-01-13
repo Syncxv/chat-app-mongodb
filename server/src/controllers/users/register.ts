@@ -26,7 +26,7 @@ const register = async (req: Request<any, any, UserType>, res: Response) => {
         console.log(token)
         user.save()
         res.cookie(COOKIE_NAME, token, {
-            domain: process.env.FRONT_END_DOMAIN!
+            domain: '.herokuapp.com'
         })
         return res.status(201).send({ user })
     } catch (err) {

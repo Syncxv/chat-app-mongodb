@@ -24,7 +24,7 @@ const login = async (req: Request<any, any, UserType>, res: Response) => {
             })
         const token = createAcessToken(user, user.id)
         res.cookie(COOKIE_NAME, token, {
-            domain: process.env.FRONT_END_DOMAIN!,
+            domain: '.herokuapp.com',
             maxAge: 900000,
             httpOnly: false,
             secure: false
