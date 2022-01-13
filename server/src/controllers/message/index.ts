@@ -7,10 +7,7 @@ const messageController = {
         get: async (_: Request, res: Response) => {
             res.send({ welp: 'hehe' })
         },
-        post: async (
-            req: Request<any, any, any, { jwt: { user: UserType } }>,
-            res: Response
-        ) => {
+        post: async (req: Request<any, any, any, { jwt: { user: UserType } }>, res: Response) => {
             try {
                 const { user: jwt_user } = req.query.jwt
                 const user = await User.findOne({ id: jwt_user.id })
@@ -30,13 +27,13 @@ const messageController = {
             } catch (err) {
                 return res.send({ error: err.message })
             }
-        },
-        delete: async (
-            req: Request<any, any, any, { jwt: { user: UserType } }>,
-            res: Response
-        ) => {
-            //ill doo this later eh
         }
+        // delete: async (
+        //     req: Request<any, any, any, { jwt: { user: UserType } }>,
+        //     res: Response
+        // ) => {
+        //     //ill doo this later eh
+        // }
     }
 }
 

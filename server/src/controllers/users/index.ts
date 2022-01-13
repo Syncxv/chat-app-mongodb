@@ -84,7 +84,7 @@ const users = {
                     res.send({ error: err.message })
                 }
             },
-            getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {},
+            // getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {},
             add: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import users from '../controllers/users'
-import isAuth from '../utils/isAuth'
+// import isAuth from '../utils/isAuth'
 
 const router = Router()
 router.route('/:id').get(users.index)

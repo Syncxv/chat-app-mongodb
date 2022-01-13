@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose'
-import { User } from './user'
 
 export interface DmChannelType {
     members: any[]
