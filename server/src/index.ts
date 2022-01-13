@@ -13,7 +13,7 @@ import onUserInitalData, { USER_INITAL_DATA_EVENT_NAME } from './socket/users/in
 import onChannelInitalData, { CHANNEL_INITAL_DATA_EVENT_NAME } from './socket/channels/initalData'
 import { handleMessagePost } from './socket/messages'
 dotenv.config()
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 export const connectedUser = new Map<
     string,
     {
@@ -39,9 +39,7 @@ const main = async () => {
         ;(globalThis as any).DmChannel = DmChannel
     })
     const server = app.listen(PORT, () =>
-        console.log(
-            `listening on port ${process.env.PORT || PORT} url: http://localhost:${process.env.PORT || PORT}`
-        )
+        console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)
     )
     const io = new Server(server, {
         cors: {
