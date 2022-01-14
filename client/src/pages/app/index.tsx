@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import FriendSection from '../../components/Main/Friends/FriendSection'
 import AppWrapper from '../../components/Wrapper'
 
 interface AppProps {
@@ -8,9 +9,7 @@ interface AppProps {
 const App: NextPage<AppProps> = ({}) => {
     return (
         <>
-            <AppWrapper>
-                <div>OK THIS IS NOT HTE MAIN COMPINENT GNAG app/index.tsx</div>
-            </AppWrapper>
+            <FriendSection />
         </>
     )
 }

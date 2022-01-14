@@ -13,6 +13,10 @@ export interface UserType {
     createdAt: string
     updatedAt: string
 }
+export interface FriendType {
+    type: number
+    user: string
+}
 export interface RawChannel {
     id: string
     _id: string

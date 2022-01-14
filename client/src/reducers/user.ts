@@ -5,7 +5,7 @@ import { apiUrl, SOCKET_ACTIONS } from '../constants'
 import { socketClient } from '../pages/_app'
 
 import type { AppState, AppThunk } from '../stores/store'
-import { UserType } from '../types'
+import { FriendType, UserType } from '../types'
 
 export interface UserStoreState {
     failed: boolean
@@ -16,6 +16,7 @@ export interface UserStoreState {
         success: boolean
         error?: { feild: string; message: string }
     }
+    friends: FriendType[]
     users: {
         [key: string]: UserType
     }
@@ -31,11 +32,13 @@ const initialState: UserStoreState = {
     },
     initialized: false,
     users: {},
+    friends: [],
     currentUserId: null
 }
 interface initUserReturnType {
     users: UserType[]
     currentUser: UserType
+    friends: FriendType[]
 }
 export const initalizeUsers = createAsyncThunk(
     'userStore/initalizeUsers',
@@ -111,6 +114,7 @@ export const userSlice = createSlice({
                 })
                 state.currentUserId = action.payload.currentUser._id
                 state.users[action.payload.currentUser._id] = action.payload.currentUser
+                state.friends = action.payload.friends
                 state.initialized = true
             })
             .addCase(initalizeUsers.rejected, state => {

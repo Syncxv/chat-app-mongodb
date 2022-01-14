@@ -1,0 +1,24 @@
+.friends {
+    .friend {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem;
+        &:hover {
+            background: var(--background-floating);
+        }
+        .friend-details {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            .friend-avatar-wrapper {
+                width: 32px;
+                height: 32px;
+                .friend-avatar {
+                    border-radius: 900px;
+                    height: 100%;
+                }
+            }
+        }
+    }
+}

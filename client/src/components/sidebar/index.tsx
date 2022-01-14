@@ -3,10 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage, NextApiRequest, NextApiResponse } from 'next'
 import { GearSix } from 'phosphor-react'
 import React, { memo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { apiUrl, defaultPfp } from '../../constants'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import useSocket from '../../hooks/useSocket'
+import { addChannel } from '../../reducers/channel'
 import { AppState } from '../../stores/store'
 import { Channel } from '../../types'
 import { open } from '../../util/openModal'
@@ -18,14 +19,9 @@ interface Props {
     channels?: Channel[]
     token?: string
 }
-const addChannel = async (id: string) => {
-    const { data } = await axios.post(`${apiUrl}/@me/channels`, {
-        members: [id]
-    })
-    return data
-}
 const AddChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
     const ref = useRef<HTMLInputElement | null>(null)
+    const dispatch = useDispatch()
     return (
         <Modal onClick={onClick}>
             <Modal.Content>
@@ -43,7 +39,9 @@ const AddChannelModal: NextPage<{ onClick: Function }> = ({ onClick }) => {
             <Modal.Footer>
                 <button
                     onClick={() => {
-                        addChannel(ref.current!.value)
+                        if (ref.current!.value) {
+                            dispatch(addChannel(ref.current!.value))
+                        }
                     }}
                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 >
