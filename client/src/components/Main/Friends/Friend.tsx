@@ -45,7 +45,9 @@ const Friend: NextPage<Props> = ({ type, user }) => {
                     </div>
                     <span>{user.username}</span>
                 </div>
-                <ActionButton type={type} />
+                <div className="flex gap-4">
+                    <ActionButton type={type} />
+                </div>
             </div>
         </>
     )
