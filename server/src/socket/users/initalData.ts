@@ -9,9 +9,10 @@ const onUserInitalData = async (socket: Socket, cb: any) => {
     const arr = await Promise.all(
         currentUser.friends.map(async (obj: FriendType) => await User.findById(obj.user._id.toString()))
     )
+    console.log(currentUser, arr)
     const currentUserJson = currentUser.toJSON()
     delete (currentUserJson as any).friends
-    cb({ users: arr, currentUser: currentUserJson })
+    cb({ users: arr, currentUser: currentUserJson, friends: currentUser.toJSON().friends })
 }
 
 export default onUserInitalData

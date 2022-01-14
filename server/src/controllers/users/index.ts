@@ -1,10 +1,13 @@
 import { Request, Response } from 'express'
+import { ioMap } from '../..'
 import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
+import { recciveFriendRequest } from '../../socket/users/friends'
 import { FreindTypes, queryAuthType } from '../../types'
 import getChannels from '../../utils/getChannels'
 import login from './login'
 import register from './register'
+import { Server } from 'socket.io'
 const users = {
     index: async (req: Request, res: Response) => {
         try {
@@ -53,7 +56,7 @@ const users = {
                         members: [currentUser?._id.toString(), ...sheesh]
                     })
                     await channel.save()
-                    return res.status(201).send({ data: channel })
+                    return res.status(201).send(channel)
                 }
                 return res.status(404).send({ error: ':| member mismatch ig' })
             } catch (err) {
@@ -84,7 +87,16 @@ const users = {
                     res.send({ error: err.message })
                 }
             },
-            // getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {},
+            // getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
+            //     try {
+            //         const { user: jwt_user } = req.query.jwt
+            //         const user = await User.findById(jwt_user.id).populate([
+            //             { path: 'friends', model: 'Friend' }
+            //         ])
+            //     } catch(e) {
+            //         return res.status(500).send({error: e.message})
+            //     }
+            // },
             add: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt
@@ -98,8 +110,10 @@ const users = {
                     if (!requestedUser) return res.send({ error: 'who tf is that' })
                     user?.friends.push({ user: req.params.id, type: FreindTypes.PENDING_OUTGOING })
                     requestedUser.friends.push({ user: req.params.id, type: FreindTypes.PENDING_INCOMMING })
-                    user.save()
-                    requestedUser.save()
+                    await user.save()
+                    await requestedUser.save()
+                    const io = ioMap.get('io')
+                    recciveFriendRequest(io as Server, requestedUser.id, user.toJSON() as unknown as UserType)
                     console.log(user, requestedUser)
                     return res.send({ user })
                 } catch (err) {

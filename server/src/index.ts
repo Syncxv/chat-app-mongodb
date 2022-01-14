@@ -24,6 +24,7 @@ export const connectedUser = new Map<
         socket_id: string
     }
 >()
+export const ioMap = new Map<string, Server>()
 const main = async () => {
     const app = express()
     app.set('trust proxy', 1)
@@ -49,6 +50,7 @@ const main = async () => {
         }
     })
     io.use(socketAuth)
+    ioMap.set('io', io)
     io.on('connection', async socket => {
         console.log('a user connected: ', socket.data.jwt)
         const user = await User.findById(socket.data.jwt.user.id)

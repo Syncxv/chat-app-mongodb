@@ -13,5 +13,6 @@ export enum SOCKET_ACTIONS {
     CREATE_MESSAGE = 'create-message',
     CHANNEL_INIT = 'channel-inital-data',
     USER_INIT = 'user-inital-data',
-    RECIVE_MESSAGE = 'recive-message'
+    RECIVE_MESSAGE = 'recive-message',
+    RECIVE_FRIEND_REQUEST = 'recive-friend-request'
 }
