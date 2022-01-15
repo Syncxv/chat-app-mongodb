@@ -15,7 +15,7 @@ const AddFriendSection: NextPage<Props> = ({}) => {
             <h1 className="text-2xl mb-4 mt-2">Add Friend</h1>
             <Text>ENTER A USERNAME aight</Text>
             <Input2 placeholder="hehe" onChange={e => setValue(e.target.value)} />
-            <button onClick={() => console.log(value)} className="btn">
+            <button onClick={() => dispatch(addFriend({ username: value }))} className="btn">
                 Add Friend
             </button>
         </>

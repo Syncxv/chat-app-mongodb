@@ -18,7 +18,7 @@ const users = {
             return res.send({ data })
         } catch (err) {
             console.error(err)
-            return res.send({ error: { message: err.message } })
+            return res.status(500).send({ error: { message: err.message } })
         }
     },
     register,
@@ -60,7 +60,7 @@ const users = {
                 }
                 return res.status(404).send({ error: ':| member mismatch ig' })
             } catch (err) {
-                return res.send({ error: { message: err.message } })
+                return res.status(500).send({ error: { message: err.message } })
             }
         },
         getChannels: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
@@ -69,7 +69,7 @@ const users = {
                 const channel = await getChannels(jwt_user.id, true)
                 res.status(200).send(channel)
             } catch (err) {
-                res.send({ error: { message: err.message } })
+                res.status(500).send({ error: { message: err.message } })
             }
         },
         friends: {
@@ -84,7 +84,7 @@ const users = {
                     res.send(user || { well: ':|' })
                 } catch (err) {
                     console.error(err)
-                    res.send({ error: { message: err.message } })
+                    res.status(500).send({ error: { message: err.message } })
                 }
             },
             // getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
@@ -109,8 +109,8 @@ const users = {
                         { path: 'friends', model: 'Friend' }
                     ])
                     if (!requestedUser) return res.status(404).send({ error: { message: 'who tf is that' } })
-                    user?.friends.push({ user: req.params.id, type: FreindTypes.PENDING_OUTGOING })
-                    requestedUser.friends.push({ user: req.params.id, type: FreindTypes.PENDING_INCOMMING })
+                    user?.friends.push({ user: requestedUser.id, type: FreindTypes.PENDING_OUTGOING })
+                    requestedUser.friends.push({ user: user.id, type: FreindTypes.PENDING_INCOMMING })
                     await user.save()
                     await requestedUser.save()
                     const io = ioMap.get('io')
@@ -119,7 +119,7 @@ const users = {
                     return res.send({ user })
                 } catch (err) {
                     console.log(err)
-                    return res.send({ error: { message: err.message } })
+                    return res.status(500).send({ error: { message: err.message } })
                 }
             },
             //its not done :| ill do it later fuck sake
@@ -133,7 +133,7 @@ const users = {
                     user.save()
                     res.send({ user })
                 } catch (err) {
-                    res.send({ error: { message: err.message } })
+                    res.status(500).send({ error: { message: err.message } })
                 }
             }
         }

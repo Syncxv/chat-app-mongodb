@@ -5,7 +5,7 @@ import { apiUrl, SOCKET_ACTIONS } from '../constants'
 import { socketClient } from '../pages/_app'
 
 import type { AppState, AppThunk } from '../stores/store'
-import { FriendType, UserType } from '../types'
+import { FriendType, UserType, UserTypeWithFriends } from '../types'
 
 export interface UserStoreState {
     failed: boolean
@@ -95,12 +95,14 @@ export const registerUser = createAsyncThunk(
 )
 export const addFriend = createAsyncThunk(
     'userStore/addFriend',
-    async ({ username }: { username: string }, { rejectWithValue }) => {
+    async (
+        { username }: { username: string },
+        { rejectWithValue }
+    ): Promise<{ user: UserTypeWithFriends }> => {
         try {
-            const { data } = await axios.post<UserType>(`${apiUrl}/users/add`, {
-                username
-            })
-            return data
+            return (
+                await axios.post<{ user: UserTypeWithFriends }>(`${apiUrl}/@me/friends/add`, { username })
+            ).data
         } catch (e: any) {
             const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
             return rejectWithValue(error) as any
@@ -171,7 +173,7 @@ export const userSlice = createSlice({
             })
             .addCase(addFriend.fulfilled, (state, action) => {
                 console.log('IN FRIEND FUFFILED', action)
-                state.friends.push(action.payload)
+                state.friends = action.payload.user.friends
             })
             .addCase(addFriend.rejected, (state, action) => {
                 console.log('ACTION IN REJECTED IN REGISTER', action)

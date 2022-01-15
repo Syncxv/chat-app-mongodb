@@ -26,7 +26,11 @@ const FriendSection: NextPage<Props> = props => {
             console.log('NEW FRIEND REQ', user)
         })
     }, [])
-    const filterd = friends.filter(s => s.type === page)
+    const filterd = friends.filter(s =>
+        page === FreindTypes.PENDING
+            ? s.type === FreindTypes.PENDING_INCOMMING || s.type === FreindTypes.PENDING_OUTGOING
+            : s.type === page
+    )
     const isAddFriend = page === 'addFriend'
     return (
         <>

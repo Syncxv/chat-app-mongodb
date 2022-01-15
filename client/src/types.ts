@@ -13,6 +13,17 @@ export interface UserType {
     createdAt: string
     updatedAt: string
 }
+export interface UserTypeWithFriends {
+    id: string
+    _id: string
+    username: string
+    discriminator: number
+    email: string
+    avatar: string | null
+    createdAt: string
+    updatedAt: string
+    friends: FriendType[]
+}
 export interface FriendType {
     type: number
     user: string
