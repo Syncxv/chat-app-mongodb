@@ -8,6 +8,7 @@ export enum SOCKET_ACTIONS {
 export enum FreindTypes {
     NONE = 0,
     FRIEND = 1,
+    PENDING = 2,
     PENDING_INCOMMING = 3,
     PENDING_OUTGOING = 4
 }

@@ -22,3 +22,17 @@
         }
     }
 }
+
+.friend-page-buttons {
+    padding: 0.7em;
+    background-color: var(--background-modifier-accent);
+    .friend-page-btn {
+        padding: 0.2em 0.5em;
+        background: var(--background-floating);
+        border-radius: 7px;
+        &.add-friend {
+            background-color: hsl(139, 47.3%, 43.9%);
+            color: hsl(0, 0%, 100%);
+        }
+    }
+}
