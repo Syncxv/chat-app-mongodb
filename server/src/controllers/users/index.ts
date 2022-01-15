@@ -18,7 +18,7 @@ const users = {
             return res.send({ data })
         } catch (err) {
             console.error(err)
-            return res.send({ error: err.message })
+            return res.send({ error: { message: err.message } })
         }
     },
     register,
@@ -84,7 +84,7 @@ const users = {
                     res.send(user || { well: ':|' })
                 } catch (err) {
                     console.error(err)
-                    res.send({ error: err.message })
+                    res.send({ error: { message: err.message } })
                 }
             },
             // getFriend: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
@@ -97,17 +97,18 @@ const users = {
             //         return res.status(500).send({error: e.message})
             //     }
             // },
-            add: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
+            add: async (req: Request<any, { username: string }, any, queryAuthType>, res: Response) => {
                 try {
+                    if (!req.body.username)
+                        return res.status(400).send({ error: { message: 'WHY YOU NO PASS USERNAME HUH' } })
                     const { user: jwt_user } = req.query.jwt
                     const user = await User.findById(jwt_user.id).populate([
                         { path: 'friends', model: 'Friend' }
                     ])
-                    console.log(user)
-                    const requestedUser = await User.findById(req.params.id).populate([
+                    const requestedUser = await User.findOne({ username: req.body.username }).populate([
                         { path: 'friends', model: 'Friend' }
                     ])
-                    if (!requestedUser) return res.send({ error: 'who tf is that' })
+                    if (!requestedUser) return res.status(404).send({ error: { message: 'who tf is that' } })
                     user?.friends.push({ user: req.params.id, type: FreindTypes.PENDING_OUTGOING })
                     requestedUser.friends.push({ user: req.params.id, type: FreindTypes.PENDING_INCOMMING })
                     await user.save()
@@ -118,7 +119,7 @@ const users = {
                     return res.send({ user })
                 } catch (err) {
                     console.log(err)
-                    return res.send({ error: err.message })
+                    return res.send({ error: { message: err.message } })
                 }
             },
             //its not done :| ill do it later fuck sake
@@ -132,7 +133,7 @@ const users = {
                     user.save()
                     res.send({ user })
                 } catch (err) {
-                    res.send({ error: err.message })
+                    res.send({ error: { message: err.message } })
                 }
             }
         }

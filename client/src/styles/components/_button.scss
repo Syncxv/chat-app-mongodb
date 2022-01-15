@@ -8,13 +8,17 @@
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
-    -webkit-user-select: none;
     user-select: none;
     border: 1px solid;
     border-radius: 6px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
-    color: rgb(24, 24, 24);
+    color: hsl(0, 0%, 14%);
     background-color: var(--primary);
+    padding: 0.5em 2em;
+    outline: none;
+    border: none;
+    &.green {
+        background-color: var(--background-success);
+        color: var(--text-normal);
+    }
 }

@@ -21,6 +21,7 @@ export interface UserStoreState {
         [key: string]: UserType
     }
     currentUserId: string | null
+    error?: { feild: string; message: string }
 }
 
 const initialState: UserStoreState = {
@@ -92,6 +93,20 @@ export const registerUser = createAsyncThunk(
         }
     }
 )
+export const addFriend = createAsyncThunk(
+    'userStore/addFriend',
+    async ({ username }: { username: string }, { rejectWithValue }) => {
+        try {
+            const { data } = await axios.post<UserType>(`${apiUrl}/users/add`, {
+                username
+            })
+            return data
+        } catch (e: any) {
+            const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
+            return rejectWithValue(error) as any
+        }
+    }
+)
 export const userSlice = createSlice({
     name: 'userStore',
     initialState,
@@ -150,6 +165,17 @@ export const userSlice = createSlice({
                 state.loginOrRegister.loading = false
                 state.loginOrRegister.failed = true
                 state.loginOrRegister.error = action.payload as { feild: string; message: string }
+            })
+            .addCase(addFriend.pending, state => {
+                console.log('ADDING FRIEND')
+            })
+            .addCase(addFriend.fulfilled, (state, action) => {
+                console.log('IN FRIEND FUFFILED', action)
+                state.friends.push(action.payload)
+            })
+            .addCase(addFriend.rejected, (state, action) => {
+                console.log('ACTION IN REJECTED IN REGISTER', action)
+                state.error = action.payload as { feild: string; message: string }
             })
     }
 })
