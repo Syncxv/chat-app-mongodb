@@ -35,7 +35,7 @@
                         flex-direction: row-reverse;
                         gap: 0.5rem;
                         .date {
-                            color: rgba(colors.$text-color, 0.8);
+                            color: rgba(var(--text-normal), 0.8);
                             font-size: 0.85rem;
                         }
                         .message-username {

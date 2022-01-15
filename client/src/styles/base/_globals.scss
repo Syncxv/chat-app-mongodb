@@ -21,8 +21,11 @@
     --text-input-border-hover: #{colors.$text-input-border-hover};
     --text-input-border-disabled: #{colors.$text-input-border-disabled};
     --text-input-prefix: #{colors.$text-input-prefix};
-    --text-normal: #{colors.$text-color};
     --primary: #{colors.$primary};
+    --header-primary: #{colors.$header-primary};
+    --header-secondary: #{colors.$header-secondary};
+    --text-normal: #{colors.$text-normal};
+    --text-muted: #{colors.$text-muted};
 }
 *,
 *::before,

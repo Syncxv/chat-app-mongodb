@@ -4,7 +4,7 @@
     flex-direction: column;
     .input {
         background: colors.$text-input-bg;
-        color: colors.$text-color;
+        color: var(--text-normal);
         border: none;
         outline: 1px solid colors.$text-input-border;
         padding: 0.7rem;
