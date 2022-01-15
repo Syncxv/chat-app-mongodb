@@ -6,17 +6,20 @@ import { socketClient } from '../../../pages/_app'
 import { AppState } from '../../../stores/store'
 import Sidebar from '../../sidebar'
 import AppWrapper from '../../Wrapper'
+import AddFriendSection from './AddFriendSection'
 import Friend from './Friend'
+import FriendList from './FriendList'
 
 interface Props {}
 export const FriendPagesLabels = {
     0: 'All',
     1: 'Friends',
-    2: 'Pending'
+    2: 'Pending',
+    addFriend: 'Add Friend'
 }
 const FriendSection: NextPage<Props> = props => {
-    const { friends, users } = useSelector((state: AppState) => state.userStore)
-    const [page, setPage] = useState<0 | 1 | 2>(FreindTypes.FRIEND)
+    const { friends } = useSelector((state: AppState) => state.userStore)
+    const [page, setPage] = useState<0 | 1 | 2 | 'addFriend'>(FreindTypes.FRIEND)
     useEffect(() => {
         console.log(friends, FreindTypes)
         socketClient.on(SOCKET_ACTIONS.RECIVE_FRIEND_REQUEST, (user: any) => {
@@ -24,6 +27,7 @@ const FriendSection: NextPage<Props> = props => {
         })
     }, [])
     const filterd = friends.filter(s => s.type === page)
+    const isAddFriend = page === 'addFriend'
     return (
         <>
             <AppWrapper>
@@ -34,22 +38,18 @@ const FriendSection: NextPage<Props> = props => {
                     <button className="friend-page-btn" onClick={() => setPage(FreindTypes.PENDING)}>
                         Pending
                     </button>
-                    <button className="friend-page-btn add-friend" onClick={() => console.log('well then')}>
+                    <button className="friend-page-btn add-friend" onClick={() => setPage('addFriend')}>
                         Add Friend
                     </button>
                 </div>
                 <div className="p-7">
-                    <h1>{FriendPagesLabels[page]}</h1>
-                    <div className="friends mt-5">
-                        {filterd.length ? (
-                            filterd.map(s => {
-                                const user = users[s.user]
-                                return <Friend type={s.type} user={user} />
-                            })
-                        ) : (
-                            <h1>nothing to show eh</h1>
-                        )}
-                    </div>
+                    {isAddFriend ? (
+                        <AddFriendSection />
+                    ) : (
+                        <div className="friends mt-5">
+                            <FriendList filterd={filterd} />
+                        </div>
+                    )}
                 </div>
             </AppWrapper>
         </>
