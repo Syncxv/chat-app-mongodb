@@ -1,7 +1,5 @@
 import { NextPage } from 'next'
-import FriendSection from '../../components/Main/Friends/FriendSection'
-import AppWrapper from '../../components/Wrapper'
-
+import FriendSection from '../../components/Main/Friends'
 interface AppProps {
     // channels: Channel[]
 }
