@@ -23,3 +23,7 @@
         transform: scale(1.5);
     }
 }
+
+.input2 {
+    @apply px-3 py-3 -placeholder-text-muted -text-text-normal relative -bg-channeltextarea-background rounded text-sm border-0 shadow outline-none focus:outline-none;
+}

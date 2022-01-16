@@ -7,6 +7,11 @@ import { socketClient } from '../pages/_app'
 import type { AppState, AppThunk } from '../stores/store'
 import { FriendType, UserType, UserTypeWithFriends } from '../types'
 
+export interface ErrorType {
+    feild: string
+    message: string
+}
+
 export interface UserStoreState {
     failed: boolean
     initialized: boolean
@@ -14,14 +19,14 @@ export interface UserStoreState {
         loading: boolean
         failed: boolean
         success: boolean
-        error?: { feild: string; message: string }
+        error?: ErrorType
     }
     friends: FriendType[]
     users: {
         [key: string]: UserType
     }
     currentUserId: string | null
-    error?: { feild: string; message: string }
+    error?: ErrorType
 }
 
 const initialState: UserStoreState = {
@@ -116,6 +121,9 @@ export const userSlice = createSlice({
     reducers: {
         clearLoginOrRegisterState: state => {
             state.loginOrRegister = initialState.loginOrRegister
+        },
+        clearError: state => {
+            state.error = undefined
         }
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -178,10 +186,11 @@ export const userSlice = createSlice({
             .addCase(addFriend.rejected, (state, action) => {
                 console.log('ACTION IN REJECTED IN REGISTER', action)
                 state.error = action.payload as { feild: string; message: string }
+                state.error.feild = 'add-friend'
             })
     }
 })
-export const { clearLoginOrRegisterState } = userSlice.actions
+export const { clearLoginOrRegisterState, clearError } = userSlice.actions
 export const getCurrentUser = (state: AppState): UserType | undefined => {
     return state.userStore.users[state.userStore.currentUserId!]
 }
