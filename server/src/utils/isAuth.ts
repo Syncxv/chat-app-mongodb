@@ -4,7 +4,7 @@ import { COOKIE_NAME } from '../constants'
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
     console.log('AUTH MIDDLEWARE')
-    if (!req.cookies || req.headers['authorization']) {
+    if (!req.cookies || !req.headers['authorization']) {
         return res.status(401).send({ error: 'No Authorization Present nobba' })
     }
     try {
