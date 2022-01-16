@@ -13,7 +13,7 @@ export const LoadingWrapper: NextPage<LoadingProps> = ({ loading }) => {
                 opacity: loading ? '1' : '0'
             }}
         >
-            <span className="loading-text">Loading Nigga</span>
+            <span className="loading-text">Loading... or is it</span>
         </div>
     )
 }
