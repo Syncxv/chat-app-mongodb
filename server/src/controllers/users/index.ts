@@ -157,13 +157,13 @@ const users = {
             //its not done :| ill do it later fuck sake
             remove: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
-                    const { user: jwt_user } = req.query.jwt
-                    const user = await User.findById(jwt_user.id).populate([
-                        { path: 'friends', model: 'Friend' }
-                    ])
-                    user.friends.pull({ user: { _id: req.params.id } })
-                    user.save()
-                    res.send({ user })
+                    // const { user: jwt_user } = req.query.jwt
+                    // const user = await User.findById(jwt_user.id).populate([
+                    //     { path: 'friends', model: 'Friend' }
+                    // ])
+                    // user.friends.pull({ user: { _id: req.params.id } })
+                    // user.save()
+                    // res.send({ user })
                 } catch (err) {
                     res.status(500).send({ error: { message: err.message } })
                 }
