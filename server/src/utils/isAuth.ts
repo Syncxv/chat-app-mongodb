@@ -4,11 +4,11 @@ import { COOKIE_NAME } from '../constants'
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
     console.log('AUTH MIDDLEWARE')
-    if (!req.cookies) {
+    if (!req.cookies || req.headers['authorization']) {
         return res.status(401).send({ error: 'No Authorization Present nobba' })
     }
     try {
-        const token = req.cookies[COOKIE_NAME]
+        const token = req.cookies[COOKIE_NAME] || req.headers['authorization']
         const payload = verify(token, process.env.ACCESS_TOKEN_SECRET!)
         req.query.jwt = payload
     } catch (err) {

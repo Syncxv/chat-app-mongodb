@@ -21,6 +21,7 @@ export interface UserStoreState {
         success: boolean
         error?: ErrorType
     }
+    accessToken?: string
     friends: FriendType[]
     users: {
         [key: string]: UserType
@@ -152,6 +153,7 @@ export const userSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action: any) => {
                 console.log('LOGIN FUFFILED', action, window)
                 window.localStorage.setItem('token', action.payload.accessToken)
+                state.accessToken = action.payload.accessToken
                 state.loginOrRegister.loading = false
                 state.loginOrRegister.success = true
             })

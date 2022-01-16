@@ -6,14 +6,15 @@ import axios from 'axios'
 import router from 'next/router'
 import SocketContextProvider from '../context/Socket/SocketContext'
 import { Wrapper } from './login'
-import { Provider } from 'react-redux'
-import store from '../stores/store'
+import { Provider, useSelector } from 'react-redux'
+import store, { AppState } from '../stores/store'
 import SocketClient from '../context/Socket/SocketClient'
 import ModalLayer from '../components/ModalLayer'
 
 export const socketClient = new SocketClient()
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
+    const accessToken = useSelector((state: AppState) => state.userStore.accessToken)
     axios.defaults.withCredentials = true
     axios.interceptors.response.use(
         response => {
@@ -26,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             return Promise.reject(error)
         }
     )
+    axios.defaults.headers.common['Authorization'] = accessToken!
     const isNotApp = (Component as Wrapper).isNotApp || false
     return (
         <QueryClientProvider client={queryClient}>
