@@ -8,7 +8,7 @@ export interface UserType {
     discriminator: number
     email: string
     avatar?: string
-    friends: any
+    friends: FriendType[]
 }
 
 export interface FriendType {

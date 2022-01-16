@@ -122,6 +122,38 @@ const users = {
                     return res.status(500).send({ error: { message: err.message } })
                 }
             },
+            accept: async (req: Request<{ id: string }, any, any, queryAuthType>, res: Response) => {
+                try {
+                    const { user: jwt_user } = req.query.jwt
+                    if (!req.params.id)
+                        return res.status(400).send({ error: { message: 'WHY DIDNT YOU PROVIDE AN ID HUH' } })
+                    const user = await User.findById(jwt_user.id).populate({
+                        path: 'friends',
+                        ref: 'Friend',
+                        populate: { path: 'user', model: 'User' }
+                    })
+                    const requestedUser = await User.findById(req.params.id).populate({
+                        path: 'friends',
+                        ref: 'Friend',
+                        populate: { path: 'user', model: 'User' }
+                    })
+                    if (!requestedUser)
+                        return res.status(400).send({ error: { message: 'who tf is that eh' } })
+                    console.log(user, requestedUser)
+                    ;(global as any).user = user
+                    ;(global as any).requestedUser = requestedUser
+                    user.friends.find((s: { user: UserType }) => s.user.id === requestedUser.id)!.type =
+                        FreindTypes.FRIEND
+                    requestedUser.friends.find((s: { user: UserType }) => s.user.id === user.id)!.type =
+                        FreindTypes.FRIEND
+                    await user.save()
+                    await requestedUser.save()
+                    return res.send({ user })
+                } catch (err) {
+                    console.log(err)
+                    return res.status(500).send({ error: { message: err.message } })
+                }
+            },
             //its not done :| ill do it later fuck sake
             remove: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
