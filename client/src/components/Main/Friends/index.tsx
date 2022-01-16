@@ -36,22 +36,28 @@ const FriendSection: NextPage<Props> = props => {
         <>
             <AppWrapper>
                 <div className="friend-page-buttons flex items-center justify-center gap-2 w-full">
-                    <button className="friend-page-btn" onClick={() => setPage(FreindTypes.FRIEND)}>
+                    <button
+                        className={`friend-page-btn ${page === FreindTypes.FRIEND ? 'friend-selected' : ''}`}
+                        onClick={() => setPage(FreindTypes.FRIEND)}
+                    >
                         Friends
                     </button>
-                    <button className="friend-page-btn" onClick={() => setPage(FreindTypes.PENDING)}>
+                    <button
+                        className={`friend-page-btn ${page === FreindTypes.PENDING ? 'friend-selected' : ''}`}
+                        onClick={() => setPage(FreindTypes.PENDING)}
+                    >
                         Pending
                     </button>
                     <button className="friend-page-btn add-friend" onClick={() => setPage('addFriend')}>
                         Add Friend
                     </button>
                 </div>
-                <div className="p-7">
+                <div className="py-7 px-3">
                     {isAddFriend ? (
                         <AddFriendSection />
                     ) : (
                         <div className="friends mt-5">
-                            <FriendList filterd={filterd} />
+                            <FriendList filterd={filterd} type={page} />
                         </div>
                     )}
                 </div>

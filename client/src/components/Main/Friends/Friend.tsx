@@ -43,7 +43,7 @@ const Friend: NextPage<Props> = ({ type, user }) => {
                     <div className="friend-avatar-wrapper">
                         <img className="friend-avatar" src={user.avatar || defaultPfp} alt="well then" />
                     </div>
-                    <span>{user.username}</span>
+                    <span className="text-lg">{user.username}</span>
                 </div>
                 <div className="flex gap-4">
                     <ActionButton type={type} />
