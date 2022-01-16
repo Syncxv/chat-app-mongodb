@@ -155,7 +155,7 @@ const users = {
                 }
             },
             //its not done :| ill do it later fuck sake
-            remove: async (req: Request<any, any, any, queryAuthType>, res: Response) => {
+            remove: async (_: Request<any, any, any, queryAuthType>, res: Response) => {
                 try {
                     // const { user: jwt_user } = req.query.jwt
                     // const user = await User.findById(jwt_user.id).populate([
