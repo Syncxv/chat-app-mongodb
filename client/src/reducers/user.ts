@@ -11,7 +11,7 @@ export interface ErrorType {
     feild: string
     message: string
 }
-
+export type SuccessType = ErrorType
 export interface UserStoreState {
     failed: boolean
     initialized: boolean
@@ -27,6 +27,7 @@ export interface UserStoreState {
         [key: string]: UserType
     }
     currentUserId: string | null
+    success?: SuccessType
     error?: ErrorType
 }
 
@@ -115,6 +116,17 @@ export const addFriend = createAsyncThunk(
         }
     }
 )
+export const acceptFriend = createAsyncThunk(
+    'userStore/acceptFriend',
+    async ({ id }: { id: string }, { rejectWithValue }): Promise<{ user: UserTypeWithFriends }> => {
+        try {
+            return (await axios.put<{ user: UserTypeWithFriends }>(`${apiUrl}/@me/friends/${id}`)).data
+        } catch (e: any) {
+            const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
+            return rejectWithValue(error) as any
+        }
+    }
+)
 export const userSlice = createSlice({
     name: 'userStore',
     initialState,
@@ -142,6 +154,8 @@ export const userSlice = createSlice({
                 state.users[action.payload.currentUser._id] = action.payload.currentUser
                 state.friends = action.payload.friends
                 state.initialized = true
+                axios.defaults.headers.common['Authorization'] =
+                    state.accessToken || localStorage.getItem('token')!
             })
             .addCase(initalizeUsers.rejected, state => {
                 state.failed = true
@@ -183,9 +197,23 @@ export const userSlice = createSlice({
             })
             .addCase(addFriend.fulfilled, (state, action) => {
                 console.log('IN FRIEND FUFFILED', action)
+                state.success = { feild: 'add-friend', message: ':D success gang' }
                 state.friends = action.payload.user.friends
             })
             .addCase(addFriend.rejected, (state, action) => {
+                console.log('ACTION IN REJECTED IN REGISTER', action)
+                state.error = action.payload as { feild: string; message: string }
+                state.error.feild = 'add-friend'
+            })
+            .addCase(acceptFriend.pending, state => {
+                console.log('ACCEPTING THEM FRIEND')
+            })
+            .addCase(acceptFriend.fulfilled, (state, action) => {
+                console.log('IN FRIEND FUFFILED', action)
+                state.success = { feild: 'add-friend', message: ':D success gang' }
+                state.friends = action.payload.user.friends
+            })
+            .addCase(acceptFriend.rejected, (state, action) => {
                 console.log('ACTION IN REJECTED IN REGISTER', action)
                 state.error = action.payload as { feild: string; message: string }
                 state.error.feild = 'add-friend'

@@ -30,8 +30,6 @@ const SocketContextProvider: NextPage<Props> = ({ children }) => {
     const dispatch = useDispatch()
     const state = useSelector((state: AppState) => state)
     useEffect(() => {
-        axios.defaults.headers.common['Authorization'] =
-            state.userStore.accessToken || localStorage.getItem('token')!
         dispatch(connectionOpen())
         dispatch(initalizeUsers())
         dispatch(initalizeChannels())
