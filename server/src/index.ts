@@ -7,7 +7,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { corsOptions } from './constants'
 import { socketAuth } from './socket/middleware/scoketAuth'
-import User, { UserType } from './models/user'
+import User, { FriendModel, UserType } from './models/user'
 import DmChannel from './models/channels'
 import onUserInitalData, { USER_INITAL_DATA_EVENT_NAME } from './socket/users/initalData'
 import onChannelInitalData, { CHANNEL_INITAL_DATA_EVENT_NAME } from './socket/channels/initalData'
@@ -39,6 +39,7 @@ const main = async () => {
         console.log('WOAH')
         ;(globalThis as any).User = User
         ;(globalThis as any).DmChannel = DmChannel
+        ;(globalThis as any).FriendModel = FriendModel
     })
     const server = app.listen(PORT, () =>
         console.log(`listening on port ${PORT} url: http://localhost:${PORT}`)

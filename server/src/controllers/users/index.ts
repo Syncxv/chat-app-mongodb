@@ -2,12 +2,11 @@ import { Request, Response } from 'express'
 import { ioMap } from '../..'
 import DmChannels from '../../models/channels'
 import User, { UserType } from '../../models/user'
-import { recciveFriendRequest } from '../../socket/users/friends'
+import { handleFriendRequest } from '../../socket/users/friends'
 import { FreindTypes, queryAuthType } from '../../types'
 import getChannels from '../../utils/getChannels'
 import login from './login'
 import register from './register'
-import { Server } from 'socket.io'
 const users = {
     index: async (req: Request, res: Response) => {
         try {
@@ -102,21 +101,37 @@ const users = {
                     if (!req.body.username)
                         return res.status(400).send({ error: { message: 'WHY YOU NO PASS USERNAME HUH' } })
                     const { user: jwt_user } = req.query.jwt
-                    const user = await User.findById(jwt_user.id).populate([
-                        { path: 'friends', model: 'Friend' }
-                    ])
-                    const requestedUser = await User.findOne({ username: req.body.username }).populate([
-                        { path: 'friends', model: 'Friend' }
-                    ])
+
+                    const requestedUser = await User.findOneAndUpdate(
+                        { username: req.body.username },
+                        {
+                            $push: {
+                                friends: { user: jwt_user.id, type: FreindTypes.PENDING_INCOMMING }
+                            }
+                        },
+                        { new: true }
+                    ).populate({ path: 'friends', populate: { path: 'user' } })
                     if (!requestedUser) return res.status(404).send({ error: { message: 'who tf is that' } })
-                    user?.friends.push({ user: requestedUser.id, type: FreindTypes.PENDING_OUTGOING })
-                    requestedUser.friends.push({ user: user.id, type: FreindTypes.PENDING_INCOMMING })
-                    await user.save()
-                    await requestedUser.save()
-                    const io = ioMap.get('io')
-                    recciveFriendRequest(io as Server, requestedUser.id, user.toJSON() as unknown as UserType)
-                    console.log(user, requestedUser)
-                    return res.send({ user })
+                    const currentUser = await User.findOneAndUpdate(
+                        { _id: jwt_user.id },
+                        {
+                            $push: {
+                                friends: { user: requestedUser!._id, type: FreindTypes.PENDING_OUTGOING }
+                            }
+                        },
+                        { new: true }
+                    ).populate({ path: 'friends', populate: { path: 'user' } })
+                    const io = ioMap.get('io')!
+                    handleFriendRequest(io, requestedUser!, currentUser!)
+                    ;(global as any).jwt_user = jwt_user
+                    ;(global as any).currentUser = currentUser
+                    ;(global as any).requestedUser = requestedUser
+                    ;(global as any).req = req
+                    ;(global as any).res = res
+                    ;(global as any).handleFriendRequest = handleFriendRequest
+                    return res.send({
+                        user: currentUser.toJSON()
+                    })
                 } catch (err) {
                     console.log(err)
                     return res.status(500).send({ error: { message: err.message } })

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Document } from 'mongoose'
 // 1. Create an interface representing a document in MongoDB.
 export interface UserType {
     id: string
@@ -10,7 +10,10 @@ export interface UserType {
     avatar?: string
     friends: FriendType[]
 }
-
+export type MongooseUserType = Document<any, any, UserType> &
+    UserType & {
+        _id: any
+    }
 export interface FriendType {
     user: UserType
     type: number
