@@ -26,7 +26,7 @@ export interface UserTypeWithFriends {
 }
 export interface FriendType {
     type: number
-    user: string
+    user: UserType
 }
 export interface RawChannel {
     id: string
