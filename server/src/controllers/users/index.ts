@@ -164,7 +164,6 @@ const users = {
                     return res.status(500).send({ error: { message: err.message } })
                 }
             },
-            //its not done :| ill do it later fuck sake
             remove: async (req: Request<{ id: string }, any, any, queryAuthType>, res: Response) => {
                 try {
                     const { user: jwt_user } = req.query.jwt
