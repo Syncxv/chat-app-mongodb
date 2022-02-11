@@ -20,8 +20,7 @@ const FriendList: NextPage<Props> = ({ filterd, type }) => {
             </span>
             {filterd.length ? (
                 filterd.map(s => {
-                    const user = users[s.user]
-                    return <Friend key={user._id} type={s.type} user={user} />
+                    return <Friend key={s.user._id} type={s.type} user={s.user} />
                 })
             ) : (
                 <h1>nothing to show eh</h1>
