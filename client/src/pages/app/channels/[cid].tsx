@@ -4,7 +4,6 @@ import React from 'react'
 import { apiUrl } from '../../../constants'
 import { Channel, MessageType } from '../../../types'
 import Main from '../../../components/Main'
-import useSocket from '../../../hooks/useSocket'
 interface ChannelProps {
     params: {
         cid: string

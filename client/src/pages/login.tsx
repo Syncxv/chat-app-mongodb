@@ -1,12 +1,11 @@
 import axios from 'axios'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from '../components/atoms/Button'
 import Input from '../components/atoms/Input'
 import { LinkP } from '../components/atoms/Link'
-import { incrementAsync } from '../reducers/counter'
 import { clearLoginOrRegisterState, loginUser, registerUser } from '../reducers/user'
 import { AppState } from '../stores/store'
 export type Wrapper<P = {}> = NextPage & {
@@ -64,7 +63,7 @@ const LoginHehe: Wrapper = () => {
                         />
                     )}
                     <LinkP onClick={() => setSignUp(!signUp)}>
-                        {signUp ? 'already have an account :|' : 'sign up nig'}
+                        {signUp ? 'already have an account :|' : 'sign up'}
                     </LinkP>
                     <Button
                         disabled={loading}
