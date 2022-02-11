@@ -1,13 +1,10 @@
 import { NextPage } from 'next'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { FreindTypes, SOCKET_ACTIONS } from '../../../constants'
-import { socketClient } from '../../../pages/_app'
+import { FreindTypes } from '../../../constants'
 import { AppState } from '../../../stores/store'
-import Sidebar from '../../sidebar'
 import AppWrapper from '../../Wrapper'
 import AddFriendSection from './AddFriendSection'
-import Friend from './Friend'
 import FriendList from './FriendList'
 
 interface Props {}
@@ -20,12 +17,6 @@ export const FriendPagesLabels = {
 const FriendSection: NextPage<Props> = props => {
     const { friends } = useSelector((state: AppState) => state.userStore)
     const [page, setPage] = useState<0 | 1 | 2 | 'addFriend'>(FreindTypes.FRIEND)
-    useEffect(() => {
-        console.log(friends, FreindTypes)
-        socketClient.on(SOCKET_ACTIONS.RECIVE_FRIEND_REQUEST, (user: any) => {
-            console.log('NEW FRIEND REQ', user)
-        })
-    }, [])
     const filterd = friends.filter(s =>
         page === FreindTypes.PENDING
             ? s.type === FreindTypes.PENDING_INCOMMING || s.type === FreindTypes.PENDING_OUTGOING
