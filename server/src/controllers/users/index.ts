@@ -101,11 +101,12 @@ const users = {
                     if (!req.body.username)
                         return res.status(400).send({ error: { message: 'WHY YOU NO PASS USERNAME HUH' } })
                     const { user: jwt_user } = req.query.jwt
-
+                    if (req.body.username === jwt_user.username)
+                        return res.status(405).send({ error: { message: 'bruh cant add yo self' } })
                     const requestedUser = await User.findOneAndUpdate(
                         { username: req.body.username },
                         {
-                            $push: {
+                            $addToSet: {
                                 friends: { user: jwt_user.id, type: FreindTypes.PENDING_INCOMMING }
                             }
                         },
@@ -115,20 +116,14 @@ const users = {
                     const currentUser = await User.findOneAndUpdate(
                         { _id: jwt_user.id },
                         {
-                            $push: {
+                            $addToSet: {
                                 friends: { user: requestedUser!._id, type: FreindTypes.PENDING_OUTGOING }
                             }
                         },
                         { new: true }
                     ).populate({ path: 'friends', populate: { path: 'user' } })
                     const io = ioMap.get('io')!
-                    handleFriendRequest(io, requestedUser!, currentUser!)
-                    ;(global as any).jwt_user = jwt_user
-                    ;(global as any).currentUser = currentUser
-                    ;(global as any).requestedUser = requestedUser
-                    ;(global as any).req = req
-                    ;(global as any).res = res
-                    ;(global as any).handleFriendRequest = handleFriendRequest
+                    handleFriendRequest(io, requestedUser, currentUser!)
                     return res.send({
                         user: currentUser.toJSON()
                     })
@@ -170,17 +165,30 @@ const users = {
                 }
             },
             //its not done :| ill do it later fuck sake
-            remove: async (_: Request<any, any, any, queryAuthType>, res: Response) => {
+            remove: async (req: Request<{ id: string }, any, any, queryAuthType>, res: Response) => {
                 try {
-                    // const { user: jwt_user } = req.query.jwt
-                    // const user = await User.findById(jwt_user.id).populate([
-                    //     { path: 'friends', model: 'Friend' }
-                    // ])
-                    // user.friends.pull({ user: { _id: req.params.id } })
-                    // user.save()
-                    // res.send({ user })
+                    const { user: jwt_user } = req.query.jwt
+                    await User.findOneAndUpdate(
+                        { _id: req.params.id },
+                        {
+                            $pull: {
+                                friends: { user: jwt_user.id }
+                            }
+                        },
+                        { new: true }
+                    )
+                    const user = await User.findOneAndUpdate(
+                        { _id: jwt_user.id },
+                        {
+                            $pull: {
+                                friends: { user: req.params.id }
+                            }
+                        },
+                        { new: true }
+                    ).populate({ path: 'friends', populate: { path: 'user' } })
+                    return res.send({ user })
                 } catch (err) {
-                    res.status(500).send({ error: { message: err.message } })
+                    return res.status(500).send({ error: { message: err.message } })
                 }
             }
         }

@@ -1,6 +1,8 @@
 import { NextPage } from 'next'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { defaultPfp, FreindTypes } from '../../../constants'
+import { acceptFriend, removeFriend } from '../../../reducers/user'
 import { UserType } from '../../../types'
 
 interface Props {
@@ -8,14 +10,22 @@ interface Props {
     user: UserType
 }
 interface ActionButtonProps {
+    user: UserType
     type: number
 }
-const ActionButton: NextPage<ActionButtonProps> = ({ type }) => {
+const ActionButton: NextPage<ActionButtonProps> = ({ user, type }) => {
+    const dispatch = useDispatch()
     switch (type) {
         case FreindTypes.FRIEND:
             return (
                 <>
                     <button className="message-him idk man">Chat</button>
+                    <button
+                        className="message-him idk man"
+                        onClick={() => dispatch(removeFriend({ id: user._id }))}
+                    >
+                        Remove
+                    </button>
                 </>
             )
         case FreindTypes.PENDING_OUTGOING:
@@ -27,7 +37,12 @@ const ActionButton: NextPage<ActionButtonProps> = ({ type }) => {
         case FreindTypes.PENDING_INCOMMING:
             return (
                 <>
-                    <button className="accept idk man">Accept</button>
+                    <button
+                        className="accept idk man"
+                        onClick={() => dispatch(acceptFriend({ id: user._id }))}
+                    >
+                        Accept
+                    </button>
                     <button className="ignore idk man">Ignore</button>
                 </>
             )
@@ -46,7 +61,7 @@ const Friend: NextPage<Props> = ({ type, user }) => {
                     <span className="text-lg">{user.username}</span>
                 </div>
                 <div className="flex gap-4">
-                    <ActionButton type={type} />
+                    <ActionButton user={user} type={type} />
                 </div>
             </div>
         </>

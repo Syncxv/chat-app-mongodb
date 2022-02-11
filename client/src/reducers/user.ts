@@ -127,6 +127,18 @@ export const acceptFriend = createAsyncThunk(
         }
     }
 )
+export const removeFriend = createAsyncThunk(
+    'userStore/removeFriend',
+    async ({ id }: { id: string }, { rejectWithValue }): Promise<{ user: UserTypeWithFriends }> => {
+        try {
+            return (await axios.delete<{ user: UserTypeWithFriends }>(`${apiUrl}/@me/friends/remove/${id}`))
+                .data
+        } catch (e: any) {
+            const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
+            return rejectWithValue(error) as any
+        }
+    }
+)
 export const userSlice = createSlice({
     name: 'userStore',
     initialState,
@@ -226,9 +238,20 @@ export const userSlice = createSlice({
                 state.friends = action.payload.user.friends
             })
             .addCase(acceptFriend.rejected, (state, action) => {
-                console.log('ACTION IN REJECTED IN REGISTER', action)
+                console.log('ACTION IN REJECTED IN ACCEPT FRIEND', action)
                 state.error = action.payload as { feild: string; message: string }
                 state.error.feild = 'add-friend'
+            })
+
+            .addCase(removeFriend.pending, () => {
+                console.log('REMOVING THE FRIEND')
+            })
+            .addCase(removeFriend.fulfilled, (state, action) => {
+                console.log('IN FRIEND REMOVE FUFFILED :D', action)
+                state.friends = action.payload.user.friends
+            })
+            .addCase(removeFriend.rejected, (state, action) => {
+                console.log('ACTION IN REJECTED IN REMOVE FRIEND', action)
             })
     }
 })
