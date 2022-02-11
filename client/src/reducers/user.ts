@@ -120,7 +120,7 @@ export const acceptFriend = createAsyncThunk(
     'userStore/acceptFriend',
     async ({ id }: { id: string }, { rejectWithValue }): Promise<{ user: UserTypeWithFriends }> => {
         try {
-            return (await axios.put<{ user: UserTypeWithFriends }>(`${apiUrl}/@me/friends/${id}`)).data
+            return (await axios.put<{ user: UserTypeWithFriends }>(`${apiUrl}/@me/friends/accept/${id}`)).data
         } catch (e: any) {
             const error = e.response.data.error || { feild: 'none', message: 'network error idk man' }
             return rejectWithValue(error) as any
@@ -137,6 +137,18 @@ export const userSlice = createSlice({
         },
         clearError: state => {
             state.error = undefined
+        },
+        updateUser: (state, action) => {
+            if (state.users[action.payload._id]) {
+                state.users[action.payload._id] = action.payload
+            }
+        },
+        updateFriend: (state, action: PayloadAction<{ user: UserType; type: number }>) => {
+            if (!state.friends.map(s => s.user._id).includes(action.payload.user._id)) {
+                state.friends.push(action.payload)
+                return
+            }
+            // state.friends[action.payload._id] = action.payload
         }
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -220,8 +232,16 @@ export const userSlice = createSlice({
             })
     }
 })
-export const { clearLoginOrRegisterState, clearError } = userSlice.actions
+export const {
+    clearLoginOrRegisterState,
+    clearError,
+    updateUser,
+    updateFriend: updateFriends
+} = userSlice.actions
 export const getCurrentUser = (state: AppState): UserType | undefined => {
     return state.userStore.users[state.userStore.currentUserId!]
+}
+export const getUser = (state: AppState, id: string): UserType | undefined => {
+    if (state.userStore.users[id]) return state.userStore.users[id]
 }
 export default userSlice.reducer

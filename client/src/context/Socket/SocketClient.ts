@@ -1,7 +1,10 @@
 import Cookie from 'js-cookie'
 import router from 'next/router'
 import io, { Socket } from 'socket.io-client'
-import { apiUrl } from '../../constants'
+import { apiUrl, FreindTypes, SOCKET_ACTIONS } from '../../constants'
+import { acceptFriend, updateFriends, updateUser } from '../../reducers/user'
+import store from '../../stores/store'
+import { UserType } from '../../types'
 export default class socketAPI {
     socket!: Socket
 
@@ -13,7 +16,10 @@ export default class socketAPI {
             }
         })
         return new Promise((resolve, reject) => {
-            this.socket.on('connect', () => resolve(true))
+            this.socket.on('connect', () => {
+                this.registerCommon()
+                resolve(true)
+            })
             this.socket.on('connect_error', error => this.handleError(error))
         })
     }
@@ -56,5 +62,20 @@ export default class socketAPI {
     handleError(error: Error) {
         console.error(error)
         if (error.message === 'auth failed eh') router.push('/login')
+    }
+
+    registerCommon() {
+        this.on(SOCKET_ACTIONS.RECIVE_FRIEND_REQUEST, (user: UserType) => {
+            this.log(SOCKET_ACTIONS.RECIVE_FRIEND_REQUEST)
+            store.dispatch(updateFriends({ user, type: FreindTypes.PENDING_INCOMMING }))
+        })
+        this.on(SOCKET_ACTIONS.USER_UPDATE, (user: UserType) => {
+            this.log(SOCKET_ACTIONS.USER_UPDATE)
+            store.dispatch(updateUser(user))
+        })
+    }
+
+    log(str: string) {
+        console.log('%c[SOCKET]', 'color: blue', str)
     }
 }
