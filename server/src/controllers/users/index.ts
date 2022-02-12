@@ -52,10 +52,10 @@ const users = {
                 if (currentUser && sheesh.some(s => s !== undefined)) {
                     console.log(currentUser, sheesh, members)
                     const channel = await DmChannels.create({
-                        members: [currentUser?._id.toString(), ...sheesh]
+                        members: [...sheesh, currentUser?._id.toString()]
                     })
                     await channel.save()
-                    return res.status(201).send(channel)
+                    return res.status(201).send(await channel.populate({ path: 'members' }))
                 }
                 return res.status(404).send({ error: ':| member mismatch ig' })
             } catch (err) {
